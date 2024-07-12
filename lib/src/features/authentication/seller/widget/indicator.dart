@@ -40,3 +40,40 @@ class NewPageIndicator extends StatelessWidget {
         ),
       );
 }
+
+class TagTitleSub extends StatelessWidget {
+  const TagTitleSub({
+    super.key,
+    required this.title,
+    required this.subz,
+  });
+  final String title, subz;
+
+  @override
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontFamily: 'poppins',
+              fontWeight: FontWeight.w600,
+              color: Color(0xff000000),
+              fontSize: 20,
+            ),
+          ),
+          const SizedBox(
+            height: 3,
+          ),
+          Text(
+            subz,
+            style: const TextStyle(
+              fontFamily: 'poppins',
+              fontWeight: FontWeight.w300,
+              color: Color(0xff5E5E5E),
+              fontSize: 13,
+            ),
+          ),
+        ],
+      );
+}

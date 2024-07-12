@@ -4,6 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/features/authentication/seller/login/forgot_password.dart';
 import 'package:tags/src/features/authentication/seller/login/view.dart';
+import 'package:tags/src/features/authentication/seller/sign_up/create_company/create_company.dart';
+import 'package:tags/src/features/authentication/seller/sign_up/create_company/what2sell.dart';
+import 'package:tags/src/features/authentication/seller/sign_up/otp.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/passW.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/signup_page.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/signup_page2.dart';
@@ -107,19 +110,33 @@ GoRouter router = GoRouter(
         ),
       ),
     ),
-    // GoRoute(
-    //   name: TagRoutes.forgotPassWord.name,
-    //   path: TagRoutes.forgotPassWord.path,
-    //   pageBuilder: (context, state) => const CupertinoPage(
-    //     child: ForgotPassWord(),
-    //   ),
-    // ),
-    // GoRoute(
-    //   name: TagRoutes.forgotPassWord.name,
-    //   path: TagRoutes.forgotPassWord.path,
-    //   pageBuilder: (context, state) => const CupertinoPage(
-    //     child: ForgotPassWord(),
-    //   ),
-    // ),
+    GoRoute(
+      name: TagRoutes.createStore.name,
+      path: TagRoutes.createStore.path,
+      pageBuilder: (context, state) => const CupertinoPage(
+        child: CreateStorePage(),
+      ),
+    ),
+    GoRoute(
+      name: TagRoutes.whatToSell.name,
+      path: TagRoutes.whatToSell.path,
+      pageBuilder: (context, state) => CupertinoPage(
+        child: SelectCategory(
+          busName: state.pathParameters['busName'].toString(),
+          busAddress: state.pathParameters['busAddress'].toString(),
+          phoneNum: state.pathParameters['phoneNum'].toString(),
+          shopCountry: state.pathParameters['shopCountry'].toString(),
+        ),
+      ),
+    ),
+    GoRoute(
+      name: TagRoutes.sellOtpPage.name,
+      path: TagRoutes.sellOtpPage.path,
+      pageBuilder: (context, state) => CupertinoPage(
+        child: SellOtpPage(
+          email: state.pathParameters['email'].toString(),
+        ),
+      ),
+    ),
   ],
 );

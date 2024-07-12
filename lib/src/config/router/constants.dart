@@ -33,7 +33,19 @@ enum TagRoutes {
   ),
   confirmPassWord(
     name: 'confirmPassWord',
-    path: '/confirmPassWord/:email/:firstName/:lastName/phone;',
+    path: '/confirmPassWord/:email/:firstName/:lastName/:phone',
+  ),
+  createStore(
+    name: 'createStore',
+    path: '/createStore',
+  ),
+  whatToSell(
+    name: 'whatToSell',
+    path: '/whatToSell/:busName/:busAddress/:phoneNum/:shopCountry',
+  ),
+  sellOtpPage(
+    name: 'sellOtpPage',
+    path: '/sellOtpPage/:email',
   ),
 
   decideScreen(

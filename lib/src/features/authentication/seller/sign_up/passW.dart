@@ -1,7 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/config/utils/enums.dart';
 import 'package:tags/src/config/utils/validator.dart';
 import 'package:tags/src/core/constant/colors.dart';
@@ -260,45 +262,35 @@ class _ConfirmPassWordState extends ConsumerState<ConfirmPassWord> {
                                 //       );
                                 //     });
 
-                                await Future.delayed(
-                                    const Duration(milliseconds: 100),
-                                    () async {
-                                  await HiveStorage.put(
-                                    HiveKeys.token,
-                                    newToken,
-                                  );
-                                });
+                                await HiveStorage.put(
+                                  HiveKeys.token,
+                                  newToken,
+                                );
 
-                                // Navigator.pushReplacement(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) {
-                                //       return SellOtpPage(
-                                //         email: widget.email,
-                                //       );
-                                //     },
-                                //   ),
-                                // );
+                                await context.pushNamed(
+                                  TagRoutes.sellerSignUpTwo.name,
+                                  pathParameters: {
+                                    'email': widget.email,
+                                  },
+                                );
                               } else {
-                                // showDialog(
-                                //     context: context,
-                                //     builder: (context) {
-                                //       return TagDialog(
-                                //         icon: const Icon(
-                                //           Icons.error,
-                                //           color: TagColors.red,
-                                //           size: 50,
-                                //         ),
-                                //         title: 'Failed',
-                                //         subtitle: response.errorMessage,
-                                //         buttonColor: TagColors.red,
-                                //         textColor: Colors.white,
-                                //         buttonText: "Dismiss",
-                                //         onTap: () {
-                                //           Navigator.pop(context);
-                                //         },
-                                //       );
-                                //     });
+                                await showDialog(
+                                    context: context,
+                                    builder: (context) => TagDialog(
+                                          icon: const Icon(
+                                            Icons.error,
+                                            color: TagColors.red,
+                                            size: 50,
+                                          ),
+                                          title: 'Failed',
+                                          subtitle: response.errorMessage,
+                                          buttonColor: TagColors.red,
+                                          textColor: Colors.white,
+                                          buttonText: 'Dismiss',
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ));
 
                                 handleError(
                                   e: response.error ?? response.errorMessage,

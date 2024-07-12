@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tags/src/core/services/moticar_backend.dart';
 import 'package:tags/src/features/authentication/seller/login/model/login_viewmodel.dart';
+import 'package:tags/src/features/authentication/seller/sign_up/model/profile_viewmodel.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/model/register_view.dart';
 
 final serviceProvider = Provider((_) => AgencyBackEnd(Dio()));
@@ -23,7 +24,8 @@ final registerViewmodelProvider =
   RegisterViewmodel.new,
 );
 
-// final profileProvider = StateNotifierProvider<ProfileViewModel, ProfileState>(
-//     (ref) => ProfileViewModel(ref));
+final profileProvider = StateNotifierProvider<ProfileViewModel, ProfileState>(
+  ProfileViewModel.new,
+);
 
 final isDarkModeEnabledProvider = StateProvider((ref) => false);
