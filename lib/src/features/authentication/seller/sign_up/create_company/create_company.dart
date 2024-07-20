@@ -144,10 +144,10 @@ class _CreateStorePageState extends ConsumerState<CreateStorePage> {
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) =>
-                            FieldValidaor.validateEmptyfield(value!),
+                            EmailValidator.validateEmail(value!),
                         controller: businessAddress,
                         title: 'Business Email Address',
-                        hintText: 'email address',
+                        hintText: 'Email Address',
                       ),
                       const SizedBox(
                         height: 20,

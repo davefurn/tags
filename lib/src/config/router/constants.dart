@@ -19,6 +19,10 @@ enum TagRoutes {
     name: 'sellerLogin',
     path: '/sellerLogin',
   ),
+   updateStore(
+    name: 'updateStore',
+    path: '/updateStore',
+  ),
   forgotPassWord(
     name: 'forgotPassWord',
     path: '/forgotPassWord',
@@ -47,7 +51,14 @@ enum TagRoutes {
     name: 'sellOtpPage',
     path: '/sellOtpPage/:email',
   ),
-
+successfulSignUp(
+    name: 'successfulSignUp',
+    path: '/successfulSignUp',
+  ),
+resetPasswordPage(
+    name: 'resetPasswordPage',
+    path: '/resetPasswordPage',
+  ),
   decideScreen(
     name: 'decideScreen',
     path: '/decideScreen',

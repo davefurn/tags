@@ -200,11 +200,13 @@ class TagCustomField extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           TextFormField(
+            cursorColor: TagColors.black,
             controller: controller,
             obscureText: obscureText,
             maxLength: maxLength,
             // maxLines: maxLines,
             onChanged: onChanged,
+
             onEditingComplete: onEditingComplete,
             textInputAction: TextInputAction.next,
             textCapitalization: textCapitalization,
@@ -301,6 +303,7 @@ class TagCustomField2 extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           TextFormField(
+            cursorColor: TagColors.black,
             controller: controller,
             maxLength: maxLength,
             maxLines: maxLines,

@@ -36,7 +36,7 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
 
     try {
       final response = await _reader.read(serviceProvider).getWithToken(
-            path: 'api/categories',
+            path: 'api/categories/',
           );
       if (response.statusCode == 200) {
         final Map<String, dynamic> body = response.data;

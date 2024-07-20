@@ -1,13 +1,12 @@
 // ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/config/utils/enums.dart';
 import 'package:tags/src/core/constant/colors.dart';
-import 'package:tags/src/core/resources/resources.dart';
 import 'package:tags/src/core/riverpod/providers/providers.dart';
 import 'package:tags/src/core/widget/tag_dialog.dart';
 import 'package:tags/src/core/widget/tag_loader.dart';
@@ -60,7 +59,7 @@ class _SelectCategoryState extends ConsumerState<SelectCategory> {
     final state = ref.watch(profileProvider);
     return RefreshIndicator.adaptive(
       onRefresh: () async {
-        ref.read(profileProvider.notifier).categories();
+        await ref.read(profileProvider.notifier).categories();
       },
       child: Scaffold(
         backgroundColor: const Color(0xffF8F9FF),
@@ -124,15 +123,10 @@ class _SelectCategoryState extends ConsumerState<SelectCategory> {
                       ),
 
                       //
-                      Container(
-                        decoration: const BoxDecoration(),
-                      ),
-
-                      //
                       if (state.loading != Loader.loading &&
                           state.categories.isNotEmpty)
-                        SizedBox(
-                          height: 400,
+                        LimitedBox(
+                          maxHeight: 400.h,
                           child: GridView.builder(
                             shrinkWrap: true,
                             gridDelegate:
@@ -140,7 +134,7 @@ class _SelectCategoryState extends ConsumerState<SelectCategory> {
                               crossAxisCount: 3,
                               crossAxisSpacing: 8,
                               mainAxisSpacing: 8,
-                              childAspectRatio: 14 / 9,
+                              childAspectRatio: 2.1,
                             ),
                             itemCount: state.categories.length,
                             itemBuilder: (context, index) {
@@ -152,25 +146,22 @@ class _SelectCategoryState extends ConsumerState<SelectCategory> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(2),
                                   child: Container(
-                                    // height: 50,
-                                    // width: 200,
                                     padding: const EdgeInsets.all(2),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
-                                      borderRadius: BorderRadius.circular(15),
+                                      borderRadius: BorderRadius.circular(4),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.grey.withOpacity(0.5),
+                                          color: Colors.grey.withOpacity(0.2),
                                           spreadRadius: 1,
-                                          blurRadius: 3,
-                                          offset: const Offset(0, 3),
+                                          blurRadius: 1,
+                                          offset: const Offset(0, 1),
                                         ),
                                       ],
                                       border: Border.all(
                                         color: isSelected
                                             ? Colors.blue
                                             : Colors.transparent,
-                                        width: 1,
                                       ),
                                     ),
                                     child: Center(
@@ -199,7 +190,6 @@ class _SelectCategoryState extends ConsumerState<SelectCategory> {
                         const Center(
                           child: SpinKitWaveSpinner(
                             color: TagColors.appThemeColor,
-                            size: 50,
                           ),
                         )
                       else
@@ -239,7 +229,6 @@ class _SelectCategoryState extends ConsumerState<SelectCategory> {
                     final state = ref.watch(registerViewmodelProvider);
                     return state.loadStatus == Loader.loading
                         ? const TagLoader(
-                            size: 50,
                             color: TagColors.appThemeColor,
                           )
                         : TagButton(
@@ -271,277 +260,9 @@ class _SelectCategoryState extends ConsumerState<SelectCategory> {
                                   //if successful :
                                   //modal for success
 
-                                  await showModalBottomSheet(
-                                    backgroundColor: Colors.white,
-                                    isDismissible: false,
-                                    context: context,
-                                    builder: (context) => FractionallySizedBox(
-                                      heightFactor: 0.75,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(16),
-                                        child: SingleChildScrollView(
-                                          child: Wrap(
-                                            children: [
-                                              Column(
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                      20,
-                                                    ),
-                                                    child: Image.asset(
-                                                      AssetsImages
-                                                          .successCreate,
-                                                    ),
-                                                  ),
-
-                                                  //
-                                                  const SizedBox(height: 16),
-                                                  Container(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                      12,
-                                                    ),
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius:
-                                                          BorderRadiusDirectional
-                                                              .circular(15),
-                                                      border: Border.all(
-                                                        color:
-                                                            Colors.grey.shade50,
-                                                        width: 1.5,
-                                                      ),
-                                                    ),
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                        15,
-                                                      ),
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          const Text(
-                                                            'Account Created Sucessfully!',
-                                                            style: TextStyle(
-                                                              fontSize: 22,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                            ),
-                                                          ),
-
-                                                          const SizedBox(
-                                                            height: 8,
-                                                          ),
-
-                                                          const Text(
-                                                            'Setup your store and provide this details.',
-                                                            textAlign: TextAlign
-                                                                .center,
-                                                            style: TextStyle(
-                                                              fontSize: 13,
-                                                            ),
-                                                          ),
-
-                                                          const SizedBox(
-                                                            height: 18,
-                                                          ),
-
-                                                          //
-                                                          ListTile(
-                                                            contentPadding:
-                                                                const EdgeInsets
-                                                                    .all(3),
-                                                            leading: SvgPicture
-                                                                .asset(
-                                                              height: 35,
-                                                              Assets.addPro,
-                                                            ),
-                                                            title: const Text(
-                                                              'Verify your Identity',
-                                                              style: TextStyle(
-                                                                fontSize: 18,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                            ),
-                                                            subtitle:
-                                                                const Text(
-                                                              'Upload a clear copy of your ID for security purposes.',
-                                                              // textAlign:
-                                                              //     TextAlign.center,
-                                                              style: TextStyle(
-                                                                fontSize: 13,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          //
-
-                                                          ListTile(
-                                                            contentPadding:
-                                                                const EdgeInsets
-                                                                    .all(3),
-                                                            leading: SvgPicture
-                                                                .asset(
-                                                              height: 35,
-                                                              Assets
-                                                                  .businessDetails,
-                                                            ),
-                                                            title: const Text(
-                                                              'Business Details',
-                                                              style: TextStyle(
-                                                                fontSize: 18,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                            ),
-                                                            subtitle:
-                                                                const Text(
-                                                              'Add your logo & cover picture on to your details.',
-                                                              // textAlign:
-                                                              //     TextAlign.center,
-                                                              style: TextStyle(
-                                                                fontSize: 13,
-                                                              ),
-                                                            ),
-                                                          ),
-
-                                                          //
-                                                          ListTile(
-                                                            contentPadding:
-                                                                const EdgeInsets
-                                                                    .all(3),
-                                                            leading: SvgPicture
-                                                                .asset(
-                                                              height: 35,
-                                                              Assets
-                                                                  .addProducts,
-                                                            ),
-                                                            title: const Text(
-                                                              'Add your Products',
-                                                              style: TextStyle(
-                                                                fontSize: 18,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                            ),
-                                                            subtitle:
-                                                                const Text(
-                                                              'Upload clear photos with detailed descriptions.',
-                                                              // textAlign:
-                                                              //     TextAlign.center,
-                                                              style: TextStyle(
-                                                                fontSize: 13,
-                                                              ),
-                                                            ),
-                                                          ),
-
-                                                          const SizedBox(
-                                                            height: 18,
-                                                          ),
-
-                                                          //
-
-                                                          TagButton(
-                                                            width:
-                                                                MediaQuery.of(
-                                                                      context,
-                                                                    )
-                                                                        .size
-                                                                        .width -
-                                                                    100,
-                                                            height: 55,
-                                                            onTap: () {
-                                                              //update company
-                                                              // Navigator.push(
-                                                              //     context,
-                                                              //     MaterialPageRoute(
-                                                              //         builder:
-                                                              //             (context) {
-                                                              //   return const UpdateStorePage();
-                                                              // }));
-                                                            },
-                                                            child: const Text(
-                                                              'Update for now',
-                                                              style: TextStyle(
-                                                                color: TagColors
-                                                                    .white,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                              ),
-                                                            ),
-                                                          ),
-
-                                                          const SizedBox(
-                                                            height: 8,
-                                                          ),
-
-                                                          //
-                                                          GestureDetector(
-                                                            onTap: () {
-                                                              context
-                                                                  .pushReplacementNamed(
-                                                                TagRoutes
-                                                                    .sellerLogin
-                                                                    .name,
-                                                              );
-                                                            },
-                                                            child: Container(
-                                                              width: MediaQuery
-                                                                      .of(
-                                                                    context,
-                                                                  ).size.width -
-                                                                  100,
-                                                              height: 55,
-                                                              alignment:
-                                                                  Alignment
-                                                                      .center,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: TagColors
-                                                                    .white,
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                  8,
-                                                                ),
-                                                              ),
-                                                              child: const Text(
-                                                                'Skip for now',
-                                                                style:
-                                                                    TextStyle(
-                                                                  color:
-                                                                      TagColors
-                                                                          .blue,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-
-                                                          //
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                  await context.pushNamed(
+                                    TagRoutes.successfulSignUp.name,
                                   );
-
                                   //
                                 } else if (response.errorMessage.isNotEmpty) {
                                   await showDialog(

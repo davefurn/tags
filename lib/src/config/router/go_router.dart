@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/features/authentication/seller/login/forgot_password.dart';
+import 'package:tags/src/features/authentication/seller/login/reset_password.dart';
 import 'package:tags/src/features/authentication/seller/login/view.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/create_company/create_company.dart';
+import 'package:tags/src/features/authentication/seller/sign_up/create_company/successful_sign_up.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/create_company/what2sell.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/otp.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/passW.dart';
@@ -15,6 +17,7 @@ import 'package:tags/src/features/onboarding/intros/intro_page_two.dart';
 import 'package:tags/src/features/onboarding/intros/intro_pagge_one.dart';
 import 'package:tags/src/features/onboarding/intros/seller.dart';
 import 'package:tags/src/features/onboarding/splash_screen/view.dart';
+import 'package:tags/src/features/seller/seller_profile/update_store.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -90,6 +93,13 @@ GoRouter router = GoRouter(
       ),
     ),
     GoRoute(
+      name: TagRoutes.resetPasswordPage.name,
+      path: TagRoutes.resetPasswordPage.path,
+      pageBuilder: (context, state) => const CupertinoPage(
+        child: ResetPasswordPage(),
+      ),
+    ),
+    GoRoute(
       name: TagRoutes.sellerSignUpTwo.name,
       path: TagRoutes.sellerSignUpTwo.path,
       pageBuilder: (context, state) => CupertinoPage(
@@ -127,6 +137,20 @@ GoRouter router = GoRouter(
           phoneNum: state.pathParameters['phoneNum'].toString(),
           shopCountry: state.pathParameters['shopCountry'].toString(),
         ),
+      ),
+    ),
+    GoRoute(
+      name: TagRoutes.successfulSignUp.name,
+      path: TagRoutes.successfulSignUp.path,
+      pageBuilder: (context, state) => const CupertinoPage(
+        child: SuccessfulSignUp(),
+      ),
+    ),
+    GoRoute(
+      name: TagRoutes.updateStore.name,
+      path: TagRoutes.updateStore.path,
+      pageBuilder: (context, state) => const CupertinoPage(
+        child: UpdateStorePage(),
       ),
     ),
     GoRoute(

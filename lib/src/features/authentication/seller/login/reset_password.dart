@@ -12,17 +12,19 @@ import 'package:tags/src/core/widget/tag_dialog.dart';
 import 'package:tags/src/core/widget/tag_loader.dart';
 import 'package:tags/src/features/onboarding/widgets/app_texts.dart';
 
-class ForgotPassPage extends StatefulHookConsumerWidget {
-  const ForgotPassPage({
+class ResetPasswordPage extends StatefulHookConsumerWidget {
+  const ResetPasswordPage({
     super.key,
   });
 
   @override
-  ConsumerState<ForgotPassPage> createState() => _ForgotPassPageState();
+  ConsumerState<ResetPasswordPage> createState() => _ResetPasswordPageState();
 }
 
-class _ForgotPassPageState extends ConsumerState<ForgotPassPage> {
-  final emailController = TextEditingController();
+class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
+  final keyController = TextEditingController();
+  final passwordController = TextEditingController();
+  bool _isObscure = true;
   final GlobalKey<FormState> _formKey = GlobalKey();
 
   @override
@@ -86,16 +88,46 @@ class _ForgotPassPageState extends ConsumerState<ForgotPassPage> {
 
                       //
                       TagCustomField(
+                        textCapitalization: TextCapitalization.words,
+                        obscureText: _isObscure,
+                        keyboardType: TextInputType.text,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: (value) =>
+                            FieldValidaor.validateField(value!),
+                        // PasswordValidator.validatePassword(value!),
+                        controller: passwordController,
+                        title: 'New Password',
+                        hintText: 'Type your new password',
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _isObscure = !_isObscure;
+                            });
+                          },
+                          icon: Icon(
+                            _isObscure
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                            color: _isObscure
+                                ? TagColors.oldGrey
+                                : Colors.black.withOpacity(0.55),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      TagCustomField(
                         textCapitalization: TextCapitalization.none,
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         keyboardType: TextInputType.text,
                         validator: (value) =>
                             FieldValidaor.validateEmptyfield(value!),
-                        controller: emailController,
-                        title: 'Email Address or Phone number',
-                        hintText: 'Type your email address or phone number',
+                        controller: keyController,
+                        title: 'key',
+                        hintText: 'Paste the unique key',
                       ),
-
                       const SizedBox(
                         height: 40,
                       ),
@@ -124,14 +156,15 @@ class _ForgotPassPageState extends ConsumerState<ForgotPassPage> {
                           height: 55,
                           onTap: () async {
                             if (_formKey.currentState!.validate()) {
-                              final email = emailController.text;
+                              final key = keyController.text;
                               // final last_name = confamController.text;
                               // final String phonie =
                               //     completePhoneNumber!.substring(1).toString();
 
-                              final response = await model.resetPass(
+                              final response = await model.confirmResetPass(
                                 formData: {
-                                  'email': email,
+                                  'new_password': passwordController.text,
+                                  'key': key,
                                 },
                               );
 
@@ -152,9 +185,9 @@ class _ForgotPassPageState extends ConsumerState<ForgotPassPage> {
                                     textColor: Colors.white,
                                     buttonText: 'Continue',
                                     onTap: () async {
-                                      context.goNamed(
-                                        TagRoutes.resetPasswordPage.name,
-                                      );
+                                      context
+                                        ..pop()
+                                        ..goNamed(TagRoutes.sellerLogin.name);
                                     },
                                   ),
                                 );

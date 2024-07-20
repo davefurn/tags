@@ -35,7 +35,7 @@ class RegisterViewmodel extends StateNotifier<RegisterState> {
             path: 'api/auth/registration/',
           );
       var body = response.data;
-
+      log(body.toString());
       if (response.statusCode == 200 || response.statusCode == 201) {
         var token = body['data']['access']; // Extract the id from the response
         log('token $token');
@@ -429,14 +429,15 @@ class RegisterViewmodel extends StateNotifier<RegisterState> {
     state = state.copyWith(
       loadStatus: Loader.loading,
     );
-    // formData.addAll({"bank_id": bankId});
+
     try {
       final response = await _reader.read(serviceProvider).post(
             formData: formData,
-            path: 'auth/forgot-password',
+            path: 'api/auth/password/reset/',
           );
       var body = response.data;
-      if (response.statusCode == 200 && response.data['success'] == true) {
+      log(response.data.toString());
+      if (response.statusCode == 200 && response.data['status'] == 'success') {
         state = state.copyWith(
           loadStatus: Loader.loaded,
         );
@@ -455,6 +456,57 @@ class RegisterViewmodel extends StateNotifier<RegisterState> {
       state = state.copyWith(
         loadStatus: Loader.error,
       );
+      log(e.toString());
+      if (e.response != null && e.response!.data['message'] is String) {
+        return ApiResponse(
+          errorMessage: e.response!.data['message'] as String,
+        );
+      }
+      return ApiResponse(
+        errorMessage: e.response!.data['message'] as String,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        loadStatus: Loader.error,
+      );
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse> confirmResetPass({
+    required Map<String, dynamic> formData,
+  }) async {
+    state = state.copyWith(
+      loadStatus: Loader.loading,
+    );
+
+    try {
+      final response = await _reader.read(serviceProvider).post(
+            formData: formData,
+            path: 'api/auth/password/reset/confirm/',
+          );
+      var body = response.data;
+      log(response.data.toString());
+      if (response.statusCode == 200 && response.data['status'] == 'success') {
+        state = state.copyWith(
+          loadStatus: Loader.loaded,
+        );
+        return ApiResponse(
+          successMessage: body['message'],
+        );
+      } else {
+        state = state.copyWith(
+          loadStatus: Loader.error,
+        );
+        return ApiResponse(
+          errorMessage: body['message'],
+        );
+      }
+    } on DioError catch (e) {
+      state = state.copyWith(
+        loadStatus: Loader.error,
+      );
+      log(e.toString());
       if (e.response != null && e.response!.data['message'] is String) {
         return ApiResponse(
           errorMessage: e.response!.data['message'] as String,

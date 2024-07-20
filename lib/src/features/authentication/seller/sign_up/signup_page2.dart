@@ -64,7 +64,7 @@ class _SellSign2PageState extends ConsumerState<SellSign2Page> {
         ),
         body: Padding(
           padding: const EdgeInsets.all(20),
-          child: Column(
+          child: ListView(
             children: [
               Container(
                 padding: const EdgeInsets.all(20),

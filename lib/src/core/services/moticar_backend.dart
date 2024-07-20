@@ -13,7 +13,7 @@ import 'package:tags/src/data/localdatabase.dart';
 // import '../utils/constants.dart';
 
 // //up endpoint
-String baseUrl = 'http://16.171.31.199/';
+String baseUrl = 'https://api.tagsmarketplace.com/';
 // Constant.baseUrl;
 
 class AgencyBackEnd implements AgencyNetwork {

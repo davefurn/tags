@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -58,10 +59,10 @@ class _SellOtpPageState extends ConsumerState<SellOtpPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(12),
-        child: Column(
+        child: ListView(
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(24),
@@ -143,8 +144,8 @@ class _SellOtpPageState extends ConsumerState<SellOtpPage> {
                       inactiveColor: const Color(0xffABABAB),
                       activeColor: TagColors.appThemeColor,
                       selectedColor: TagColors.appThemeColor,
-                      fieldHeight: 50,
-                      fieldWidth: 50,
+                      fieldHeight: 72.h,
+                      fieldWidth: 69.w,
                       borderWidth: 0.4,
                       inactiveBorderWidth: 0.4,
                       activeBorderWidth: 0.4,
@@ -169,29 +170,8 @@ class _SellOtpPageState extends ConsumerState<SellOtpPage> {
                       );
 
                       if (response.successMessage.isNotEmpty) {
-                        await showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (context) => TagDialog(
-                            icon: const Icon(
-                              Icons.check_circle,
-                              color: TagColors.appThemeColor,
-                              size: 50,
-                            ),
-                            subtitle: response.successMessage,
-                            buttonColor: TagColors.appThemeColor,
-                            textColor: Colors.white,
-                            buttonText: 'Continue',
-                            onTap: () async {
-                              // await HiveStorage.put(
-                              //     HiveKeys.token, newToken);
-                              context.pushReplacementNamed(
-                                TagRoutes.createStore.name,
-                              );
-
-                              //to create company
-                            },
-                          ),
+                        context.pushReplacementNamed(
+                          TagRoutes.createStore.name,
                         );
                       } else if (response.errorMessage.isNotEmpty) {
                         await showDialog(
@@ -308,27 +288,8 @@ class _SellOtpPageState extends ConsumerState<SellOtpPage> {
                           );
 
                           if (response.successMessage.isNotEmpty) {
-                            await showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (context) => TagDialog(
-                                icon: const Icon(
-                                  Icons.check_circle,
-                                  color: TagColors.appThemeColor,
-                                  size: 50,
-                                ),
-                                subtitle: response.successMessage,
-                                buttonColor: TagColors.appThemeColor,
-                                textColor: Colors.white,
-                                buttonText: 'Continue',
-                                onTap: () async {
-                                  // await HiveStorage.put(
-                                  //     HiveKeys.token, newToken);
-                                  context.pushReplacementNamed(
-                                    TagRoutes.createStore.name,
-                                  );
-                                },
-                              ),
+                            context.pushReplacementNamed(
+                              TagRoutes.createStore.name,
                             );
                           } else if (response.errorMessage.isNotEmpty) {
                             await showDialog(
