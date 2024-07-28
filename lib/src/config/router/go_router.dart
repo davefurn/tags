@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tags/src/config/router/constants.dart';
+import 'package:tags/src/config/router/scaffold_with_nav_bar.dart';
 import 'package:tags/src/features/authentication/seller/login/forgot_password.dart';
 import 'package:tags/src/features/authentication/seller/login/reset_password.dart';
 import 'package:tags/src/features/authentication/seller/login/view.dart';
@@ -12,14 +13,26 @@ import 'package:tags/src/features/authentication/seller/sign_up/otp.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/passW.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/signup_page.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/signup_page2.dart';
+import 'package:tags/src/features/categories/view.dart';
+import 'package:tags/src/features/home/view.dart';
+import 'package:tags/src/features/me/view.dart';
 import 'package:tags/src/features/onboarding/intros/buyer.dart';
 import 'package:tags/src/features/onboarding/intros/intro_page_two.dart';
 import 'package:tags/src/features/onboarding/intros/intro_pagge_one.dart';
 import 'package:tags/src/features/onboarding/intros/seller.dart';
 import 'package:tags/src/features/onboarding/splash_screen/view.dart';
+import 'package:tags/src/features/search/view.dart';
+import 'package:tags/src/features/sell/view.dart';
 import 'package:tags/src/features/seller/seller_profile/update_store.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final _shellNavigatorHomeKey = GlobalKey<NavigatorState>(debugLabel: 'shellA');
+final _shellNavigatorSearchKey =
+    GlobalKey<NavigatorState>(debugLabel: 'shellB');
+final _shellNavigatorCategoriesKey =
+    GlobalKey<NavigatorState>(debugLabel: 'shellC');
+final _shellNavigatorSellKey = GlobalKey<NavigatorState>(debugLabel: 'shellE');
+final _shellNavigatorMeKey = GlobalKey<NavigatorState>(debugLabel: 'shellD');
 
 GoRouter router = GoRouter(
   debugLogDiagnostics: true,
@@ -36,6 +49,75 @@ GoRouter router = GoRouter(
   //   return null;
   // },
   routes: [
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) => ScaffoldWithNavBar(
+        navigationShell: navigationShell,
+      ),
+      branches: [
+        StatefulShellBranch(
+          navigatorKey: _shellNavigatorHomeKey,
+          routes: <RouteBase>[
+            GoRoute(
+              name: TagRoutes.home.name,
+              path: TagRoutes.home.path,
+              pageBuilder: (context, state) => MaterialPage(
+                key: state.pageKey,
+                child: const HomePage(),
+              ),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          navigatorKey: _shellNavigatorSearchKey,
+          routes: <RouteBase>[
+            GoRoute(
+              name: TagRoutes.search.name,
+              path: TagRoutes.search.path,
+              pageBuilder: (context, state) => MaterialPage(
+                key: state.pageKey,
+                child: const SearchPage(),
+              ),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          navigatorKey: _shellNavigatorCategoriesKey,
+          routes: <RouteBase>[
+            GoRoute(
+              name: TagRoutes.categories.name,
+              path: TagRoutes.categories.path,
+              pageBuilder: (context, state) => const CupertinoPage(
+                child: CategoryPage(),
+              ),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          navigatorKey: _shellNavigatorMeKey,
+          routes: <RouteBase>[
+            GoRoute(
+              name: TagRoutes.me.name,
+              path: TagRoutes.me.path,
+              pageBuilder: (context, state) => const NoTransitionPage(
+                child: MePage(),
+              ),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          navigatorKey: _shellNavigatorSellKey,
+          routes: <RouteBase>[
+            GoRoute(
+              name: TagRoutes.sell.name,
+              path: TagRoutes.sell.path,
+              pageBuilder: (context, state) => const NoTransitionPage(
+                child: SellPage(),
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
     GoRoute(
       name: TagRoutes.splashScreen.name,
       path: TagRoutes.splashScreen.path,

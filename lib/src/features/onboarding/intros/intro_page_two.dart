@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/resources/resources.dart';
+import 'package:tags/src/data/hivekeys.dart';
+import 'package:tags/src/data/localdatabase.dart';
 import 'package:tags/src/features/onboarding/widgets/app_texts.dart';
 import 'package:tags/src/features/onboarding/widgets/page_indicator.dart';
 
@@ -92,6 +94,8 @@ class _IntroPageTwoState extends State<IntroPageTwo> {
                       borderColor: TagColors.appThemeColor,
                       myColor: Colors.white,
                       onTap: () {
+                        HiveStorage.put(HiveKeys.seller, 'Seller');
+                        HiveStorage.put(HiveKeys.buyer, '');
                         context.pushNamed(TagRoutes.sellerPage.name);
                       },
                       child: TagText(
@@ -106,6 +110,8 @@ class _IntroPageTwoState extends State<IntroPageTwo> {
                       myColor: TagColors.appThemeColor,
                       borderColor: Colors.transparent,
                       onTap: () {
+                        HiveStorage.put(HiveKeys.buyer, 'Buyer');
+                        HiveStorage.put(HiveKeys.seller, '');
                         context.pushNamed(TagRoutes.decideScreen.name);
                       },
                       child: TagText(

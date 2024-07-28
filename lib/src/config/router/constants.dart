@@ -19,7 +19,7 @@ enum TagRoutes {
     name: 'sellerLogin',
     path: '/sellerLogin',
   ),
-   updateStore(
+  updateStore(
     name: 'updateStore',
     path: '/updateStore',
   ),
@@ -51,17 +51,37 @@ enum TagRoutes {
     name: 'sellOtpPage',
     path: '/sellOtpPage/:email',
   ),
-successfulSignUp(
+  successfulSignUp(
     name: 'successfulSignUp',
     path: '/successfulSignUp',
   ),
-resetPasswordPage(
+  resetPasswordPage(
     name: 'resetPasswordPage',
     path: '/resetPasswordPage',
   ),
   decideScreen(
     name: 'decideScreen',
     path: '/decideScreen',
+  ),
+  categories(
+    name: 'categories',
+    path: '/categories',
+  ),
+  home(
+    name: 'home',
+    path: '/home',
+  ),
+  sell(
+    name: 'sell',
+    path: '/sell',
+  ),
+  search(
+    name: 'search',
+    path: '/search',
+  ),
+  me(
+    name: 'me',
+    path: '/me',
   );
 
   const TagRoutes({
