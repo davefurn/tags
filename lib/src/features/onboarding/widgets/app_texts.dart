@@ -115,7 +115,7 @@ class TagLoginButton extends StatelessWidget {
   final Color? borderColor;
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
+  Widget build(BuildContext context) => InkWell(
         onTap: onTap,
         child: Container(
           height: 57.h,

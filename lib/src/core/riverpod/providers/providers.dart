@@ -31,3 +31,6 @@ final profileProvider = StateNotifierProvider<ProfileViewModel, ProfileState>(
 );
 
 final isDarkModeEnabledProvider = StateProvider((ref) => false);
+
+final currentScreenIndexProvider =
+    StateProvider<int>((ref) => 0);// initial index for buyer screens

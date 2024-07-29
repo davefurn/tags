@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/resources/resources.dart';
 import 'package:tags/src/features/onboarding/widgets/app_texts.dart';
@@ -90,7 +92,9 @@ class _BuyerPageState extends State<BuyerPage> {
                   TagLoginButton(
                     myColor: TagColors.white,
                     borderColor: Colors.transparent,
-                    onTap: () {},
+                    onTap: () {
+                      context.goNamed(TagRoutes.home.name);
+                    },
                     child: TagText(
                       fontColor: const Color(0xff303030),
                       text: 'Start Shopping',

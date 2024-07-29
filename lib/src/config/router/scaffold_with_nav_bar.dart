@@ -43,7 +43,7 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
           child: Builder(
             builder: (context) {
               double height = 93.h;
-              double circleHeight = 64;
+              double circleHeight = 64.h;
               double heightFactor =
                   (((height - (circleHeight / 2)) * 100) / height) / 100;
 
@@ -73,10 +73,9 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
                                 Assets.search,
                                 'Search',
                               ),
-                              SizedBox(width: 30.w),
-                              if (seller == 'Seller')
+                              if (seller == 'Seller' && buyer == '')
                                 _buildNavItem(context, 2, Assets.sell, 'Sell')
-                              else if (seller == 'Buyer')
+                              else if (buyer == 'Buyer' && seller == '')
                                 _buildNavItem(
                                   context,
                                   2,
@@ -112,13 +111,19 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SvgPicture.asset(asset, color: color),
+          SvgPicture.asset(
+            asset,
+            color: color,
+            width: 17.w,
+            height: 17.h,
+          ),
+          4.verticalSpace,
           Text(
             label,
             style: TextStyle(
-              fontSize: 12.sp,
+              fontSize: 10.sp,
               color: color,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w400,
             ),
           ),
         ],
