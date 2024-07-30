@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/resources/resources.dart';
@@ -30,13 +31,13 @@ class _TagBarState extends State<TagBar> {
   Widget build(BuildContext context) => AppBar(
         title: Text(
           widget.title,
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Montserrat',
-            fontSize: 15,
+            fontSize: 18.sp,
             letterSpacing: 1,
             color: TagColors.textColor,
             // const Color(0xff344054),
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w600,
           ),
         ),
         elevation: 0,
@@ -45,25 +46,7 @@ class _TagBarState extends State<TagBar> {
         actions: widget.actions,
         leading: widget.isHome ==
                 false // condition to allow us to resuse this TagBar in the Home Screen
-            ? IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Container(
-                  height: 40,
-                  width: 40,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: TagColors.appThemeColor,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: TagColors.appThemeColor),
-                  ),
-                  child: const Icon(
-                    Icons.arrow_back,
-                    color: Colors.white,
-                  ),
-                ),
-              )
+            ? const SizedBox.shrink()
             : Padding(
                 padding: const EdgeInsets.only(left: 16),
                 child: Image.asset(
