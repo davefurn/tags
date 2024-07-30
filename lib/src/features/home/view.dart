@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tags/src/config/utils/enums.dart';
@@ -7,6 +8,7 @@ import 'package:tags/src/core/resources/resources.dart';
 import 'package:tags/src/core/riverpod/providers/providers.dart';
 import 'package:tags/src/core/widget/tag_appbar.dart';
 import 'package:tags/src/features/home/widgets/view_products.dart';
+import 'package:tags/src/features/search/view.dart';
 
 class HomePage extends StatefulHookConsumerWidget {
   const HomePage({super.key});
@@ -34,23 +36,20 @@ class _HomePageState extends ConsumerState<HomePage> {
         isHome: true,
         title: ' ',
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.favorite_outline_rounded,
-                color: Color(0xff5E5E5E)),
+          const InkWell(
+            child: Icon(
+              Icons.favorite_outline_rounded,
+              color: Color(0xff5E5E5E),
+            ),
           ),
-          IconButton(
-            onPressed: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => const CheckoutScreen(),
-              //   ),
-              // );
-            },
-            icon: const Icon(Icons.shopping_bag_outlined,
-                color: Color(0xff474747)),
-          )
+          4.horizontalSpace,
+          Padding(
+            padding: EdgeInsets.only(right: 16.w),
+            child: const Icon(
+              Icons.shopping_bag_outlined,
+              color: Color(0xff474747),
+            ),
+          ),
         ],
       ),
       body: Padding(
@@ -58,44 +57,17 @@ class _HomePageState extends ConsumerState<HomePage> {
         child: ListView(
           physics: const BouncingScrollPhysics(),
           children: [
-            GestureDetector(
-              onTap: () {
-                ref.read(currentScreenIndexProvider.notifier).state = 1;
-              },
-              child: Container(
-                height: 50,
-                width: MediaQuery.sizeOf(context).width - 100,
-                decoration: ShapeDecoration(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(22),
-                    side: const BorderSide(color: TagColors.greyColor),
-                  ),
-                ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Icon(Icons.search, color: TagColors.greyColor),
-                    Text(
-                      'Search for categories, product or brand',
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    Icon(Icons.mic, color: TagColors.greyColor, size: 15),
-                    Icon(Icons.image_outlined,
-                        color: TagColors.greyColor, size: 15),
-                  ],
-                ),
-              ),
-            ),
+            const CustomTextInput(),
             const SizedBox(height: 30),
             Image.asset(AssetsImages.blackFridaySales),
             const SizedBox(height: 15),
-            const Text(
+            Text(
               'Explore Popular Categories',
               style: TextStyle(
                 fontFamily: 'montserrat',
                 fontWeight: FontWeight.w600,
                 color: TagColors.black,
-                fontSize: 16,
+                fontSize: 14.sp,
               ),
             ),
             const SizedBox(height: 15),
@@ -161,13 +133,13 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ),
               ),
             const SizedBox(height: 15),
-            const Text(
+            Text(
               'Best Selling',
               style: TextStyle(
                 fontFamily: 'montserrat',
                 fontWeight: FontWeight.w600,
                 color: TagColors.black,
-                fontSize: 16,
+                fontSize: 14.sp,
               ),
             ),
             const SizedBox(height: 15),
@@ -258,12 +230,13 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ),
               ),
             const SizedBox(height: 20),
-            const Text(
+            Text(
               'Deals of the Day',
               style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: TagColors.black),
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+                color: TagColors.black,
+              ),
             ),
             const SizedBox(height: 15),
             if (state.loading != Loader.loading && state.todayDealz.isNotEmpty)
@@ -329,7 +302,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                               color: TagColors.greyColor,
                               fontSize: 14,
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),

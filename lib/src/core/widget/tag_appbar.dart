@@ -44,14 +44,15 @@ class _TagBarState extends State<TagBar> {
         centerTitle: true,
         automaticallyImplyLeading: false,
         actions: widget.actions,
+
         leading: widget.isHome ==
                 false // condition to allow us to resuse this TagBar in the Home Screen
             ? const SizedBox.shrink()
             : Padding(
-                padding: const EdgeInsets.only(left: 16),
+                padding: EdgeInsets.only(left: 16.w, right: 10.w),
                 child: Image.asset(
                   AssetsImages.tagLogo,
-                  height: 20,
+                  fit: BoxFit.contain,
                 ),
               ), // tags logo for home screen,
         // foregroundColor: Colors.white,
