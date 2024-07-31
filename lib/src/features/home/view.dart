@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:tags/src/config/utils/enums.dart';
 import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/resources/resources.dart';
@@ -156,6 +159,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ),
                 itemBuilder: (context, index) {
                   final bestSeller = state.bestSelling[index];
+
+                  final format = NumberFormat('#,##0', 'en_US');
+                  String price = format.format(bestSeller.price);
+
+                  log(bestSeller.price.toString());
                   return GestureDetector(
                     onTap: () {
                       Navigator.push(
@@ -164,7 +172,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                           builder: (context) => ViewProducts(
                             productImage: bestSeller.image,
                             productTitle: bestSeller.product,
-                            productPrice: bestSeller.priceString,
+                            productPrice: bestSeller.price.toString(),
                             productBrand: bestSeller.slug,
                             slug: bestSeller.slug,
                           ),
@@ -193,18 +201,18 @@ class _HomePageState extends ConsumerState<HomePage> {
                           const SizedBox(height: 2),
                           Text(
                             bestSeller.product,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontWeight: FontWeight.w400,
-                              color: TagColors.greyColor,
-                              fontSize: 12,
+                              color: const Color(0xff474747),
+                              fontSize: 12.sp,
                             ),
                           ),
                           Text(
-                            bestSeller.priceString.toString(),
-                            style: const TextStyle(
+                            '${bestSeller.currency} $price',
+                            style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              color: TagColors.greyColor,
-                              fontSize: 14,
+                              color: const Color(0xff0B1B34),
+                              fontSize: 14.sp,
                             ),
                           ),
                         ],
@@ -260,7 +268,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                           builder: (context) => ViewProducts(
                             productImage: dealOfDay.image,
                             productTitle: dealOfDay.product,
-                            productPrice: dealOfDay.priceString,
+                            productPrice: dealOfDay.formattedDiscountedPrice,
                             productBrand: dealOfDay.slug,
                             slug: dealOfDay.slug,
                           ),
@@ -289,18 +297,26 @@ class _HomePageState extends ConsumerState<HomePage> {
                           const SizedBox(height: 2),
                           Text(
                             dealOfDay.product,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontWeight: FontWeight.w400,
-                              color: TagColors.greyColor,
-                              fontSize: 12,
+                              color: const Color(0xff474747),
+                              fontSize: 12.sp,
                             ),
                           ),
                           Text(
-                            dealOfDay.priceString.toString(),
-                            style: const TextStyle(
+                            '${dealOfDay.currency} ${dealOfDay.formattedPrice}',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14.sp,
+                                color: const Color(0xff0B1B34),
+                                decoration: TextDecoration.lineThrough),
+                          ),
+                          Text(
+                            '${dealOfDay.currency} ${dealOfDay.formattedDiscountedPrice}',
+                            style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              color: TagColors.greyColor,
-                              fontSize: 14,
+                              fontSize: 14.sp,
+                              color: const Color(0xff0B1B34),
                             ),
                           ),
                         ],

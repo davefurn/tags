@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_dynamic_calls
 
+import 'package:intl/intl.dart';
+
 class ResultModel {
   ResultModel({
     required this.name,
@@ -43,51 +45,57 @@ class PopularCategoriz {
       };
 }
 
-class TodayModel {
-  TodayModel({
+class TodayDeal {
+  TodayDeal({
     required this.product,
     required this.slug,
     required this.price,
     required this.currency,
-    required this.priceString,
     required this.discount,
     required this.discountedPrice,
-    required this.discountedPriceString,
     required this.image,
+    required this.tagOne,
   });
-  factory TodayModel.fromJson(Map<String, dynamic> json) => TodayModel(
-        product: json['product'] ?? '',
-        slug: json['slug'] ?? '',
-        price: json['price'].toDouble(),
-        currency: json['currency'] ?? '',
-        priceString: json['price_string'] ?? '',
-        discount: json['discount'].toDouble(),
-        discountedPrice: json['discounted_price'].toDouble(),
-        discountedPriceString: json['discounted_price_string'] ?? '',
-        image: json['image'] ?? '',
-      );
 
-  final String product;
-  final String slug;
-  final double price;
-  final String currency;
-  final String priceString;
-  final double discount;
-  final double discountedPrice;
-  final String discountedPriceString;
-  final String image;
+  factory TodayDeal.fromJson(Map<String, dynamic> json) => TodayDeal(
+        product: json['product'],
+        slug: json['slug'],
+        price: json['price'],
+        currency: json['currency'],
+        discount: json['discount'],
+        discountedPrice: json['discounted_price'],
+        image: json['image'],
+        tagOne: json['tag_one'],
+      );
+  String product;
+  String slug;
+  double price;
+  String currency;
+  double discount;
+  double discountedPrice;
+  String image;
+  bool tagOne;
 
   Map<String, dynamic> toJson() => {
         'product': product,
         'slug': slug,
         'price': price,
         'currency': currency,
-        'price_string': priceString,
         'discount': discount,
         'discounted_price': discountedPrice,
-        'discounted_price_string': discountedPriceString,
         'image': image,
+        'tag_one': tagOne,
       };
+
+  String get formattedPrice {
+    final format = NumberFormat('#,##0.00', 'en_US');
+    return format.format(price);
+  }
+
+  String get formattedDiscountedPrice {
+    final format = NumberFormat('#,##0.00', 'en_US');
+    return format.format(discountedPrice);
+  }
 }
 
 class BestSellingModel {
@@ -96,33 +104,32 @@ class BestSellingModel {
     required this.slug,
     required this.price,
     required this.currency,
-    required this.priceString,
     required this.image,
+    required this.tagOne,
   });
   factory BestSellingModel.fromJson(Map<String, dynamic> json) =>
       BestSellingModel(
-        product: json['product'] ?? '',
-        slug: json['slug'] ?? '',
-        price: json['price'].toDouble(),
-        currency: json['currency'] ?? '',
-        priceString: json['price_string'] ?? '',
-        image: json['image'] ?? '',
+        product: json['product'],
+        slug: json['slug'],
+        price: json['price'],
+        currency: json['currency'],
+        image: json['image'],
+        tagOne: json['tag_one'],
       );
-
-  final String product;
-  final String slug;
-  final double price;
-  final String currency;
-  final String priceString;
-  final String image;
+  String product;
+  String slug;
+  double price;
+  String currency;
+  String image;
+  bool tagOne;
 
   Map<String, dynamic> toJson() => {
         'product': product,
         'slug': slug,
         'price': price,
         'currency': currency,
-        'price_string': priceString,
         'image': image,
+        'tag_one': tagOne,
       };
 }
 

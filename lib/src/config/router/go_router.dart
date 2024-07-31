@@ -87,7 +87,7 @@ GoRouter router = GoRouter(
               name: TagRoutes.categories.name,
               path: TagRoutes.categories.path,
               pageBuilder: (context, state) => const CupertinoPage(
-                child: CategoryPage(),
+                child: CategoryScreen(),
               ),
             ),
           ],

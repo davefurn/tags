@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use, avoid_print, non_constant_identifier_names, unnecessary_lambdas, avoid_dynamic_calls, avoid_catches_without_on_clauses
 
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 
@@ -192,7 +193,7 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
 
     try {
       final response = await _reader.read(serviceProvider).get(
-            path: 'api/home',
+            path: 'api/home/',
           );
       if (response.statusCode == 200) {
         final Map<String, dynamic> body = response.data;
@@ -209,10 +210,10 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
             (body['data']['best_selling'] as List)
                 .map((e) => BestSellingModel.fromJson(e))
                 .toList();
-
+        log(allbestSelling[0].price.toString());
         //today deals
-        List<TodayModel> todayDeals = (body['data']['today_deals'] as List)
-            .map((e) => TodayModel.fromJson(e))
+        List<TodayDeal> todayDeals = (body['data']['today_deals'] as List)
+            .map((e) => TodayDeal.fromJson(e))
             .toList();
 
         //categories
@@ -841,33 +842,14 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
 }
 
 class ProfileState {
-  final Loader loading;
-  // final UserProfile userProfile;
-  // final UserProfile user;
-  // final DataBalance dataBalance;
-  final bool hasEnabledBiometricLogin;
-  // final GetProfileModel getProfile;
-  final List<ResultModel> categories;
-  // final List<CompanyModel> companies;
-  final List<String>? companies;
-  final List<PopularCategoriz> popularCat;
-  final List<BestSellingModel> bestSelling;
-  final List<TodayModel> todayDealz;
-  final List<Product> productz;
-  final List<AllCategoriesModel> allNewCatz;
-  String? company_name,
-      company_email,
-      company_phone,
-      company_logo,
-      company_cover,
-      company_currency,
-      company_deliveryPlan;
   // final List<NewAccount> account2;
   // final List<ProductTypeModel> productList;
   // OtpResponseModel? otpResponse;
   // final BankFlexUser? bankFlexUser;
 
   ProfileState({
+    // required this.getProfile,
+    required this.hasEnabledBiometricLogin,
     this.loading = Loader.idle,
     // required this.userProfile,
     this.company_name,
@@ -885,13 +867,31 @@ class ProfileState {
     this.todayDealz = const [],
     this.allNewCatz = const [],
 
-    // required this.getProfile,
-    required this.hasEnabledBiometricLogin,
-
     // required this.user,
     // this.otpResponse,
     // this.bankFlexUser,
   });
+  final Loader loading;
+  // final UserProfile userProfile;
+  // final UserProfile user;
+  // final DataBalance dataBalance;
+  final bool hasEnabledBiometricLogin;
+  // final GetProfileModel getProfile;
+  final List<ResultModel> categories;
+  // final List<CompanyModel> companies;
+  final List<String>? companies;
+  final List<PopularCategoriz> popularCat;
+  final List<BestSellingModel> bestSelling;
+  final List<TodayDeal> todayDealz;
+  final List<Product> productz;
+  final List<AllCategoriesModel> allNewCatz;
+  String? company_name;
+  String? company_email;
+  String? company_phone;
+  String? company_logo;
+  String? company_cover;
+  String? company_currency;
+  String? company_deliveryPlan;
 
   ProfileState copyWith({
     Loader? loading,
@@ -900,7 +900,7 @@ class ProfileState {
     List<String>? companies,
     final List<PopularCategoriz>? popularCat,
     final List<BestSellingModel>? bestSelling,
-    final List<TodayModel>? todayDealz,
+    final List<TodayDeal>? todayDealz,
     final List<AllCategoriesModel>? allNewCatz,
     final List<Product>? productz,
     // UserProfile? userProfile,
@@ -916,33 +916,32 @@ class ProfileState {
     company_deliveryPlan,
     // UserProfile? user,
     // OtpResponseModel? otpResponse,
-  }) {
-    return ProfileState(
-      productz: productz ?? this.productz,
-      company_name: company_name ?? this.company_name,
+  }) =>
+      ProfileState(
+        productz: productz ?? this.productz,
+        company_name: company_name ?? this.company_name,
 
-      company_email: company_email ?? this.company_email,
+        company_email: company_email ?? this.company_email,
 
-      company_phone: company_phone ?? this.company_phone,
-      company_logo: company_logo ?? this.company_logo,
-      company_cover: company_cover ?? this.company_cover,
-      company_currency: company_currency ?? this.company_currency,
-      company_deliveryPlan: company_deliveryPlan ?? this.company_deliveryPlan,
-      companies: companies ?? this.companies,
-      categories: categories ?? this.categories,
-      popularCat: popularCat ?? this.popularCat,
-      bestSelling: bestSelling ?? this.bestSelling,
-      todayDealz: todayDealz ?? this.todayDealz,
+        company_phone: company_phone ?? this.company_phone,
+        company_logo: company_logo ?? this.company_logo,
+        company_cover: company_cover ?? this.company_cover,
+        company_currency: company_currency ?? this.company_currency,
+        company_deliveryPlan: company_deliveryPlan ?? this.company_deliveryPlan,
+        companies: companies ?? this.companies,
+        categories: categories ?? this.categories,
+        popularCat: popularCat ?? this.popularCat,
+        bestSelling: bestSelling ?? this.bestSelling,
+        todayDealz: todayDealz ?? this.todayDealz,
 
-      allNewCatz: allNewCatz ?? this.allNewCatz,
-      // getProfile: getProfile ?? this.getProfile,
-      // dataBalance: dataBalance ?? this.dataBalance,
-      loading: loading ?? this.loading,
-      // userProfile: userProfile ?? this.userProfile,
-      hasEnabledBiometricLogin:
-          hasEnabledBiometricLogin ?? this.hasEnabledBiometricLogin,
-      // user: user ?? this.user,
-      // otpResponse: otpResponse ?? this.otpResponse,
-    );
-  }
+        allNewCatz: allNewCatz ?? this.allNewCatz,
+        // getProfile: getProfile ?? this.getProfile,
+        // dataBalance: dataBalance ?? this.dataBalance,
+        loading: loading ?? this.loading,
+        // userProfile: userProfile ?? this.userProfile,
+        hasEnabledBiometricLogin:
+            hasEnabledBiometricLogin ?? this.hasEnabledBiometricLogin,
+        // user: user ?? this.user,
+        // otpResponse: otpResponse ?? this.otpResponse,
+      );
 }
