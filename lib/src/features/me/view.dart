@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tags/src/core/resources/resources.dart';
 import 'package:tags/src/core/widget/tag_appbar.dart';
+import 'package:tags/src/data/hivekeys.dart';
+import 'package:tags/src/data/localdatabase.dart';
 import 'package:tags/src/features/home/models/home_models.dart';
 
 class MePage extends StatefulWidget {
@@ -12,13 +15,28 @@ class MePage extends StatefulWidget {
 }
 
 class _MePageState extends State<MePage> {
+  String? email;
+  String? name;
+  String? buyer;
+  String? seller;
+  @override
+  void initState() {
+    setState(() {
+      email = HiveStorage.get(HiveKeys.userEmail);
+      name = HiveStorage.get(HiveKeys.name);
+      buyer = HiveStorage.get(HiveKeys.buyer);
+      seller = HiveStorage.get(HiveKeys.seller);
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     List<ProfileModel> myProfile = [
       ProfileModel(
         action: () {},
         image: Assets.ads,
-        title: 'My Ads',
+        title: buyer == 'Buyer' ? 'Sell' : 'My Ads',
       ),
       //order
       ProfileModel(
@@ -28,18 +46,18 @@ class _MePageState extends State<MePage> {
       ),
 
       //id
-      ProfileModel(
-        action: () {},
-        image: Assets.uploadId,
-        title: 'Upload ID',
-      ),
-
-      //drafts
-      ProfileModel(
-        action: () {},
-        image: Assets.drafts,
-        title: 'Drafts',
-      ),
+      if (seller == 'Seller')
+        ProfileModel(
+          action: () {},
+          image: Assets.uploadId,
+          title: 'Upload ID',
+        ),
+      if (seller == 'Seller')
+        ProfileModel(
+          action: () {},
+          image: Assets.drafts,
+          title: 'Drafts',
+        ),
 
       //wishlist
       ProfileModel(
@@ -112,26 +130,26 @@ class _MePageState extends State<MePage> {
                       const SizedBox(
                         width: 30,
                       ),
-                      const Column(
+                      Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Tags Market',
+                            name ?? 'Tags Market',
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontWeight: FontWeight.w600,
-                              color: Color(0xff000000),
-                              fontSize: 16,
+                              color: const Color(0xff000000),
+                              fontSize: 16.sp,
                             ),
                           ),
                           Text(
-                            'tagsmarket001@gmail.com',
+                            email ?? 'tagsmarket001@gmail.com',
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontWeight: FontWeight.w300,
-                              color: Color(0xff5E5E5E),
-                              fontSize: 13,
+                              color: const Color(0xff5E5E5E),
+                              fontSize: 13.sp,
                             ),
                           ),
                         ],

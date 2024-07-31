@@ -139,7 +139,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             Text(
               'Best Selling',
               style: TextStyle(
-                fontFamily: 'montserrat',
+                fontFamily: 'Montserrat',
                 fontWeight: FontWeight.w600,
                 color: TagColors.black,
                 fontSize: 14.sp,
@@ -306,10 +306,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                           Text(
                             '${dealOfDay.currency} ${dealOfDay.formattedPrice}',
                             style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14.sp,
-                                color: const Color(0xff0B1B34),
-                                decoration: TextDecoration.lineThrough),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14.sp,
+                              color: const Color(0xff0B1B34),
+                              decoration: TextDecoration.lineThrough,
+                            ),
                           ),
                           Text(
                             '${dealOfDay.currency} ${dealOfDay.formattedDiscountedPrice}',

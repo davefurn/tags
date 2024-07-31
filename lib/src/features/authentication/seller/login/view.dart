@@ -198,8 +198,6 @@ class _SellLoginPageState extends State<SellLoginPage> {
                                   ),
                                 ),
                               ),
-                          
-                          
                             ],
                           ),
                         ),
@@ -301,13 +299,7 @@ class _SellLoginPageState extends State<SellLoginPage> {
                                       _hasLoggedIn = true;
                                     });
 
-                                    // Navigator.pushReplacement(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) =>
-                                    //         const SellerBottomNavBar(),
-                                    //   ),
-                                    // );
+                                    context.goNamed(TagRoutes.home.name);
                                   } else if (response.errorMessage.isNotEmpty) {
                                     await showDialog(
                                       context: context,

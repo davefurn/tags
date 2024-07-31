@@ -1,27 +1,39 @@
 // ignore_for_file: type_annotate_public_apis
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tags/src/core/constant/colors.dart';
 
 class CategoryWidget {
-  static Widget listCard(context, image) => SizedBox(
+  static Widget listCard(context, image, name, price, discountedPrice) =>
+      SizedBox(
         height: 200,
         width: MediaQuery.sizeOf(context).width,
         child: Row(
           children: [
             Padding(
               padding: const EdgeInsets.all(10),
-              child: Image.asset(image),
+              child: Container(
+                height: 170.h,
+                width: 150.w,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(8.r)),
+                ),
+                child: Image.network(
+                  image,
+                  fit: BoxFit.fill,
+                ),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'AirPods Max',
+                  Text(
+                    name,
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       color: TagColors.black,
                       fontWeight: FontWeight.w600,
                     ),
@@ -30,22 +42,22 @@ class CategoryWidget {
                     height: 5,
                   ),
                   RichText(
-                    text: const TextSpan(
+                    text: TextSpan(
                       children: [
                         TextSpan(
-                          text: r'$707,600 ',
+                          text: discountedPrice,
                           style: TextStyle(
                             color: TagColors.black,
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         TextSpan(
-                          text: r'$65,960',
+                          text: price,
                           style: TextStyle(
                             decoration: TextDecoration.lineThrough,
                             color: TagColors.greyColor,
-                            fontSize: 10,
+                            fontSize: 10.sp,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -184,7 +196,8 @@ class CategoryWidget {
         content: Text(''),
       );
 
-  static Widget gridCard(context, image) => Container(
+  static Widget gridCard(context, image, name, price, discountedPrice) =>
+      Container(
         padding: const EdgeInsets.symmetric(horizontal: 5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,7 +205,7 @@ class CategoryWidget {
             SizedBox(
               height: 150,
               width: MediaQuery.sizeOf(context).width,
-              child: Image.asset(
+              child: Image.network(
                 image,
                 fit: BoxFit.fill,
               ),
@@ -202,10 +215,10 @@ class CategoryWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'AirPods Max',
+                  Text(
+                    name,
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       color: TagColors.black,
                       fontWeight: FontWeight.w600,
                     ),
@@ -214,22 +227,22 @@ class CategoryWidget {
                     height: 5,
                   ),
                   RichText(
-                    text: const TextSpan(
+                    text: TextSpan(
                       children: [
                         TextSpan(
-                          text: r'$707,600 ',
+                          text: discountedPrice,
                           style: TextStyle(
                             color: TagColors.black,
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         TextSpan(
-                          text: r'$65,960',
+                          text: price,
                           style: TextStyle(
                             decoration: TextDecoration.lineThrough,
                             color: TagColors.greyColor,
-                            fontSize: 10,
+                            fontSize: 10.sp,
                             fontWeight: FontWeight.w600,
                           ),
                         ),

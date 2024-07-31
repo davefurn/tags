@@ -15,6 +15,7 @@ import 'package:tags/src/features/authentication/seller/sign_up/signup_page.dart
 import 'package:tags/src/features/authentication/seller/sign_up/signup_page2.dart';
 import 'package:tags/src/features/categories/view.dart';
 import 'package:tags/src/features/home/view.dart';
+import 'package:tags/src/features/me/screens/settings.dart';
 import 'package:tags/src/features/me/view.dart';
 import 'package:tags/src/features/onboarding/intros/buyer.dart';
 import 'package:tags/src/features/onboarding/intros/intro_page_two.dart';
@@ -233,6 +234,13 @@ GoRouter router = GoRouter(
       path: TagRoutes.updateStore.path,
       pageBuilder: (context, state) => const CupertinoPage(
         child: UpdateStorePage(),
+      ),
+    ),
+    GoRoute(
+      name: TagRoutes.settings.name,
+      path: TagRoutes.settings.path,
+      pageBuilder: (context, state) => const CupertinoPage(
+        child: Settings(),
       ),
     ),
     GoRoute(

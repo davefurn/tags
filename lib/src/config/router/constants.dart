@@ -79,6 +79,10 @@ enum TagRoutes {
     name: 'search',
     path: '/search',
   ),
+  settings(
+    name: 'settings',
+    path: '/settings',
+  ),
   me(
     name: 'me',
     path: '/me',
