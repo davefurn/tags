@@ -43,11 +43,12 @@ class NewPageIndicator extends StatelessWidget {
 
 class TagTitleSub extends StatelessWidget {
   const TagTitleSub({
-    super.key,
     required this.title,
     required this.subz,
+    super.key,
   });
-  final String title, subz;
+  final String title;
+  final String subz;
 
   @override
   Widget build(BuildContext context) => Column(

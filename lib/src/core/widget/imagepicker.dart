@@ -37,9 +37,10 @@ class TagImagePicker {
   TagImagePicker(this._picker);
   final ImagePicker _picker;
 
-  Future<void> pickImage(
-      {required ImageSource source,
-      required ValueNotifier<XFile> imageList}) async {
+  Future<void> pickImage({
+    required ImageSource source,
+    required ValueNotifier<XFile> imageList,
+  }) async {
     if (Platform.isAndroid) {
       var status = await Permission.storage.status;
       if (!status.isGranted) {

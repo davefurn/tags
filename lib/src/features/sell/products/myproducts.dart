@@ -35,11 +35,11 @@ class MySellProductPage extends StatelessWidget {
                 height: 10,
               ),
               const TagText(
-                text: 'Use the \"Add Product\" button to add product',
+                text: 'Use the "Add Product" button to add product',
                 fontSize: 12,
                 fontWeight: FontWeight.w300,
                 fontColor: TagColors.newGrey,
-              )
+              ),
             ],
           ),
         ),

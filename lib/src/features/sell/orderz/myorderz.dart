@@ -11,7 +11,6 @@ class OrderzPage extends StatelessWidget {
           height: MediaQuery.sizeOf(context).height,
           width: MediaQuery.sizeOf(context).width,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Row(
@@ -24,8 +23,7 @@ class OrderzPage extends StatelessWidget {
                     // padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
-                      border:
-                          Border.all(width: 1, color: TagColors.appThemeColor),
+                      border: Border.all(color: TagColors.appThemeColor),
                       color: const Color(0xffF8FFF8),
                     ),
                     child: const Column(
@@ -65,8 +63,7 @@ class OrderzPage extends StatelessWidget {
                     // padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
-                      border:
-                          Border.all(width: 1, color: const Color(0xff3088EF)),
+                      border: Border.all(color: const Color(0xff3088EF)),
                       color: const Color(0xffF7F9FF),
                     ),
                     child: const Column(
@@ -96,7 +93,7 @@ class OrderzPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
               const SizedBox(
@@ -114,7 +111,6 @@ class OrderzPage extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        width: 1,
                         color: const Color(0xffFFA07F),
                       ),
                       color: const Color(0xffFFF6F1),
@@ -157,7 +153,6 @@ class OrderzPage extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        width: 1,
                         color: const Color(0xffFFF500),
                       ),
                       color: const Color(0xffFEFEF4),
@@ -189,7 +184,7 @@ class OrderzPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
               // const TagText(

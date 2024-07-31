@@ -48,13 +48,14 @@ class _SearchPageState extends State<SearchPage> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 155.h),
                   child: SizedBox(
-                      child: Center(
-                    child: Image.asset(
-                      AssetsImages.emptySearchHistory,
-                      height: MediaQuery.sizeOf(context).height * 0.25,
+                    child: Center(
+                      child: Image.asset(
+                        AssetsImages.emptySearchHistory,
+                        height: MediaQuery.sizeOf(context).height * 0.25,
+                      ),
                     ),
-                  )),
-                )
+                  ),
+                ),
               ],
             ),
           ),
@@ -68,61 +69,58 @@ class CustomTextInput extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 60.h,
-      child: TextField(
-        textAlignVertical: TextAlignVertical.bottom,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(vertical: 15.h),
-          hintMaxLines: 1,
-          focusedBorder: OutlineInputBorder(
-            borderSide:
-                const BorderSide(color: TagColors.appThemeColor),
-            borderRadius: BorderRadius.circular(25.r),
-          ),
-          hintStyle: TextStyle(
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w300,
-            color: const Color(0xffC6C6C6),
-            fontSize: 13.sp,
-          ),
-          prefixIcon: IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.search,
-              color: TagColors.greyColor,
+  Widget build(BuildContext context) => SizedBox(
+        height: 60.h,
+        child: TextField(
+          textAlignVertical: TextAlignVertical.bottom,
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 15.h),
+            hintMaxLines: 1,
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: TagColors.appThemeColor),
+              borderRadius: BorderRadius.circular(25.r),
             ),
-          ),
-          suffixIcon: Padding(
-            padding: EdgeInsets.only(right: 10.w),
-            child: SizedBox(
-              width: 50.w,
-              child: const Row(
-                children: [
-                  Icon(
-                    Icons.mic,
-                    color: TagColors.greyColor,
-                    size: 20,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Icon(
-                    Icons.image_outlined,
-                    color: TagColors.greyColor,
-                    size: 20,
-                  ),
-                ],
+            hintStyle: TextStyle(
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w300,
+              color: const Color(0xffC6C6C6),
+              fontSize: 13.sp,
+            ),
+            prefixIcon: IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.search,
+                color: TagColors.greyColor,
               ),
             ),
-          ),
-          hintText: 'Search for categories, product or brand',
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25.r),
+            suffixIcon: Padding(
+              padding: EdgeInsets.only(right: 10.w),
+              child: SizedBox(
+                width: 50.w,
+                child: const Row(
+                  children: [
+                    Icon(
+                      Icons.mic,
+                      color: TagColors.greyColor,
+                      size: 20,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Icon(
+                      Icons.image_outlined,
+                      color: TagColors.greyColor,
+                      size: 20,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            hintText: 'Search for categories, product or brand',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(25.r),
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 }

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tags/src/config/router/go_router.dart';
+import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/data/hivekeys.dart';
 
 void main() async {
@@ -35,6 +36,12 @@ class MyApp extends StatelessWidget {
           routerConfig: router,
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
+            primaryColor: TagColors.white,
+            brightness: Brightness.light,
+            fontFamily: 'Poppins',
+            scaffoldBackgroundColor: TagColors.white,
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),

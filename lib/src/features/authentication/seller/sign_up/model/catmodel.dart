@@ -146,7 +146,8 @@ class AllCategoriesModel {
         products: json['products'] == null
             ? []
             : List<Product>.from(
-                json['products']!.map((x) => Product.fromJson(x))),
+                json['products']!.map((x) => Product.fromJson(x)),
+              ),
       );
 
   final String name;

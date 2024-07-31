@@ -818,7 +818,7 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
   //   }
   // }
 
-  void enableBiometricLogin(bool value) async {
+  Future<void> enableBiometricLogin(bool value) async {
     state = state.copyWith(
       hasEnabledBiometricLogin: !state.hasEnabledBiometricLogin,
     );

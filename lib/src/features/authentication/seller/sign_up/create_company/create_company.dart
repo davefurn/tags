@@ -7,6 +7,8 @@ import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/config/utils/validator.dart';
 import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/widget/tag_dialog.dart';
+import 'package:tags/src/data/hivekeys.dart';
+import 'package:tags/src/data/localdatabase.dart';
 import 'package:tags/src/features/onboarding/widgets/app_texts.dart';
 
 class CreateStorePage extends StatefulHookConsumerWidget {
@@ -165,7 +167,7 @@ class _CreateStorePageState extends ConsumerState<CreateStorePage> {
                       // ),
 
                       const Padding(
-                        padding: EdgeInsets.only(top: 8.0, bottom: 8, left: 3),
+                        padding: EdgeInsets.only(top: 8, bottom: 8, left: 3),
                         child: TagText(
                           text: 'Phone number',
                           fontSize: 13,
@@ -286,7 +288,7 @@ class _CreateStorePageState extends ConsumerState<CreateStorePage> {
                         value: selectedCountry,
                         onChanged: (value) {
                           setState(() {
-                            selectedCountry = value!;
+                            selectedCountry = value;
                           });
                         },
                       ),
@@ -304,7 +306,7 @@ class _CreateStorePageState extends ConsumerState<CreateStorePage> {
                 //       ? const CircularProgressIndicator()
                 //       : const Text('Login'),
                 // ),
-                const SizedBox(height: 50.0),
+                const SizedBox(height: 50),
 
                 // if (otpController.text.isNotEmpty)
                 TagButton(
@@ -315,13 +317,32 @@ class _CreateStorePageState extends ConsumerState<CreateStorePage> {
                         businessAddress.text.isNotEmpty &&
                         phoneControl.text.isNotEmpty &&
                         selectedCountry.toString().isNotEmpty) {
-                      context.pushReplacementNamed(TagRoutes.whatToSell.name,
-                          pathParameters: {
-                            'shopCountry': selectedCountry.toString(),
-                            'phoneNum': completePhoneNumber.toString(),
-                            'busAddress': businessAddress.text,
-                            'busName': businessControl.text,
-                          });
+                      HiveStorage.put(
+                        HiveKeys.companyName,
+                        businessControl.text,
+                      );
+                      HiveStorage.put(
+                        HiveKeys.companyPhone,
+                        completePhoneNumber,
+                      );
+                      HiveStorage.put(
+                        HiveKeys.companyEmail,
+                        businessAddress.text,
+                      );
+                      HiveStorage.put(
+                        HiveKeys.companyCurrency,
+                        selectedCountry,
+                      );
+
+                      context.pushReplacementNamed(
+                        TagRoutes.whatToSell.name,
+                        pathParameters: {
+                          'shopCountry': selectedCountry.toString(),
+                          'phoneNum': completePhoneNumber.toString(),
+                          'busAddress': businessAddress.text,
+                          'busName': businessControl.text,
+                        },
+                      );
                     } else {
                       return showDialog(
                         context: context,

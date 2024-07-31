@@ -244,6 +244,7 @@ class _SelectCategoryState extends ConsumerState<SelectCategory> {
                                     'company_name': widget.busName,
                                     'company_phone': widget.phoneNum,
                                     'company_country': widget.shopCountry,
+
                                     'categories': selectedCategories
                                         .map((cat) => cat.slug)
                                         .toList(),

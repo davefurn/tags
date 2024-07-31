@@ -40,7 +40,7 @@ class ProfileModel {
   });
   String image;
   String title;
-  final void Function()? action;
+  void Function()? action;
 }
 
 enum Category { cars, phones, bestSelling }

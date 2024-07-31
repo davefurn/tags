@@ -3,13 +3,14 @@ import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/features/onboarding/widgets/app_texts.dart';
 
 class ViewProducts extends StatefulWidget {
-  const ViewProducts(
-      {required this.productImage,
-      required this.productTitle,
-      required this.productPrice,
-      required this.productBrand,
-      required this.slug,
-      super.key});
+  const ViewProducts({
+    required this.productImage,
+    required this.productTitle,
+    required this.productPrice,
+    required this.productBrand,
+    required this.slug,
+    super.key,
+  });
 
   final String productImage;
   final String productTitle;
@@ -29,11 +30,12 @@ class _ViewProductsState extends State<ViewProducts> {
           title: const Text(
             'Product Details',
             style: TextStyle(
-                fontFamily: 'Montserrat',
-                // fontSize: 14,
-                fontWeight: FontWeight.w500,
-                letterSpacing: 1.2,
-                color: Colors.black),
+              fontFamily: 'Montserrat',
+              // fontSize: 14,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 1.2,
+              color: Colors.black,
+            ),
           ),
           elevation: 0,
           centerTitle: true,

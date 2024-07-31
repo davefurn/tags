@@ -23,7 +23,7 @@ import 'package:tags/src/features/onboarding/intros/intro_pagge_one.dart';
 import 'package:tags/src/features/onboarding/intros/seller.dart';
 import 'package:tags/src/features/onboarding/splash_screen/view.dart';
 import 'package:tags/src/features/search/view.dart';
-import 'package:tags/src/features/sell/view.dart';
+import 'package:tags/src/features/sell/sell_page.dart';
 import 'package:tags/src/features/seller/seller_profile/update_store.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();

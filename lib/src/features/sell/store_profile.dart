@@ -32,7 +32,7 @@ class _StoreProfileState extends State<StoreProfile> {
               style: TextStyle(
                 color: Colors.transparent,
               ),
-            )
+            ),
           ],
         ),
         body: Padding(
@@ -214,7 +214,8 @@ class _StoreProfileState extends State<StoreProfile> {
                   ),
                   shape: WidgetStatePropertyAll(
                     RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   fixedSize: WidgetStatePropertyAll(
                     Size(
@@ -240,7 +241,7 @@ class _StoreProfileState extends State<StoreProfile> {
               ),
               const SizedBox(
                 height: 10,
-              )
+              ),
             ],
           ),
         ),
@@ -273,7 +274,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
               style: TextStyle(
                 color: Colors.transparent,
               ),
-            )
+            ),
           ],
         ),
         body: Padding(
@@ -392,7 +393,8 @@ class _DeliveryPageState extends State<DeliveryPage> {
                   ),
                   shape: WidgetStatePropertyAll(
                     RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   fixedSize: WidgetStatePropertyAll(
                     Size(
@@ -418,7 +420,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
               ),
               const SizedBox(
                 height: 10,
-              )
+              ),
             ],
           ),
         ),

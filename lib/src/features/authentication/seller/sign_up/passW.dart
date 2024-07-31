@@ -267,6 +267,11 @@ class _ConfirmPassWordState extends ConsumerState<ConfirmPassWord> {
                                     newToken,
                                   );
 
+                                  await HiveStorage.put(
+                                    HiveKeys.name,
+                                    widget.firstName + widget.lastName,
+                                  );
+
                                   await context.pushNamed(
                                     TagRoutes.sellOtpPage.name,
                                     pathParameters: {

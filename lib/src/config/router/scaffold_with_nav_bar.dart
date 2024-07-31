@@ -74,7 +74,7 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
                                 'Search',
                               ),
                               if (seller == 'Seller' && buyer == '')
-                                _buildNavItem(context, 2, Assets.sell, 'Sell')
+                                _buildNavItem(context, 4, Assets.sell, 'Sell')
                               else if (buyer == 'Buyer' && seller == '')
                                 _buildNavItem(
                                   context,

@@ -41,12 +41,12 @@ class _SellPageState extends ConsumerState<SellPage>
     // final companyName = ref.read(profileProvider).company_name;
     // final companyEmail = ref.read(profileProvider).company_email;
     // final phone = ref.read(profileProvider).company_phone;
-    // final logo = ref.read(profileProvider).company_logo;
-    // final cover = ref.read(profileProvider).company_cover;
+    final logo = ref.read(profileProvider).company_logo;
+    final cover = ref.read(profileProvider).company_cover;
     final List<String>? companies = state.companies;
     return RefreshIndicator.adaptive(
       onRefresh: () async {
-        ref.read(profileProvider.notifier).getCompany();
+        await ref.read(profileProvider.notifier).getCompany();
       },
       child: DefaultTabController(
         length: 3,
@@ -70,20 +70,20 @@ class _SellPageState extends ConsumerState<SellPage>
                         width: 100,
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: const Color(0xffF8F9FF),
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                // logo.toString(),
-                                HiveStorage.get(HiveKeys.companyLogo)
-                                        .toString()
-                                        .isNotEmpty
-                                    ? HiveStorage.get(HiveKeys.companyLogo)
-                                        .toString()
-                                    : 'https://images.pexels.com/photos/3028500/pexels-photo-3028500.jpeg?cs=srgb&dl=pexels-phaseexit-3028500.jpg&fm=jpg',
-                              ),
-                            )),
+                          shape: BoxShape.circle,
+                          color: const Color(0xffF8F9FF),
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(
+                              // logo.toString(),
+                              HiveStorage.get(HiveKeys.companyLogo)
+                                      .toString()
+                                      .isNotEmpty
+                                  ? logo.toString()
+                                  : 'https://images.pexels.com/photos/3028500/pexels-photo-3028500.jpeg?cs=srgb&dl=pexels-phaseexit-3028500.jpg&fm=jpg',
+                            ),
+                          ),
+                        ),
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -134,7 +134,7 @@ class _SellPageState extends ConsumerState<SellPage>
                                 ],
                               ),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ],
@@ -158,10 +158,7 @@ class _SellPageState extends ConsumerState<SellPage>
                   title: const Text('Verify ID'),
                   onTap: () {
                     // Handle ABC tap
-                    // Navigator.pushReplacement(context,
-                    //     MaterialPageRoute(builder: (context) {
-                    //   return const CreateStorePage();
-                    // }));
+                    context.pushReplacementNamed(TagRoutes.updateStore.name);
                   },
                 ),
                 const Padding(
@@ -174,10 +171,7 @@ class _SellPageState extends ConsumerState<SellPage>
                   title: const Text('Delivery'),
                   onTap: () {
                     // Handle air rounded tap
-                    // Navigator.pushReplacement(context,
-                    //     MaterialPageRoute(builder: (context) {
-                    //   return const CreateStorePage();
-                    // }));
+                    context.pushReplacementNamed(TagRoutes.updateStore.name);
                   },
                 ),
                 const Padding(
@@ -249,7 +243,6 @@ class _SellPageState extends ConsumerState<SellPage>
           body: SizedBox(
             height: MediaQuery.of(context).size.height,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 if (state.loading != Loader.loading &&
                     state.companies!.isNotEmpty)
@@ -261,8 +254,7 @@ class _SellPageState extends ConsumerState<SellPage>
                           HiveStorage.get(HiveKeys.companyCover)
                                   .toString()
                                   .isNotEmpty
-                              ? HiveStorage.get(HiveKeys.companyCover)
-                                  .toString()
+                              ? cover.toString()
                               : 'https://images.pexels.com/photos/3028500/pexels-photo-3028500.jpeg?cs=srgb&dl=pexels-phaseexit-3028500.jpg&fm=jpg',
                           width: MediaQuery.sizeOf(context).width,
                           height: MediaQuery.sizeOf(context).height * 0.23,
@@ -281,8 +273,7 @@ class _SellPageState extends ConsumerState<SellPage>
                                 HiveStorage.get(HiveKeys.companyLogo)
                                         .toString()
                                         .isNotEmpty
-                                    ? HiveStorage.get(HiveKeys.companyLogo)
-                                        .toString()
+                                    ? logo.toString()
                                     : 'https://images.pexels.com/photos/3028500/pexels-photo-3028500.jpeg?cs=srgb&dl=pexels-phaseexit-3028500.jpg&fm=jpg',
                               ),
                             ),
@@ -312,7 +303,6 @@ class _SellPageState extends ConsumerState<SellPage>
                   const Center(
                     child: SpinKitWaveSpinner(
                       color: TagColors.appThemeColor,
-                      size: 50,
                     ),
                   )
                 else
@@ -347,6 +337,7 @@ class _SellPageState extends ConsumerState<SellPage>
                     Text(
                       // companies.toString().replaceAll('[]', ""),
                       companies?.join(', ') ?? '',
+                      textAlign: TextAlign.center,
                     ),
                     // SizedBox(
                     //   width:
@@ -399,11 +390,14 @@ class _SellPageState extends ConsumerState<SellPage>
                     height: 53,
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(32),
-                        // color: const Color(0xffF7F7F7),
-                        border: Border.all(
-                            width: 2, color: const Color(0xfff9F9F9)),
-                        color: const Color(0xfff9F9F9)),
+                      borderRadius: BorderRadius.circular(32),
+                      // color: const Color(0xffF7F7F7),
+                      border: Border.all(
+                        width: 2,
+                        color: const Color(0xfff9F9F9),
+                      ),
+                      color: const Color(0xfff9F9F9),
+                    ),
                     child: TabBar(
                       controller: _tabController,
                       indicatorColor: Colors.transparent,
@@ -416,10 +410,11 @@ class _SellPageState extends ConsumerState<SellPage>
                       labelColor: Colors.white,
                       // const Color(0xff334155),
                       labelStyle: const TextStyle(
-                          fontFamily: 'Montserrat',
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13),
+                        fontFamily: 'Montserrat',
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13,
+                      ),
                       unselectedLabelColor: const Color(0xff333333),
                       tabs: const [
                         Tab(
