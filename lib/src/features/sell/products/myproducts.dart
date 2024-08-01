@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/features/onboarding/widgets/app_texts.dart';
@@ -13,13 +14,12 @@ class MySellProductPage extends StatelessWidget {
           height: MediaQuery.sizeOf(context).height,
           width: MediaQuery.sizeOf(context).width,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SvgPicture.asset(
                 'assets/svg/no_products.svg',
-                height: 120,
-                width: 130,
+                height: 100.h,
+                width: 130.w,
                 fit: BoxFit.fill,
               ),
               const SizedBox(

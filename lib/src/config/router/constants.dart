@@ -15,6 +15,10 @@ enum TagRoutes {
     name: 'sellerPage',
     path: '/sellerPage',
   ),
+  deliveryPage(
+    name: 'deliveryPage',
+    path: '/deliveryPage',
+  ),
   sellerLogin(
     name: 'sellerLogin',
     path: '/sellerLogin',
@@ -31,6 +35,10 @@ enum TagRoutes {
     name: 'sellerSignUpOne',
     path: '/sellerSignUpOne',
   ),
+  addProducts(
+    name: 'addProducts',
+    path: '/addProducts',
+  ),
   sellerSignUpTwo(
     name: 'sellerSignUpTwo',
     path: '/sellerSignUpTwo/:email',
@@ -42,6 +50,34 @@ enum TagRoutes {
   createStore(
     name: 'createStore',
     path: '/createStore',
+  ),
+  viewProducts(
+    name: 'viewProducts',
+    path: '/viewProducts',
+  ),
+  salesPage(
+    name: 'salesPage',
+    path: '/salesPage',
+  ),
+  mySellProductPage(
+    name: 'mySellProductPage',
+    path: '/mySellProductPage',
+  ),
+  orderzPage(
+    name: 'orderzPage',
+    path: '/orderzPage',
+  ),
+  addProductPage(
+    name: 'addProductPage',
+    path: '/addProductPage',
+  ),
+  paymentsPage(
+    name: 'paymentsPage',
+    path: '/paymentsPage',
+  ),
+  storeProfile(
+    name: 'storeProfile',
+    path: '/storeProfile',
   ),
   whatToSell(
     name: 'whatToSell',

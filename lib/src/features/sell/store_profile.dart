@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/features/onboarding/widgets/app_texts.dart';
 import 'package:tags/src/features/sell/payments_screen.dart';
@@ -225,12 +227,7 @@ class _StoreProfileState extends State<StoreProfile> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const PaymentsPage(),
-                    ),
-                  );
+                  context.pushNamed(TagRoutes.paymentsPage.name);
                 },
                 child: const TagText(
                   text: 'Save & Continue',
@@ -404,12 +401,7 @@ class _DeliveryPageState extends State<DeliveryPage> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SellPage(),
-                    ),
-                  );
+                  context.pushNamed(TagRoutes.sellerPage.name);
                 },
                 child: const TagText(
                   text: 'Save & Continue',

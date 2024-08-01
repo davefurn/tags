@@ -283,22 +283,24 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
     required Map<String, String> formData,
     required XFile image,
     required XFile image2,
+    required XFile image3,
   }) async {
     state = state.copyWith(
       loading: Loader.loading,
     );
 
     try {
+      log(formData.toString());
       final response = await _reader.read(serviceProvider).postMultipart(
             path: 'api/company/product/create/',
-            files: [image, image2],
+            files: [image, image3, image2],
             formData: formData,
             pathName: 'images',
           );
       var body = json.decode(response.body);
+      log(response.statusCode.toString());
       // var body = response.body;
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print(body);
         state = state.copyWith(
           loading: Loader.loaded,
           // eventModel: EventModel.fromJson(body['data']['event'])

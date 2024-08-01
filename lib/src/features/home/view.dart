@@ -166,18 +166,18 @@ class _HomePageState extends ConsumerState<HomePage> {
                   log(bestSeller.price.toString());
                   return GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ViewProducts(
-                            productImage: bestSeller.image,
-                            productTitle: bestSeller.product,
-                            productPrice: bestSeller.price.toString(),
-                            productBrand: bestSeller.slug,
-                            slug: bestSeller.slug,
-                          ),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => ViewProducts(
+                      //       productImage: bestSeller.image,
+                      //       productTitle: bestSeller.product,
+                      //       productPrice: bestSeller.price.toString(),
+                      //       productBrand: bestSeller.slug,
+                      //       slug: bestSeller.slug,
+                      //     ),
+                      //   ),
+                      // );
                     },
                     child: SizedBox(
                       key: ValueKey(bestSeller.product),
@@ -262,18 +262,18 @@ class _HomePageState extends ConsumerState<HomePage> {
                   final dealOfDay = state.todayDealz[index];
                   return GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ViewProducts(
-                            productImage: dealOfDay.image,
-                            productTitle: dealOfDay.product,
-                            productPrice: dealOfDay.formattedDiscountedPrice,
-                            productBrand: dealOfDay.slug,
-                            slug: dealOfDay.slug,
-                          ),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => ViewProducts(
+                      //       productImage: dealOfDay.image,
+                      //       productTitle: dealOfDay.product,
+                      //       productPrice: dealOfDay.formattedDiscountedPrice,
+                      //       productBrand: dealOfDay.slug,
+                      //       slug: dealOfDay.slug,
+                      //     ),
+                      //   ),
+                      // );
                     },
                     child: SizedBox(
                       key: ValueKey(dealOfDay.price),

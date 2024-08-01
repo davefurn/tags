@@ -547,12 +547,7 @@ class _SellPageState extends ConsumerState<SellPage>
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               // //add products
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //         builder: (context) => const AddProductPage()));
-
-              // //
+              context.pushNamed(TagRoutes.addProducts.name);
             },
             backgroundColor: TagColors.lemonGreen,
             foregroundColor: TagColors.white,

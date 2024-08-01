@@ -97,7 +97,7 @@ class _SellerPageState extends State<SellerPage> {
                     },
                     child: TagText(
                       fontColor: const Color(0xff303030),
-                      text: 'Start Browsing',
+                      text: 'Start selling',
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
                     ),

@@ -23,7 +23,13 @@ import 'package:tags/src/features/onboarding/intros/intro_pagge_one.dart';
 import 'package:tags/src/features/onboarding/intros/seller.dart';
 import 'package:tags/src/features/onboarding/splash_screen/view.dart';
 import 'package:tags/src/features/search/view.dart';
+import 'package:tags/src/features/sell/add_products.dart';
+import 'package:tags/src/features/sell/orderz/myorderz.dart';
+import 'package:tags/src/features/sell/payments_screen.dart';
+import 'package:tags/src/features/sell/products/myproducts.dart';
+import 'package:tags/src/features/sell/sales/sales.dart';
 import 'package:tags/src/features/sell/sell_page.dart';
+import 'package:tags/src/features/sell/store_profile.dart';
 import 'package:tags/src/features/seller/seller_profile/update_store.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -155,6 +161,13 @@ GoRouter router = GoRouter(
       ),
     ),
     GoRoute(
+      name: TagRoutes.deliveryPage.name,
+      path: TagRoutes.deliveryPage.path,
+      pageBuilder: (context, state) => const CupertinoPage(
+        child: DeliveryPage(),
+      ),
+    ),
+    GoRoute(
       name: TagRoutes.sellerLogin.name,
       path: TagRoutes.sellerLogin.path,
       pageBuilder: (context, state) => const CupertinoPage(
@@ -241,6 +254,48 @@ GoRouter router = GoRouter(
       path: TagRoutes.settings.path,
       pageBuilder: (context, state) => const CupertinoPage(
         child: Settings(),
+      ),
+    ),
+    GoRoute(
+      name: TagRoutes.addProducts.name,
+      path: TagRoutes.addProducts.path,
+      pageBuilder: (context, state) => const CupertinoPage(
+        child: AddProductPage(),
+      ),
+    ),
+    GoRoute(
+      name: TagRoutes.mySellProductPage.name,
+      path: TagRoutes.mySellProductPage.path,
+      pageBuilder: (context, state) => const CupertinoPage(
+        child: MySellProductPage(),
+      ),
+    ),
+    GoRoute(
+      name: TagRoutes.orderzPage.name,
+      path: TagRoutes.orderzPage.path,
+      pageBuilder: (context, state) => const CupertinoPage(
+        child: OrderzPage(),
+      ),
+    ),
+    GoRoute(
+      name: TagRoutes.paymentsPage.name,
+      path: TagRoutes.paymentsPage.path,
+      pageBuilder: (context, state) => const CupertinoPage(
+        child: PaymentsPage(),
+      ),
+    ),
+    GoRoute(
+      name: TagRoutes.salesPage.name,
+      path: TagRoutes.salesPage.path,
+      pageBuilder: (context, state) => const CupertinoPage(
+        child: SalesPage(),
+      ),
+    ),
+    GoRoute(
+      name: TagRoutes.storeProfile.name,
+      path: TagRoutes.storeProfile.path,
+      pageBuilder: (context, state) => const CupertinoPage(
+        child: StoreProfile(),
       ),
     ),
     GoRoute(
