@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -32,7 +34,9 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
     super.initState();
     globalContext = context;
     buyer = HiveStorage.get(HiveKeys.buyer);
+    log(buyer);
     seller = HiveStorage.get(HiveKeys.seller);
+    log(seller);
   }
 
   @override
