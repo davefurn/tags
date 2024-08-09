@@ -255,3 +255,71 @@ class CompanyModel {
         'delivery_plan': deliveryPlan,
       };
 }
+
+//
+class Brand {
+  Brand({
+    required this.name,
+    required this.slug,
+    required this.image,
+  });
+
+  factory Brand.fromJson(Map<String, dynamic> json) => Brand(
+        name: json['name'],
+        slug: json['slug'],
+        image: json['image'],
+      );
+  final String name;
+  final String slug;
+  final String image;
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'slug': slug,
+        'image': image,
+      };
+}
+//
+
+class BrandProduct {
+  BrandProduct({
+    required this.name,
+    required this.slug,
+    required this.image,
+    required this.price,
+    required this.currency,
+    required this.discount,
+    required this.discountedPrice,
+    required this.tagOne,
+  });
+
+  factory BrandProduct.fromJson(Map<String, dynamic> json) => BrandProduct(
+        name: json['name'],
+        slug: json['slug'],
+        image: json['image'],
+        price: json['price'].toDouble(),
+        currency: json['currency'],
+        discount: json['discount'].toDouble(),
+        discountedPrice: json['discounted_price'].toDouble(),
+        tagOne: json['tag_one'],
+      );
+  final String name;
+  final String slug;
+  final String image;
+  final double price;
+  final String currency;
+  final double discount;
+  final double discountedPrice;
+  final bool tagOne;
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'slug': slug,
+        'image': image,
+        'price': price,
+        'currency': currency,
+        'discount': discount,
+        'discounted_price': discountedPrice,
+        'tag_one': tagOne,
+      };
+}

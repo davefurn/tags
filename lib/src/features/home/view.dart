@@ -28,6 +28,19 @@ class _HomePageState extends ConsumerState<HomePage> {
     super.initState();
   }
 
+  Map<String, String> currencySymbols = {
+    'USD': r'$', // Dollar
+    'NGN': '₦', // Naira
+    'EUR': '€', // Euro
+    'GBP': '£', // Pound
+    // Add other currencies as needed
+  };
+
+// Function to get the currency symbol
+  String getCurrencySymbol(String currencyCode) =>
+      currencySymbols[currencyCode] ??
+      currencyCode; // Fallback to currency code if not found
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(profileProvider);
@@ -92,15 +105,14 @@ class _HomePageState extends ConsumerState<HomePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ClipRRect(
-                            borderRadius: BorderRadius.circular(9),
-                            child: SizedBox(
+                            borderRadius: BorderRadius.circular(9.r),
+                            child: Image.network(
+                              topCatz.image.isNotEmpty
+                                  ? topCatz.image
+                                  : 'https://images.pexels.com/photos/2294342/pexels-photo-2294342.jpeg?cs=srgb&dl=pexels-paggiarofrancesco-2294342.jpg&fm=jpg',
+                              fit: BoxFit.cover,
                               height: 125,
-                              child: Image.network(
-                                topCatz.image.isNotEmpty
-                                    ? topCatz.image
-                                    : 'https://images.pexels.com/photos/2294342/pexels-photo-2294342.jpeg?cs=srgb&dl=pexels-paggiarofrancesco-2294342.jpg&fm=jpg',
-                                fit: BoxFit.fitHeight,
-                              ),
+                              width: 130.w,
                             ),
                           ),
                           const SizedBox(height: 1),
@@ -207,7 +219,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                             ),
                           ),
                           Text(
-                            '${bestSeller.currency} $price',
+                            '${getCurrencySymbol(bestSeller.currency)}$price',
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               color: const Color(0xff0B1B34),
@@ -251,14 +263,15 @@ class _HomePageState extends ConsumerState<HomePage> {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: state.todayDealz.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
-                  mainAxisExtent: 200,
+                  mainAxisExtent: 205.h,
                 ),
                 itemBuilder: (context, index) {
                   final dealOfDay = state.todayDealz[index];
+
                   return GestureDetector(
                     onTap: () {
                       // Navigator.push(
@@ -276,7 +289,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     },
                     child: SizedBox(
                       key: ValueKey(dealOfDay.price),
-                      height: 200,
+                      height: 205.h,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -293,30 +306,66 @@ class _HomePageState extends ConsumerState<HomePage> {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 2),
+                          10.verticalSpace,
+                          DecoratedBox(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.r),
+                              color: const Color(0xff89C0FF),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8.w,
+                                vertical: 4.h,
+                              ),
+                              child: Text(
+                                '${double.parse(dealOfDay.discount.toString()).toInt()}% Off',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 10.sp,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                          2.verticalSpace,
+                          LimitedBox(
+                            maxWidth: 110.w,
+                            child: RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        '${getCurrencySymbol(dealOfDay.currency)}${dealOfDay.formattedDiscountedPrice}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14.sp,
+                                      color: const Color(0xff0B1B34),
+                                    ),
+                                  ),
+                                  WidgetSpan(
+                                    child: SizedBox(width: 2.w),
+                                  ),
+                                  TextSpan(
+                                    text:
+                                        '${getCurrencySymbol(dealOfDay.currency)}${dealOfDay.formattedPrice}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 8.sp,
+                                      color: const Color(0xff777777),
+                                      decoration: TextDecoration.lineThrough,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              maxLines: 2, // Adjust this value as needed
+                            ),
+                          ),
                           Text(
                             dealOfDay.product,
                             style: TextStyle(
                               fontWeight: FontWeight.w400,
                               color: const Color(0xff474747),
                               fontSize: 12.sp,
-                            ),
-                          ),
-                          Text(
-                            '${dealOfDay.currency} ${dealOfDay.formattedPrice}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14.sp,
-                              color: const Color(0xff0B1B34),
-                              decoration: TextDecoration.lineThrough,
-                            ),
-                          ),
-                          Text(
-                            '${dealOfDay.currency} ${dealOfDay.formattedDiscountedPrice}',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14.sp,
-                              color: const Color(0xff0B1B34),
                             ),
                           ),
                         ],
@@ -341,81 +390,151 @@ class _HomePageState extends ConsumerState<HomePage> {
                   ),
                 ),
               ),
-            const SizedBox(height: 20),
-            // Text(
-            //   "Categories",
-            //   style: const TextStyle(
-            //       fontSize: 16,
-            //       fontWeight: FontWeight.w600,
-            //       color: TagColors.black),
-            // ),
-            // const SizedBox(height: 15),
-            // if (state.loading != Loader.loading && state.allNewCatz.isNotEmpty)
-            //   GridView.builder(
-            //     shrinkWrap: true,
-            //     physics: const NeverScrollableScrollPhysics(),
-            //     itemCount: state.allNewCatz.length,
-            //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            //       crossAxisCount: 3,
-            //       crossAxisSpacing: 12.0,
-            //       mainAxisSpacing: 10.0,
-            //       mainAxisExtent: 70,
-            //       childAspectRatio: 16 / 9,
-            //     ),
-            //     itemBuilder: (context, index) {
-            //       final allCatz = state.allNewCatz[index];
-            //       return SizedBox(
-            //         key: ValueKey(allCatz.name),
-            //         height: 120,
-            //         child: Container(
-            //           alignment: Alignment.center,
-            //           padding: const EdgeInsets.all(8),
-            //           decoration: BoxDecoration(
-            //             color: Colors.white,
-            //             borderRadius: BorderRadius.circular(15),
-            //             boxShadow: [
-            //               BoxShadow(
-            //                 color: Colors.grey.withOpacity(0.5),
-            //                 spreadRadius: 1,
-            //                 blurRadius: 1,
-            //                 offset: const Offset(0, 3),
-            //               ),
-            //             ],
-            //           ),
-            //           child: Column(
-            //             mainAxisAlignment: MainAxisAlignment.center,
-            //             children: [
-            //               Text(
-            //                 allCatz.name,
-            //                 style: const TextStyle(
-            //                   fontWeight: FontWeight.w600,
-            //                   color: TagColors.textColor,
-            //                   fontSize: 12,
-            //                 ),
-            //               ),
-            //             ],
-            //           ),
-            //         ),
-            //       );
-            //     },
-            //   )
-            // else if (state.loading == Loader.loading)
-            //   const Center(
-            //     child: SpinKitWaveSpinner(
-            //       color: TagColors.appThemeColor,
-            //       size: 50,
-            //     ),
-            //   )
-            // else
-            //   const Center(
-            //     child: Padding(
-            //       padding: EdgeInsets.all(8.0),
-            //       child: Text(
-            //         'No Categories available',
-            //         style: TextStyle(color: Colors.grey),
-            //       ),
-            //     ),
-            //   ),
+            20.verticalSpace,
+            if (state.loading != Loader.loading && state.allNewCatz.isNotEmpty)
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: state.allNewCatz.length,
+                itemBuilder: (context, index) {
+                  final allCatz = state.allNewCatz[index];
+
+                  return LimitedBox(
+                    key: ValueKey(allCatz.name),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (state.loading != Loader.loading &&
+                            state.allNewCatz[index].products.isNotEmpty)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                allCatz.name,
+                                style: TextStyle(
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.w600,
+                                  color: TagColors.black,
+                                  fontSize: 14.sp,
+                                ),
+                              ),
+                              const SizedBox(height: 15),
+                            ],
+                          )
+                        else
+                          const SizedBox.shrink(),
+                        if (state.loading != Loader.loading &&
+                            state.allNewCatz[index].products.isNotEmpty)
+                          GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: state.allNewCatz[index].products.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                              mainAxisExtent: 200,
+                            ),
+                            itemBuilder: (context, index) {
+                              final categories =
+                                  state.allNewCatz[index].products[index];
+
+                              final format = NumberFormat('#,##0', 'en_US');
+                              String price = format.format(categories.price);
+
+                              log(categories.price.toString());
+                              return GestureDetector(
+                                onTap: () {
+                                  // Navigator.push(
+                                  //   context,
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => ViewProducts(
+                                  //       productImage: bestSeller.image,
+                                  //       productTitle: bestSeller.product,
+                                  //       productPrice: bestSeller.price.toString(),
+                                  //       productBrand: bestSeller.slug,
+                                  //       slug: bestSeller.slug,
+                                  //     ),
+                                  //   ),
+                                  // );
+                                },
+                                child: SizedBox(
+                                  key: ValueKey(
+                                    categories.slug,
+                                  ),
+                                  height: 200,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(9),
+                                        child: SizedBox(
+                                          height: 135,
+                                          width:
+                                              MediaQuery.sizeOf(context).width *
+                                                  0.35,
+                                          child: Image.network(
+                                            categories.image.isNotEmpty
+                                                ? categories.image
+                                                : 'https://images.pexels.com/photos/3028500/pexels-photo-3028500.jpeg?cs=srgb&dl=pexels-phaseexit-3028500.jpg&fm=jpg',
+                                            fit: BoxFit.fitHeight,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        categories.name,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          color: const Color(0xff474747),
+                                          fontSize: 12.sp,
+                                        ),
+                                      ),
+                                      Text(
+                                        '${getCurrencySymbol(categories.currency)}$price',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          color: const Color(0xff0B1B34),
+                                          fontSize: 14.sp,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        else if (state.loading == Loader.loading)
+                          const Center(
+                            child: SpinKitWaveSpinner(
+                              color: TagColors.appThemeColor,
+                            ),
+                          )
+                        else
+                          const SizedBox.shrink(),
+                      ],
+                    ),
+                  );
+                },
+              )
+            else if (state.loading == Loader.loading)
+              const Center(
+                child: SpinKitWaveSpinner(
+                  color: TagColors.appThemeColor,
+                ),
+              )
+            else
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Text(
+                    'No Categories available',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+              ),
           ],
         ),
       ),

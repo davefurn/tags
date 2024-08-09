@@ -13,6 +13,7 @@ import 'package:tags/src/features/authentication/seller/sign_up/otp.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/passW.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/signup_page.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/signup_page2.dart';
+import 'package:tags/src/features/categories/sub_categories.dart';
 import 'package:tags/src/features/categories/view.dart';
 import 'package:tags/src/features/home/view.dart';
 import 'package:tags/src/features/me/screens/settings.dart';
@@ -305,6 +306,13 @@ GoRouter router = GoRouter(
         child: SellOtpPage(
           email: state.pathParameters['email'].toString(),
         ),
+      ),
+    ),
+    GoRoute(
+      name: TagRoutes.subCategoryScreen.name,
+      path: TagRoutes.subCategoryScreen.path,
+      pageBuilder: (context, state) =>  CupertinoPage(
+        child: SubCategoryScreen(brandName: state.pathParameters['brandName'].toString(),),
       ),
     ),
   ],

@@ -119,6 +119,10 @@ enum TagRoutes {
     name: 'settings',
     path: '/settings',
   ),
+  subCategoryScreen(
+    name: 'subCategoryScreen',
+    path: '/subCategoryScreen/:brandName',
+  ),
   me(
     name: 'me',
     path: '/me',

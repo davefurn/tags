@@ -100,15 +100,15 @@ class _PaymentsPageState extends State<PaymentsPage> {
             ),
             TextButton(
               style: ButtonStyle(
-                backgroundColor: const WidgetStatePropertyAll(
+                backgroundColor: const MaterialStatePropertyAll(
                   TagColors.appThemeColor,
                 ),
-                shape: WidgetStatePropertyAll(
+                shape: MaterialStatePropertyAll(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                fixedSize: WidgetStatePropertyAll(
+                fixedSize: MaterialStatePropertyAll(
                   Size(
                     MediaQuery.sizeOf(context).width,
                     50,
@@ -117,7 +117,6 @@ class _PaymentsPageState extends State<PaymentsPage> {
               ),
               onPressed: () {
                 context.pushNamed(TagRoutes.deliveryPage.name);
-                
               },
               child: const TagText(
                 text: 'Save & Continue',

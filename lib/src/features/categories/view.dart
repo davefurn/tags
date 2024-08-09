@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/config/utils/enums.dart';
 import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/riverpod/providers/providers.dart';
 import 'package:tags/src/core/widget/tag_appbar.dart';
-import 'package:tags/src/features/categories/widget/category_widgets.dart';
 import 'package:tags/src/features/search/view.dart';
 
 class CategoryScreen extends StatefulHookConsumerWidget {
@@ -24,24 +27,39 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
     super.initState();
   }
 
+  Map<String, String> currencySymbols = {
+    'USD': r'$', // Dollar
+    'NGN': '₦', // Naira
+    'EUR': '€', // Euro
+    'GBP': '£', // Pound
+    // Add other currencies as needed
+  };
+
+// Function to get the currency symbol
+  String getCurrencySymbol(String currencyCode) =>
+      currencySymbols[currencyCode] ??
+      currencyCode; // Fallback to currency code if not found
+
+  @override
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(profileProvider);
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: TagBar(
-        isHome: false,
+        isHome: true,
         title: 'Categories',
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
+          const InkWell(
+            child: Icon(
               Icons.favorite_outline_rounded,
               color: Color(0xff5E5E5E),
             ),
           ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
+          4.horizontalSpace,
+          Padding(
+            padding: EdgeInsets.only(right: 16.w),
+            child: const Icon(
               Icons.shopping_bag_outlined,
               color: Color(0xff474747),
             ),
@@ -49,307 +67,156 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.only(
-          left: 20,
-          right: 20,
-          top: 10,
-        ),
-        child: CustomScrollView(
-          slivers: [
-            const SliverToBoxAdapter(
-              child: CustomTextInput(),
-            ),
-            const SliverToBoxAdapter(
-              child: SizedBox(
-                height: 20,
-              ),
-            ),
-            const SliverToBoxAdapter(
-              child: Text(
-                'All Categories',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            const SliverToBoxAdapter(
-              child: SizedBox(
-                height: 10,
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: SizedBox(
-                width: MediaQuery.sizeOf(context).width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        child: ListView(
+          physics: const BouncingScrollPhysics(),
+          children: [
+            const CustomTextInput(),
+            const SizedBox(height: 15),
+            if (state.loading != Loader.loading && state.allNewCatz.isNotEmpty)
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: state.allNewCatz.length,
+                itemBuilder: (context, index) {
+                  final allCatz = state.allNewCatz[index];
+
+                  return LimitedBox(
+                    key: ValueKey(allCatz.name),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        TextButton(
-                          style: const ButtonStyle(
-                            backgroundColor:
-                                WidgetStatePropertyAll(TagColors.paleBlue),
-                          ),
-                          onPressed: () {},
-                          child: const Row(
-                            children: [
-                              Text(
-                                'Price',
-                                style: TextStyle(
-                                  color: TagColors.black,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              Icon(Icons.arrow_drop_down),
-                            ],
-                          ),
-                        ),
-                        TextButton(
-                          style: const ButtonStyle(
-                            backgroundColor:
-                                WidgetStatePropertyAll(TagColors.paleBlue),
-                          ),
-                          onPressed: () {},
-                          child: const Row(
-                            children: [
-                              Text(
-                                'Color',
-                                style: TextStyle(
-                                  color: TagColors.black,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              Icon(Icons.arrow_drop_down),
-                            ],
-                          ),
-                        ),
-                        TextButton(
-                          style: const ButtonStyle(
-                            backgroundColor:
-                                WidgetStatePropertyAll(TagColors.paleBlue),
-                          ),
-                          onPressed: () {},
-                          child: const Row(
-                            children: [
-                              Text(
-                                'Conditions',
-                                style: TextStyle(
-                                  color: TagColors.black,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              Icon(Icons.arrow_drop_down),
-                            ],
-                          ),
-                        ),
-                        TextButton(
-                          style: const ButtonStyle(
-                            backgroundColor:
-                                WidgetStatePropertyAll(TagColors.paleBlue),
-                          ),
-                          onPressed: () {},
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Filter ',
-                                style: TextStyle(
-                                  color: TagColors.black,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              Image.asset(
-                                'assets/images/filter_icon.png',
-                                height: 12,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    SizedBox(
-                      width: 105,
-                      child: TextButton(
-                        style: const ButtonStyle(
-                          backgroundColor:
-                              WidgetStatePropertyAll(TagColors.paleBlue),
-                        ),
-                        onPressed: () {},
-                        child: const Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Discount',
+                              allCatz.name,
                               style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w600,
                                 color: TagColors.black,
-                                fontSize: 12,
+                                fontSize: 14.sp,
                               ),
                             ),
-                            Icon(Icons.arrow_drop_down),
+                            if (state.allNewCatz[index].products.isNotEmpty)
+                              InkWell(
+                                onTap: () {
+                                  context.pushNamed(
+                                    TagRoutes.subCategoryScreen.name,
+                                    pathParameters: {
+                                      'brandName': allCatz.slug,
+                                    },
+                                  );
+                                },
+                                child: Text(
+                                  'See All',
+                                  style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.w400,
+                                    color: const Color(0xff3088EF),
+                                    fontSize: 12.sp,
+                                  ),
+                                ),
+                              )
+                            else
+                              const SizedBox.shrink(),
                           ],
                         ),
-                      ),
+                        const SizedBox(height: 15),
+                        if (state.loading != Loader.loading &&
+                            state.allNewCatz[index].products.isNotEmpty)
+                          GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: state.allNewCatz[index].products.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                              mainAxisExtent: 160,
+                            ),
+                            itemBuilder: (context, index) {
+                              final categories =
+                                  state.allNewCatz[index].products[index];
+
+                              return GestureDetector(
+                                onTap: () {},
+                                child: SizedBox(
+                                  key: ValueKey(
+                                    categories.slug,
+                                  ),
+                                  height: 160,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(9),
+                                        child: SizedBox(
+                                          height: 135,
+                                          width:
+                                              MediaQuery.sizeOf(context).width *
+                                                  0.35,
+                                          child: Image.network(
+                                            categories.image.isNotEmpty
+                                                ? categories.image
+                                                : 'https://images.pexels.com/photos/3028500/pexels-photo-3028500.jpeg?cs=srgb&dl=pexels-phaseexit-3028500.jpg&fm=jpg',
+                                            fit: BoxFit.fitHeight,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        categories.name,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          color: const Color(0xff474747),
+                                          fontSize: 12.sp,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+                        else if (state.loading == Loader.loading)
+                          const Center(
+                            child: SpinKitWaveSpinner(
+                              color: TagColors.appThemeColor,
+                            ),
+                          )
+                        else
+                          const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(8),
+                              child: Text(
+                                'No Products available',
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                          ),
+                        10.verticalSpace,
+                      ],
                     ),
-                  ],
-                ),
-              ),
-            ),
-            const SliverToBoxAdapter(
-              child: SizedBox(
-                height: 30,
-              ),
-            ),
-            const SliverToBoxAdapter(
-              child: Text(
-                'Brands',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                ),
-              ),
-            ),
-            const SliverToBoxAdapter(
-              child: SizedBox(
-                height: 10,
-              ),
-            ),
-            SliverGrid(
-              delegate: SliverChildListDelegate([
-                SizedBox(
-                  height: 100,
-                  width: MediaQuery.sizeOf(context).width / 4.25,
-                  child: Image.asset('assets/images/Oraimo.png'),
-                ),
-                SizedBox(
-                  height: 100,
-                  width: MediaQuery.sizeOf(context).width / 4.25,
-                  child: Image.asset('assets/images/JBL.png'),
-                ),
-                SizedBox(
-                  height: 100,
-                  width: MediaQuery.sizeOf(context).width / 4.25,
-                  child: Image.asset('assets/images/Nokia.png'),
-                ),
-                SizedBox(
-                  height: 100,
-                  width: MediaQuery.sizeOf(context).width / 4.25,
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Image.asset('assets/images/Apple.png'),
-                  ),
-                ),
-                SizedBox(
-                  height: 100,
-                  width: MediaQuery.sizeOf(context).width / 4.25,
-                  child: Image.asset('assets/images/Sony.png'),
-                ),
-                SizedBox(
-                  height: 100,
-                  width: MediaQuery.sizeOf(context).width / 4.25,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Image.asset('assets/images/Samsung.png'),
-                  ),
-                ),
-                SizedBox(
-                  height: 100,
-                  width: MediaQuery.sizeOf(context).width / 4.25,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: (MediaQuery.sizeOf(context).width / 4.25) / 6,
-                    ),
-                    child: Image.asset('assets/images/Tecno.png'),
-                  ),
-                ),
-                SizedBox(
-                  height: 100,
-                  width: MediaQuery.sizeOf(context).width / 4.25,
-                  child: Image.asset('assets/images/Xiaomi.png'),
-                ),
-              ]),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
-                crossAxisSpacing: 5,
-                mainAxisSpacing: 15,
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        isGrid = false;
-                      });
-                    },
-                    icon: CircleAvatar(
-                      backgroundColor: isGrid == false
-                          ? TagColors.paleBlue
-                          : Colors.transparent,
-                      child: Image.asset(
-                        'assets/images/listview_icon.png',
-                        height: 14,
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        isGrid = true;
-                      });
-                    },
-                    icon: CircleAvatar(
-                      backgroundColor: isGrid == false
-                          ? Colors.transparent
-                          : TagColors.paleBlue,
-                      child: const Icon(
-                        Icons.grid_view_outlined,
-                        size: 24,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (isGrid == false &&
-                state.loading != Loader.loading &&
-                state.todayDealz.isNotEmpty)
-              SliverList.builder(
-                itemCount: state.todayDealz.length,
-                itemBuilder: (context, index) {
-                  final dealOfDay = state.todayDealz[index];
-                  return CategoryWidget.listCard(
-                    context,
-                    dealOfDay.image,
-                    dealOfDay.product,
-                    '${dealOfDay.currency} ${dealOfDay.formattedDiscountedPrice}',
-                    '${dealOfDay.currency} ${dealOfDay.formattedPrice}',
                   );
                 },
               )
+            else if (state.loading == Loader.loading)
+              const Center(
+                child: SpinKitWaveSpinner(
+                  color: TagColors.appThemeColor,
+                ),
+              )
             else
-              SliverGrid.builder(
-                itemCount: state.todayDealz.length,
-                itemBuilder: (context, index) {
-                  final dealOfDay = state.todayDealz[index];
-                  return CategoryWidget.gridCard(
-                    context,
-                    dealOfDay.image,
-                    dealOfDay.product,
-                    '${dealOfDay.currency} ${dealOfDay.formattedDiscountedPrice}',
-                    '${dealOfDay.currency} ${dealOfDay.formattedPrice}',
-                  );
-                },
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  mainAxisExtent: 300,
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 5,
-                  mainAxisSpacing: 10,
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Text(
+                    'No Categories available',
+                    style: TextStyle(color: Colors.grey),
+                  ),
                 ),
               ),
           ],

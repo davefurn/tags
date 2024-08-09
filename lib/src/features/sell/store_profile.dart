@@ -211,15 +211,15 @@ class _StoreProfileState extends State<StoreProfile> {
               ),
               TextButton(
                 style: ButtonStyle(
-                  backgroundColor: const WidgetStatePropertyAll(
+                  backgroundColor: const MaterialStatePropertyAll(
                     TagColors.appThemeColor,
                   ),
-                  shape: WidgetStatePropertyAll(
+                  shape: MaterialStatePropertyAll(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  fixedSize: WidgetStatePropertyAll(
+                  fixedSize: MaterialStatePropertyAll(
                     Size(
                       MediaQuery.sizeOf(context).width,
                       50,
@@ -385,15 +385,15 @@ class _DeliveryPageState extends State<DeliveryPage> {
               ),
               TextButton(
                 style: ButtonStyle(
-                  backgroundColor: const WidgetStatePropertyAll(
+                  backgroundColor: const MaterialStatePropertyAll(
                     TagColors.appThemeColor,
                   ),
-                  shape: WidgetStatePropertyAll(
+                  shape: MaterialStatePropertyAll(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  fixedSize: WidgetStatePropertyAll(
+                  fixedSize: MaterialStatePropertyAll(
                     Size(
                       MediaQuery.sizeOf(context).width,
                       50,
