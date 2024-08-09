@@ -254,9 +254,12 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
                   return SizedBox(
                     height: 100,
                     width: MediaQuery.sizeOf(context).width / 4.25,
-                    child: Image.asset('assets/images/Oraimo.png'),
+                    child: state.brandsNames[index].image == ''
+                        ? Image.asset('assets/images/Oraimo.png')
+                        : Image.network(state.brandsNames[index].image),
                   );
                 }
+                return null;
               },
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
