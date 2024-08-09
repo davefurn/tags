@@ -195,6 +195,7 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
       final response = await _reader.read(serviceProvider).get(
             path: 'api/home/',
           );
+      log(response.statusCode.toString());
       if (response.statusCode == 200) {
         final Map<String, dynamic> body = response.data;
 

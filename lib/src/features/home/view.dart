@@ -10,7 +10,6 @@ import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/resources/resources.dart';
 import 'package:tags/src/core/riverpod/providers/providers.dart';
 import 'package:tags/src/core/widget/tag_appbar.dart';
-import 'package:tags/src/features/home/widgets/view_products.dart';
 import 'package:tags/src/features/search/view.dart';
 
 class HomePage extends StatefulHookConsumerWidget {
@@ -76,7 +75,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             const SizedBox(height: 15),
             if (state.loading != Loader.loading && state.popularCat.isNotEmpty)
               SizedBox(
-                height: 150,
+                height: 180.h,
                 child: ListView.separated(
                   physics: const BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
@@ -87,8 +86,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                     final topCatz = state.popularCat[index];
                     return SizedBox(
                       key: ValueKey(topCatz.slug),
-                      width: 130,
-                      height: 150,
+                      width: 130.w,
+                      height: 150.h,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

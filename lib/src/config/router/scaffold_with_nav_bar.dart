@@ -39,11 +39,11 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
   Widget build(BuildContext context) => Scaffold(
         body: widget.navigationShell,
         bottomNavigationBar: SizedBox(
-          height: 100,
+          height: 73.h,
           child: Builder(
             builder: (context) {
-              double height = 93.h;
-              double circleHeight = 64.h;
+              double height = 66.h;
+              double circleHeight = 37.h;
               double heightFactor =
                   (((height - (circleHeight / 2)) * 100) / height) / 100;
 
@@ -55,36 +55,51 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
                       alignment: Alignment.bottomCenter,
                       child: FractionallySizedBox(
                         heightFactor: heightFactor,
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            color: TagColors.white,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(16.r),
-                              topRight: Radius.circular(16.r),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(left: 28.w, right: 21.5.w),
+                              child: _buildNavItem(
+                                context,
+                                0,
+                                Assets.home,
+                                'Home',
+                              ),
                             ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              _buildNavItem(context, 0, Assets.home, 'Home'),
-                              _buildNavItem(
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 21.5.w),
+                              child: _buildNavItem(
                                 context,
                                 1,
                                 Assets.search,
                                 'Search',
                               ),
-                              if (seller == 'Seller' && buyer == '')
-                                _buildNavItem(context, 4, Assets.sell, 'Sell')
-                              else if (buyer == 'Buyer' && seller == '')
-                                _buildNavItem(
+                            ),
+                            if (seller == 'Seller' && buyer == '')
+                              Padding(
+                                padding:
+                                    EdgeInsets.symmetric(horizontal: 21.5.w),
+                                child: _buildNavItem(
+                                    context, 4, Assets.sell, 'Sell'),
+                              )
+                            else if (buyer == 'Buyer' && seller == '')
+                              Padding(
+                                padding:
+                                    EdgeInsets.symmetric(horizontal: 21.5.w),
+                                child: _buildNavItem(
                                   context,
                                   2,
                                   Assets.categories,
                                   'Categories',
                                 ),
-                              _buildNavItem(context, 3, Assets.me, 'Me'),
-                            ],
-                          ),
+                              ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 21.5.w),
+                              child: _buildNavItem(context, 3, Assets.me, 'Me'),
+                            ),
+                          ],
                         ),
                       ),
                     ),
@@ -109,13 +124,12 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
     return InkWell(
       onTap: () => _onTap(context, index),
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         children: [
           SvgPicture.asset(
             asset,
             color: color,
-            width: 17.w,
-            height: 17.h,
+            width: 22.5.w,
+            height: 19.5.h,
           ),
           4.verticalSpace,
           Text(
