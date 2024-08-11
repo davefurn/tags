@@ -46,16 +46,6 @@ GoRouter router = GoRouter(
   debugLogDiagnostics: true,
   navigatorKey: _rootNavigatorKey,
   initialLocation: TagRoutes.splashScreen.path,
-  // redirect: (context, state) async {
-  //   final prefs = await SharedPreferences.getInstance();
-
-  //   final hasOnBoarded = prefs.getBool(LandConstants.hasOnBoarded) ?? false;
-
-  //   if (hasOnBoarded != true) {
-  //     return TagRoutes.onBoarding.path;
-  //   }
-  //   return null;
-  // },
   routes: [
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) => ScaffoldWithNavBar(
@@ -311,8 +301,10 @@ GoRouter router = GoRouter(
     GoRoute(
       name: TagRoutes.subCategoryScreen.name,
       path: TagRoutes.subCategoryScreen.path,
-      pageBuilder: (context, state) =>  CupertinoPage(
-        child: SubCategoryScreen(brandName: state.pathParameters['brandName'].toString(),),
+      pageBuilder: (context, state) => CupertinoPage(
+        child: SubCategoryScreen(
+          brandName: state.pathParameters['brandName'].toString(),
+        ),
       ),
     ),
   ],

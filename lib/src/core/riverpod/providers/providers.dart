@@ -15,6 +15,7 @@ final serviceProvider = Provider((_) => AgencyBackEnd(Dio()));
 final pinProvider = StateProvider.autoDispose<List>((ref) => []);
 
 final imagePickerService = Provider((ref) => TagImagePicker(ImagePicker()));
+final filePickerService = Provider((ref) => TagFilePicker());
 
 final loginViewModelProvider =
     StateNotifierProvider<LoginViewModel, LoginState>(

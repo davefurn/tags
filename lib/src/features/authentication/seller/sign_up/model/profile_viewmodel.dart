@@ -409,7 +409,6 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
     required Map<String, String> formData,
     required XFile image,
     required XFile image2,
-    required XFile image3,
   }) async {
     state = state.copyWith(
       loading: Loader.loading,
@@ -419,7 +418,7 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
       log(formData.toString());
       final response = await _reader.read(serviceProvider).postMultipart(
             path: 'api/company/product/create/',
-            files: [image, image3, image2],
+            files: [image, image2],
             formData: formData,
             pathName: 'images',
           );

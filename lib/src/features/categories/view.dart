@@ -136,9 +136,9 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                               mainAxisSpacing: 10,
                               mainAxisExtent: 160,
                             ),
-                            itemBuilder: (context, index) {
-                              final categories =
-                                  state.allNewCatz[index].products[index];
+                            itemBuilder: (context, productIndex) {
+                              final categories = state
+                                  .allNewCatz[index].products[productIndex];
 
                               return GestureDetector(
                                 onTap: () {},

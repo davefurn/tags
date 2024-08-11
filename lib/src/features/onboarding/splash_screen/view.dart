@@ -1,8 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/core/constant/colors.dart';
+import 'package:tags/src/data/hivekeys.dart';
+import 'package:tags/src/data/localdatabase.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -31,8 +35,25 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future _nextPage() async {
-    await Future.delayed(const Duration(seconds: 3), () {
-      context.goNamed(TagRoutes.introPageOne.name);
+    await Future.delayed(const Duration(seconds: 3), () async {
+      // Fetch values from HiveStorage
+      String onborded = (await HiveStorage.get(HiveKeys.onBoarded)) ?? 'false';
+      String seller = (await HiveStorage.get(HiveKeys.seller)) ?? '';
+      String buyer = (await HiveStorage.get(HiveKeys.buyer)) ?? '';
+
+      // Redirect logic
+      if (context.mounted && onborded != 'true') {
+        context.goNamed(TagRoutes.introPageOne.name);
+      } else if (context.mounted &&
+          onborded == 'true' &&
+          seller == '' &&
+          buyer == '') {
+        context.goNamed(TagRoutes.introPageTwo.name);
+      } else if (onborded == 'true' && context.mounted && seller == 'Seller') {
+        context.goNamed(TagRoutes.sellerLogin.name);
+      } else if (onborded == 'true' && context.mounted && buyer == 'Buyer') {
+        context.goNamed(TagRoutes.home.name);
+      }
     });
   }
 

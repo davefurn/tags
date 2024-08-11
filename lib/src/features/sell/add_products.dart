@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages
 import 'dart:developer';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -76,10 +77,11 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(profileProvider);
-    var images = useState(XFile(''));
-    var images2 = useState(XFile(''));
-    var images3 = useState(XFile(''));
-    final _imagePicker = ref.read(imagePickerService);
+    var imagesList = useState<List<XFile>>([]);
+    var documents = useState<List<PlatformFile>>([]);
+
+    final imagePicker = ref.read(imagePickerService);
+    ref.read(filePickerService);
     return Scaffold(
       backgroundColor: const Color(0xffF8F9FF),
       appBar: AppBar(
@@ -94,23 +96,26 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
         ),
         elevation: 0,
         centerTitle: true,
+        leadingWidth: 55.w,
         automaticallyImplyLeading: false,
-        leading: IconButton(
-          onPressed: () {
-            context.goNamed(TagRoutes.sell.name);
-          },
-          icon: Container(
-            height: 40,
-            width: 40,
-            alignment: Alignment.center,
+        leading: InkWell(
+          onTap: () => context.goNamed(TagRoutes.sell.name),
+          child: Container(
+            width: 28.19.w,
+            height: 27.25.h,
+            margin: EdgeInsets.only(
+              left: 16.w,
+              right: 10.w,
+              top: 12.h,
+              bottom: 8.h,
+            ),
             decoration: BoxDecoration(
               color: TagColors.appThemeColor,
-              shape: BoxShape.circle,
-              border: Border.all(color: TagColors.appThemeColor),
+              borderRadius: BorderRadius.circular(1000.r),
             ),
             child: const Icon(
               Icons.arrow_back,
-              color: Colors.white,
+              color: TagColors.white,
             ),
           ),
         ),
@@ -155,20 +160,20 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
                       GestureDetector(
                         onTap: () => showTagBottomSheet(
                           child: ImagePickerWidget(
-                            picker: _imagePicker,
-                            imageList: images,
+                            picker: imagePicker,
+                            imageList: imagesList,
                             onImageSelected: () {},
                           ),
                           context: context,
                         ),
                         child: Column(
                           children: [
-                            if (images.value.path.isNotEmpty)
+                            if (imagesList.value.isNotEmpty)
                               PickedImageDisplay(
-                                imageList: images,
+                                imageList: imagesList,
                                 isDark: false,
                               ),
-                            if (images.value.path.isEmpty)
+                            if (imagesList.value.isEmpty)
                               Container(
                                 width: 130,
                                 height: 130,
@@ -188,45 +193,7 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
                           ],
                         ),
                       ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      GestureDetector(
-                        onTap: () => showTagBottomSheet(
-                          child: ImagePickerWidget(
-                            picker: _imagePicker,
-                            imageList: images,
-                            onImageSelected: () {},
-                          ),
-                          context: context,
-                        ),
-                        child: Column(
-                          children: [
-                            if (images3.value.path.isNotEmpty)
-                              PickedImageDisplay(
-                                imageList: images3,
-                                isDark: false,
-                              ),
-                            if (images3.value.path.isEmpty)
-                              Container(
-                                width: 130,
-                                height: 130,
-                                decoration: BoxDecoration(
-                                  color: const Color(0xffF9F9F9),
-                                  // border: Border.all(
-                                  //   color: TagColors.textGrey.withOpacity(0.5),
-                                  // ),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Center(
-                                  child: SvgPicture.asset(
-                                    'assets/svg/gallery-add.svg',
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
+
                       const SizedBox(
                         height: 25,
                       ),
@@ -557,24 +524,6 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
                         title: 'Price',
                         // prefixText: '\u20A6 ',
                         hintText: 'Type the of price your item ',
-                        // onChanged: (value) {
-                        //   final formattedAmount =
-                        //       formatAmountWithThousandSeparator(value);
-                        //   if (formattedAmount != priceContr.text) {
-                        //     priceContr.value = TextEditingValue(
-                        //       text: formattedAmount,
-                        //       selection: TextSelection.collapsed(
-                        //           offset: formattedAmount.length),
-                        //     );
-                        //   }
-                        // },
-                        // onEditingComplete: () {
-                        //   final unformattedAmount =
-                        //       removeThousandSeparator(priceContr.text);
-                        //   setState(() {
-                        //     priceContr.text = unformattedAmount;
-                        //   });
-                        // },
                       ),
                       const SizedBox(
                         height: 20,
@@ -612,82 +561,79 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
                       const SizedBox(
                         height: 15,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Product description document',
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w300,
-                              color: TagColors.newText,
-                              fontSize: 13,
-                            ),
-                          ),
-                          Container(
-                            width: 90,
-                            // height: 55,
-                            padding: const EdgeInsets.all(8),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: const Color(0xffF1F1F1),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: const Text(
-                              'Optional',
-                              style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w300,
-                                color: TagColors.newText,
-                                fontSize: 13,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   children: [
+                      //     const Text(
+                      //       'Product description document',
+                      //       style: TextStyle(
+                      //         fontFamily: 'Poppins',
+                      //         fontWeight: FontWeight.w300,
+                      //         color: TagColors.newText,
+                      //         fontSize: 13,
+                      //       ),
+                      //     ),
+                      //     Container(
+                      //       width: 90,
+                      //       // height: 55,
+                      //       padding: const EdgeInsets.all(8),
+                      //       alignment: Alignment.center,
+                      //       decoration: BoxDecoration(
+                      //         color: const Color(0xffF1F1F1),
+                      //         borderRadius: BorderRadius.circular(16),
+                      //       ),
+                      //       child: const Text(
+                      //         'Optional',
+                      //         style: TextStyle(
+                      //           fontFamily: 'Poppins',
+                      //           fontWeight: FontWeight.w300,
+                      //           color: TagColors.newText,
+                      //           fontSize: 13,
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
 
-                      const SizedBox(
-                        height: 20,
-                      ),
+                      // const SizedBox(
+                      //   height: 20,
+                      // ),
 
-                      GestureDetector(
-                        onTap: () => showTagBottomSheet(
-                          child: ImagePickerWidget(
-                            picker: _imagePicker,
-                            imageList: images2,
-                            onImageSelected: () {},
-                          ),
-                          context: context,
-                        ),
-                        child: Column(
-                          children: [
-                            if (images2.value.path.isNotEmpty)
-                              PickedImageDisplay(
-                                imageList: images2,
-                                isDark: false,
-                              ),
-                            if (images2.value.path.isEmpty)
-                              Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: 130,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    color: TagColors.textGrey.withOpacity(0.8),
-                                  ),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                child: Center(
-                                  child: SvgPicture.asset(
-                                    'assets/svg/document-upload.svg',
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
+                      // GestureDetector(
+                      //   onTap: () => showTagBottomSheet(
+                      //     child: DocumentPickerWidget(
+                      //       picker: filePicker,
+                      //       documentList: documents,
+                      //       onDocumentSelected: () {},
+                      //     ),
+                      //     context: context,
+                      //   ),
+                      //   child: Column(
+                      //     children: [
+                      //       if (documents.value.isNotEmpty)
+                      //         PickedDocumentDisplay(
+                      //           documentList: documents,
+                      //           isDark: false,
+                      //         ),
+                      //       if (documents.value.isEmpty)
+                      //         Container(
+                      //           width: 130,
+                      //           height: 130,
+                      //           decoration: BoxDecoration(
+                      //             color: const Color(0xffF9F9F9),
+                      //             borderRadius: BorderRadius.circular(15),
+                      //           ),
+                      //           child: Center(
+                      //             child: SvgPicture.asset(
+                      //               'assets/svg/file-add.svg', // Update asset path as needed
+                      //             ),
+                      //           ),
+                      //         ),
+                      //     ],
+                      //   ),
+                      // ),
 
-                      //
+                      // //
                       const SizedBox(
                         height: 20,
                       ),
@@ -717,8 +663,7 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
                             width: MediaQuery.of(context).size.width - 70,
                             height: 55,
                             onTap: () async {
-                              if (images.value.path.isNotEmpty &&
-                                  images3.value.path.isNotEmpty &&
+                              if (imagesList.value.isNotEmpty &&
                                   productName.text.isNotEmpty &&
                                   prroductDescx.text.isNotEmpty &&
                                   priceContr.text.isNotEmpty &&
@@ -731,8 +676,8 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
                                   selectedColor.toString().isNotEmpty) {
                                 // String pinCode = otpController.text;
                                 log('running');
-                                log(images2.value.path);
-                                log(images.value.path);
+                                log(documents.value[0].path.toString());
+                                log(imagesList.value.length.toString());
                                 final response = await model.createItem(
                                   formData: {
                                     'name': productName.text,
@@ -746,9 +691,8 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
                                     'return_policy': returnControl.text,
                                     'category': selectedCategory.toString(),
                                   },
-                                  image: XFile(images.value.path),
-                                  image2: XFile(images2.value.path),
-                                  image3: XFile(images3.value.path),
+                                  image: XFile(imagesList.value[0].path),
+                                  image2: XFile(imagesList.value[1].path),
                                 );
 
                                 if (response.successMessage.isNotEmpty) {

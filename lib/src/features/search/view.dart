@@ -16,7 +16,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: TagBar(
-          isHome: false,
+          isHome: true,
           title: 'Search',
           actions: [
             const InkWell(

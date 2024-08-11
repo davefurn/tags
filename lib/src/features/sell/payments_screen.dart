@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/features/onboarding/widgets/app_texts.dart';
-import 'package:tags/src/features/sell/store_profile.dart';
 
 class PaymentsPage extends StatefulWidget {
   const PaymentsPage({super.key});
@@ -15,7 +14,7 @@ class PaymentsPage extends StatefulWidget {
 class _PaymentsPageState extends State<PaymentsPage> {
   @override
   Widget build(BuildContext context) {
-    TextEditingController _bankNameController = TextEditingController();
+    TextEditingController bankNameController = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(
@@ -73,7 +72,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
             ),
             TagCustomField(
               textCapitalization: TextCapitalization.none,
-              controller: _bankNameController,
+              controller: bankNameController,
               title: 'Bank',
               hintText: ' Type in your bank name',
             ),
@@ -82,7 +81,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
             ),
             TagCustomField(
               textCapitalization: TextCapitalization.none,
-              controller: _bankNameController,
+              controller: bankNameController,
               title: 'Account Name',
               hintText: ' Type in your account name',
             ),
@@ -91,7 +90,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
             ),
             TagCustomField(
               textCapitalization: TextCapitalization.none,
-              controller: _bankNameController,
+              controller: bankNameController,
               title: 'Account Number',
               hintText: ' Type in your account number',
             ),

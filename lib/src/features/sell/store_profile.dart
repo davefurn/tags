@@ -4,8 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/features/onboarding/widgets/app_texts.dart';
-import 'package:tags/src/features/sell/payments_screen.dart';
-import 'package:tags/src/features/sell/sell_page.dart';
 
 class StoreProfile extends StatefulWidget {
   const StoreProfile({super.key});

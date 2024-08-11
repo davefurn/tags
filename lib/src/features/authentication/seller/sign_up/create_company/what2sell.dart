@@ -146,38 +146,39 @@ class _SelectCategoryState extends ConsumerState<SelectCategory> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(2),
                                   child: Container(
-                                    padding: const EdgeInsets.all(2),
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 10.h,
+                                      horizontal: 10.w,
+                                    ),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
-                                      borderRadius: BorderRadius.circular(4),
+                                      borderRadius: BorderRadius.circular(4.r),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.grey.withOpacity(0.2),
-                                          spreadRadius: 1,
-                                          blurRadius: 1,
-                                          offset: const Offset(0, 1),
+                                          color: Colors.white.withOpacity(0.3),
+                                          spreadRadius: 2,
+                                          blurRadius: 6,
+                                          offset: const Offset(0, 2),
                                         ),
                                       ],
                                       border: Border.all(
                                         color: isSelected
                                             ? Colors.blue
-                                            : Colors.transparent,
+                                            : const Color(0xffF1F1F1),
                                       ),
                                     ),
                                     child: Center(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8),
-                                        child: Text(
-                                          item.name.toString(),
-                                          style: TextStyle(
-                                            fontSize: 10.5,
-                                            fontWeight: FontWeight.w600,
-                                            color: isSelected
-                                                ? Colors.blue
-                                                : TagColors.newText,
-                                          ),
-                                          textAlign: TextAlign.center,
+                                      child: Text(
+                                        item.name.toString(),
+                                        style: TextStyle(
+                                          fontFamily: 'Poppins',
+                                          fontSize: 10.sp,
+                                          fontWeight: FontWeight.w300,
+                                          color: isSelected
+                                              ? Colors.blue
+                                              : const Color(0xff919191),
                                         ),
+                                        textAlign: TextAlign.center,
                                       ),
                                     ),
                                   ),

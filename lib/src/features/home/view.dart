@@ -267,7 +267,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   crossAxisCount: 3,
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
-                  mainAxisExtent: 205.h,
+                  mainAxisExtent: 220.h,
                 ),
                 itemBuilder: (context, index) {
                   final dealOfDay = state.todayDealz[index];
@@ -289,14 +289,14 @@ class _HomePageState extends ConsumerState<HomePage> {
                     },
                     child: SizedBox(
                       key: ValueKey(dealOfDay.price),
-                      height: 205.h,
+                      height: 220.h,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(9),
                             child: SizedBox(
-                              height: 135,
+                              height: 135.h,
                               width: MediaQuery.sizeOf(context).width * 0.35,
                               child: Image.network(
                                 dealOfDay.image.isNotEmpty
@@ -367,6 +367,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                               color: const Color(0xff474747),
                               fontSize: 12.sp,
                             ),
+                            maxLines: 2,
                           ),
                         ],
                       ),
@@ -436,14 +437,17 @@ class _HomePageState extends ConsumerState<HomePage> {
                               mainAxisSpacing: 10,
                               mainAxisExtent: 200,
                             ),
-                            itemBuilder: (context, index) {
-                              final categories =
-                                  state.allNewCatz[index].products[index];
+                            itemBuilder: (context, productIndex) {
+                              final categories = state
+                                  .allNewCatz[index].products[productIndex];
 
                               final format = NumberFormat('#,##0', 'en_US');
                               String price = format.format(categories.price);
 
-                              log(categories.price.toString());
+                              log(
+                                state.allNewCatz[index].products.length
+                                    .toString(),
+                              );
                               return GestureDetector(
                                 onTap: () {
                                   // Navigator.push(

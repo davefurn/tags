@@ -95,7 +95,7 @@ class _UpdateStorePageState extends ConsumerState<UpdateStorePage> {
     ref.read(profileProvider.notifier);
     final state = ref.watch(profileProvider);
     var images = useState(XFile(''));
-    var images2 = useState(XFile(''));
+    var imagesList = useState<List<XFile>>([]);
     final imagePicker = ref.read(imagePickerService);
 
     Future<void> updateCompany() async {
@@ -122,10 +122,14 @@ class _UpdateStorePageState extends ConsumerState<UpdateStorePage> {
           'currency': selectedCurrency.toString(),
           'delivery_plan': selectedDelivery.toString().toUpperCase(),
         });
-        request.files
-            .add(await http.MultipartFile.fromPath('logo', images.value.path));
         request.files.add(
-          await http.MultipartFile.fromPath('cover', images2.value.path),
+          await http.MultipartFile.fromPath(
+            'logo',
+            imagesList.value[0].path,
+          ),
+        );
+        request.files.add(
+          await http.MultipartFile.fromPath('cover', imagesList.value[1].path),
         );
         request.headers.addAll(headers);
 
@@ -653,7 +657,7 @@ class _UpdateStorePageState extends ConsumerState<UpdateStorePage> {
                       onTap: () => showTagBottomSheet(
                         child: ImagePickerWidget(
                           picker: imagePicker,
-                          imageList: images,
+                          imageList: imagesList,
                           onImageSelected: () {},
                         ),
                         context: context,
@@ -662,7 +666,7 @@ class _UpdateStorePageState extends ConsumerState<UpdateStorePage> {
                         children: [
                           if (images.value.path.isNotEmpty)
                             PickedImageDisplay(
-                              imageList: images,
+                              imageList: imagesList,
                               isDark: false,
                             ),
                           if (images.value.path.isEmpty)
@@ -734,19 +738,19 @@ class _UpdateStorePageState extends ConsumerState<UpdateStorePage> {
                       onTap: () => showTagBottomSheet(
                         child: ImagePickerWidget(
                           picker: imagePicker,
-                          imageList: images2,
+                          imageList: imagesList,
                           onImageSelected: () {},
                         ),
                         context: context,
                       ),
                       child: Column(
                         children: [
-                          if (images2.value.path.isNotEmpty)
+                          if (imagesList.value.isNotEmpty)
                             PickedImageDisplay(
-                              imageList: images2,
+                              imageList: imagesList,
                               isDark: false,
                             ),
-                          if (images2.value.path.isEmpty)
+                          if (imagesList.value.isEmpty)
                             Container(
                               width: MediaQuery.of(context).size.width,
                               height: 150,

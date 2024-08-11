@@ -92,8 +92,10 @@ class _BuyerPageState extends State<BuyerPage> {
                   TagLoginButton(
                     myColor: TagColors.white,
                     borderColor: Colors.transparent,
-                    onTap: () {
-                      context.goNamed(TagRoutes.home.name);
+                    onTap: () async {
+                      if (context.mounted) {
+                        context.goNamed(TagRoutes.home.name);
+                      }
                     },
                     child: TagText(
                       fontColor: const Color(0xff303030),

@@ -21,6 +21,7 @@ class _MePageState extends State<MePage> {
   String? name;
   String? buyer;
   String? seller;
+  String? token;
   @override
   void initState() {
     setState(() {
@@ -28,13 +29,14 @@ class _MePageState extends State<MePage> {
       name = HiveStorage.get(HiveKeys.name);
       buyer = HiveStorage.get(HiveKeys.buyer);
       seller = HiveStorage.get(HiveKeys.seller);
+      token = HiveStorage.get(HiveKeys.token);
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<ProfileModel> myProfile = [
+    final List<ProfileModel> profileItems = [
       ProfileModel(
         action: buyer == 'Buyer'
             ? () {
@@ -46,42 +48,23 @@ class _MePageState extends State<MePage> {
         image: Assets.ads,
         title: buyer == 'Buyer' ? 'Sell' : 'My Ads',
       ),
-      //order
-      ProfileModel(
-        action: () {},
-        image: Assets.order,
-        title: 'Order History',
-      ),
-
-      //id
-      if (seller == 'Seller')
+      if (seller == 'Seller') ...[
         ProfileModel(
           action: () {},
           image: Assets.uploadId,
           title: 'Upload ID',
         ),
-      if (seller == 'Seller')
         ProfileModel(
           action: () {},
           image: Assets.drafts,
           title: 'Drafts',
         ),
-
-      //wishlist
-      ProfileModel(
-        action: () {},
-        image: Assets.wishlist,
-        title: 'Wishlist',
-      ),
-
-      //rate us
+      ],
       ProfileModel(
         action: () {},
         image: Assets.rateUs,
         title: 'Rate Us',
       ),
-
-      //settings
       ProfileModel(
         action: () {
           // Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -91,18 +74,28 @@ class _MePageState extends State<MePage> {
         image: Assets.setting,
         title: 'Settings',
       ),
-
-      //log out
-      ProfileModel(
-        action: () {},
-        image: Assets.logout,
-        title: 'Log Out',
-      ),
+      if (token == null || token!.isEmpty) ...[
+        ProfileModel(
+          action: () {},
+          image: Assets.logout,
+          title: 'Log Out',
+        ),
+        ProfileModel(
+          action: () {},
+          image: Assets.wishlist,
+          title: 'Wishlist',
+        ),
+        ProfileModel(
+          action: () {},
+          image: Assets.order,
+          title: 'Order History',
+        ),
+      ],
     ];
     return Scaffold(
       backgroundColor: const Color(0xffF8F9FF),
       appBar: const TagBar(
-        isHome: false,
+        isHome: true,
         myColor: Color(0xffF8F9FF),
         title: 'Me',
       ),
@@ -184,7 +177,7 @@ class _MePageState extends State<MePage> {
                       color: Color(0xffF1F1F1),
                       thickness: 0.5,
                     ),
-                    itemCount: myProfile.length,
+                    itemCount: profileItems.length,
                     itemBuilder: (context, index) => Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 8,
@@ -194,14 +187,14 @@ class _MePageState extends State<MePage> {
                         children: [
                           //
                           SvgPicture.asset(
-                            myProfile[index].image,
+                            profileItems[index].image,
                             // height: 30,
                           ),
 
                           const SizedBox(width: 20),
 
                           Text(
-                            myProfile[index].title,
+                            profileItems[index].title,
                             style: const TextStyle(
                               fontFamily: 'Poppins',
                               fontWeight: FontWeight.w300,

@@ -6,8 +6,11 @@ import 'package:go_router/go_router.dart';
 import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/resources/resources.dart';
+import 'package:tags/src/data/hivekeys.dart';
 import 'package:tags/src/features/onboarding/widgets/app_texts.dart';
 import 'package:tags/src/features/onboarding/widgets/page_indicator.dart';
+
+import '../../../data/localdatabase.dart';
 
 class IntroPageOne extends StatefulWidget {
   const IntroPageOne({super.key});
@@ -100,8 +103,12 @@ class _IntroPageOneState extends State<IntroPageOne> {
                       TagLoginButton(
                         myColor: TagColors.appThemeColor,
                         borderColor: Colors.transparent,
-                        onTap: () {
-                          context.pushNamed(TagRoutes.introPageTwo.name);
+                        onTap: () async {
+                          await HiveStorage.put(HiveKeys.onBoarded, 'true');
+                          if (context.mounted) {
+                            await context
+                                .pushNamed(TagRoutes.introPageTwo.name);
+                          }
                         },
                         child: TagText(
                           fontColor: TagColors.white,

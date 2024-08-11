@@ -1,6 +1,6 @@
 class HiveKeys {
   static const buyer = 'buyer';
-   static const seller = 'seller';
+  static const seller = 'seller';
   static const appBox = 'appBox';
   static const token = 'token';
   static const refreshToken = 'refresh_token';
@@ -32,6 +32,7 @@ class HiveKeys {
   static const phonenumber = 'phone';
   static const license = 'license';
 
+  static const onBoarded = 'onBoarded';
   //
   static const companyName = 'company_name';
   static const companyEmail = 'company_email';

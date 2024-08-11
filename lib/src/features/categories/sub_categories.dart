@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:tags/src/config/utils/enums.dart';
 import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/riverpod/providers/providers.dart';
@@ -38,7 +39,7 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
     'GBP': '£', // Pound
     // Add other currencies as needed
   };
-
+  final format = NumberFormat('#,##0', 'en_US');
 // Function to get the currency symbol
   String getCurrencySymbol(String currencyCode) =>
       currencySymbols[currencyCode] ??
@@ -84,11 +85,11 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
                 height: 20,
               ),
             ),
-            const SliverToBoxAdapter(
+            SliverToBoxAdapter(
               child: Text(
-                'All Categories',
+                widget.brandName.toUpperCase(),
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -238,35 +239,33 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
                 height: 10,
               ),
             ),
-            SliverGrid.builder(
-              itemCount: state.brandsNames.length,
-              itemBuilder: (context, index) {
-                if (state.loading == Loader.loading) {
-                  return const SliverToBoxAdapter(
-                    child: Center(
-                      child: SpinKitWaveSpinner(
-                        color: TagColors.appThemeColor,
-                      ),
-                    ),
-                  );
-                } else if (state.loading != Loader.loading &&
-                    state.brandsNames.isNotEmpty) {
+            if (state.loading == Loader.loading)
+              const SliverToBoxAdapter(
+                child: Center(
+                  child: SpinKitWaveSpinner(
+                    color: TagColors.appThemeColor,
+                  ),
+                ),
+              )
+            else if (state.brandsNames.isNotEmpty)
+              SliverGrid.builder(
+                itemCount: state.brandsNames.length,
+                itemBuilder: (context, index) {
+                  final brand = state.brandsNames[index];
                   return SizedBox(
                     height: 100,
                     width: MediaQuery.sizeOf(context).width / 4.25,
-                    child: state.brandsNames[index].image == ''
+                    child: brand.image.isEmpty
                         ? Image.asset('assets/images/Oraimo.png')
-                        : Image.network(state.brandsNames[index].image),
+                        : Image.network(brand.image),
                   );
-                }
-                return null;
-              },
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
-                crossAxisSpacing: 5,
-                mainAxisSpacing: 15,
+                },
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  crossAxisSpacing: 5,
+                  mainAxisSpacing: 15,
+                ),
               ),
-            ),
             SliverToBoxAdapter(
               child: Row(
                 children: [
@@ -324,8 +323,8 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
                     context,
                     dealOfDay.image,
                     dealOfDay.name,
-                    '${getCurrencySymbol(dealOfDay.currency)}${dealOfDay.discountedPrice}',
-                    '${getCurrencySymbol(dealOfDay.currency)}${dealOfDay.price}',
+                    '${getCurrencySymbol(dealOfDay.currency)}${format.format(dealOfDay.discountedPrice)}',
+                    '${getCurrencySymbol(dealOfDay.currency)}${format.format(dealOfDay.price)}',
                   );
                 },
               )
@@ -338,8 +337,8 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
                     context,
                     dealOfDay.image,
                     dealOfDay.name,
-                    '${getCurrencySymbol(dealOfDay.currency)}${dealOfDay.discountedPrice}',
-                    '${getCurrencySymbol(dealOfDay.currency)}${dealOfDay.price}',
+                    '${getCurrencySymbol(dealOfDay.currency)}${format.format(dealOfDay.discountedPrice)}',
+                    '${getCurrencySymbol(dealOfDay.currency)}${format.format(dealOfDay.price)}',
                   );
                 },
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
