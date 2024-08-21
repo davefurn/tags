@@ -17,6 +17,7 @@ class TagText extends StatelessWidget {
     this.fontStyle,
     this.textAlign,
     super.key,
+    this.letterSpacing,
   });
   final String text;
   final double fontSize;
@@ -24,6 +25,7 @@ class TagText extends StatelessWidget {
   final FontWeight fontWeight;
   final FontStyle? fontStyle;
   final TextAlign? textAlign;
+  final double? letterSpacing;
 
   @override
   Widget build(BuildContext context) => Text(
@@ -34,7 +36,7 @@ class TagText extends StatelessWidget {
           fontFamily: 'Poppins',
           fontSize: fontSize,
           fontWeight: fontWeight,
-          letterSpacing: 1.2,
+          letterSpacing: letterSpacing ?? 1.2,
           color: fontColor,
         ),
       );
@@ -49,6 +51,7 @@ class TagText2 extends StatelessWidget {
     this.fontStyle,
     this.textAlign,
     super.key,
+    this.letterSpacing,
   });
   final String text;
   final double fontSize;
@@ -56,6 +59,7 @@ class TagText2 extends StatelessWidget {
   final FontWeight fontWeight;
   final FontStyle? fontStyle;
   final TextAlign? textAlign;
+  final double? letterSpacing;
 
   @override
   Widget build(BuildContext context) => Text(
@@ -66,7 +70,7 @@ class TagText2 extends StatelessWidget {
           fontFamily: 'Montserrat',
           fontSize: fontSize,
           fontWeight: fontWeight,
-          letterSpacing: 1.2,
+          letterSpacing: letterSpacing ?? 1.2,
           color: fontColor,
         ),
       );

@@ -323,3 +323,5 @@ class BrandProduct {
         'tag_one': tagOne,
       };
 }
+
+

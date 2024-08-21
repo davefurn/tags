@@ -4,6 +4,8 @@ class Assets {
   Assets._();
 
   static const String addPro = 'assets/svg/add_pro.svg';
+  static const String iphoneForward = 'assets/svg/iphone_forward.svg';
+  static const String iphoneBack = 'assets/svg/iphone_back.svg';
   static const String addProducts = 'assets/svg/add_products.svg';
   static const String address = 'assets/svg/address.svg';
   static const String ads = 'assets/svg/ads.svg';

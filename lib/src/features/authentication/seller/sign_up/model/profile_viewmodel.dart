@@ -14,6 +14,7 @@ import 'package:tags/src/core/services/dio_utils.dart';
 import 'package:tags/src/data/hivekeys.dart';
 import 'package:tags/src/data/localdatabase.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/model/catmodel.dart';
+import 'package:tags/src/features/home/models/view_model.dart';
 
 class ProfileViewModel extends StateNotifier<ProfileState> {
   ProfileViewModel(this._reader)
@@ -48,6 +49,71 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
         state = state.copyWith(
           loading: Loader.loaded,
           productResponse: eventCat,
+        );
+        return ApiResponse(
+          successMessage: body['message'],
+        );
+      } else {
+        log('failed gotten brand product');
+        state = state.copyWith(
+          loading: Loader.error,
+        );
+        return ApiResponse(
+          errorMessage: response.data['message'],
+        );
+      }
+    } on DioError catch (e) {
+      state = state.copyWith(loading: Loader.error);
+
+      if (e.response != null &&
+          e.response!.data['message'] != null &&
+          e.response!.data['errors'] is List &&
+          e.response!.data['message'].isNotEmpty) {
+        // Join the error messages if there are multiple
+        String errorMessage = e.response!.data['errors'].join('\n');
+        return ApiResponse(errorMessage: errorMessage);
+      } else if (e.type == DioErrorType.badResponse ||
+          e.type == DioErrorType.receiveTimeout ||
+          e.type == DioErrorType.unknown) {
+        // Handle no internet connection or connection error here
+        return ApiResponse(
+          errorMessage:
+              e.response!.data['message'] ?? e.response!.data['error'],
+          // "Check your data connection / Connection error."
+        );
+      } else {
+        // Handle other DioErrors
+        // return ApiResponse(errorMessage: "Connection error, Please try again.");
+        return ApiResponse(errorMessage: e.response!.data['message']);
+      }
+    } catch (e) {
+      state = state.copyWith(
+        loading: Loader.error,
+      );
+      rethrow;
+    }
+  }
+
+  ///
+
+  Future<ApiResponse> getAProduct(String slug) async {
+    state = state.copyWith(
+      loading: Loader.loading,
+    );
+    log(slug);
+    try {
+      final response = await _reader.read(serviceProvider).getWithToken(
+            path: 'api/product/$slug/',
+          );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> body = response.data;
+        log(body.toString());
+        List<ViewMoreProduct> eventCat = (body['data'] as List)
+            .map((e) => ViewMoreProduct.fromJson(e))
+            .toList();
+        state = state.copyWith(
+          loading: Loader.loaded,
+          viewMoreProducts: eventCat,
         );
         return ApiResponse(
           successMessage: body['message'],
@@ -980,6 +1046,7 @@ class ProfileState {
     this.loading = Loader.idle,
     // required this.userProfile,
     this.company_name,
+    this.viewMoreProducts,
     this.company_email,
     this.brandsNames = const [],
     this.company_phone,
@@ -1016,6 +1083,7 @@ class ProfileState {
   final List<TodayDeal> todayDealz;
   final List<Product> productz;
   final List<AllCategoriesModel> allNewCatz;
+  final List<ViewMoreProduct>? viewMoreProducts;
   String? company_name;
   String? company_email;
   String? company_phone;
@@ -1031,6 +1099,7 @@ class ProfileState {
     List<String>? companies,
     final List<PopularCategoriz>? popularCat,
     final List<Brand>? brandsNames,
+    final List<ViewMoreProduct>? viewMoreProducts,
     final List<BrandProduct>? productResponse,
     final List<BestSellingModel>? bestSelling,
     final List<TodayDeal>? todayDealz,
@@ -1051,6 +1120,7 @@ class ProfileState {
     // OtpResponseModel? otpResponse,
   }) =>
       ProfileState(
+        viewMoreProducts: viewMoreProducts ?? this.viewMoreProducts,
         productz: productz ?? this.productz,
         company_name: company_name ?? this.company_name,
 

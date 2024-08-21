@@ -72,9 +72,12 @@ class CustomTextInput extends StatelessWidget {
   Widget build(BuildContext context) => SizedBox(
         height: 60.h,
         child: TextField(
+          cursorColor: TagColors.black,
           textAlignVertical: TextAlignVertical.bottom,
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 15.h),
+            contentPadding:
+                EdgeInsets.symmetric(vertical: 15.h, horizontal: 5.w)
+                    .copyWith(bottom: 20.h),
             hintMaxLines: 1,
             focusedBorder: OutlineInputBorder(
               borderSide: const BorderSide(color: TagColors.appThemeColor),
@@ -82,14 +85,16 @@ class CustomTextInput extends StatelessWidget {
             ),
             hintStyle: TextStyle(
               fontFamily: 'Poppins',
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w200,
               color: const Color(0xffC6C6C6),
+              letterSpacing: 1.2,
               fontSize: 13.sp,
             ),
             prefixIcon: IconButton(
               onPressed: () {},
-              icon: const Icon(
+              icon: Icon(
                 Icons.search,
+                size: 20.sp,
                 color: TagColors.greyColor,
               ),
             ),
@@ -97,20 +102,18 @@ class CustomTextInput extends StatelessWidget {
               padding: EdgeInsets.only(right: 10.w),
               child: SizedBox(
                 width: 50.w,
-                child: const Row(
+                child: Row(
                   children: [
                     Icon(
-                      Icons.mic,
+                      Icons.mic_none_outlined,
                       color: TagColors.greyColor,
-                      size: 20,
+                      size: 24.sp,
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
+                    2.horizontalSpace,
                     Icon(
                       Icons.image_outlined,
                       color: TagColors.greyColor,
-                      size: 20,
+                      size: 24.sp,
                     ),
                   ],
                 ),
@@ -118,7 +121,10 @@ class CustomTextInput extends StatelessWidget {
             ),
             hintText: 'Search for categories, product or brand',
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(25.r),
+              borderRadius: BorderRadius.circular(32.r),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(32.r),
             ),
           ),
         ),

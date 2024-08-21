@@ -16,6 +16,7 @@ import 'package:tags/src/features/authentication/seller/sign_up/signup_page2.dar
 import 'package:tags/src/features/categories/sub_categories.dart';
 import 'package:tags/src/features/categories/view.dart';
 import 'package:tags/src/features/home/view.dart';
+import 'package:tags/src/features/home/widgets/view_products.dart';
 import 'package:tags/src/features/me/screens/settings.dart';
 import 'package:tags/src/features/me/view.dart';
 import 'package:tags/src/features/onboarding/intros/buyer.dart';
@@ -31,6 +32,7 @@ import 'package:tags/src/features/sell/products/myproducts.dart';
 import 'package:tags/src/features/sell/sales/sales.dart';
 import 'package:tags/src/features/sell/sell_page.dart';
 import 'package:tags/src/features/sell/store_profile.dart';
+
 import 'package:tags/src/features/seller/seller_profile/update_store.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -223,6 +225,20 @@ GoRouter router = GoRouter(
           busAddress: state.pathParameters['busAddress'].toString(),
           phoneNum: state.pathParameters['phoneNum'].toString(),
           shopCountry: state.pathParameters['shopCountry'].toString(),
+        ),
+      ),
+    ),
+    GoRoute(
+      name: TagRoutes.viewProducts.name,
+      path: TagRoutes.viewProducts.path,
+      pageBuilder: (context, state) => CupertinoPage(
+        child: ViewProducts(
+          productImage: state.pathParameters['productImage'].toString(),
+          productTitle: state.pathParameters['productTitle'].toString(),
+          productPrice: state.pathParameters['productPrice'].toString(),
+          productBrand: state.pathParameters['productBrand'].toString(),
+          slug: state.pathParameters['slug'].toString(),
+          discount: state.pathParameters['discount'].toString(),
         ),
       ),
     ),

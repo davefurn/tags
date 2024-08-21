@@ -3,8 +3,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/config/utils/enums.dart';
 import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/resources/resources.dart';
@@ -177,18 +179,18 @@ class _HomePageState extends ConsumerState<HomePage> {
                   log(bestSeller.price.toString());
                   return GestureDetector(
                     onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => ViewProducts(
-                      //       productImage: bestSeller.image,
-                      //       productTitle: bestSeller.product,
-                      //       productPrice: bestSeller.price.toString(),
-                      //       productBrand: bestSeller.slug,
-                      //       slug: bestSeller.slug,
-                      //     ),
-                      //   ),
-                      // );
+                      context.pushNamed(
+                        TagRoutes.viewProducts.name,
+                        pathParameters: {
+                          'productImage': bestSeller.image,
+                          'productTitle': bestSeller.product,
+                          'productPrice':
+                              '${getCurrencySymbol(bestSeller.currency)}$price',
+                          'productBrand': bestSeller.product,
+                          'slug': bestSeller.slug,
+                          'discount': ' ',
+                        },
+                      );
                     },
                     child: SizedBox(
                       key: ValueKey(bestSeller.product),
@@ -274,18 +276,19 @@ class _HomePageState extends ConsumerState<HomePage> {
 
                   return GestureDetector(
                     onTap: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) => ViewProducts(
-                      //       productImage: dealOfDay.image,
-                      //       productTitle: dealOfDay.product,
-                      //       productPrice: dealOfDay.formattedDiscountedPrice,
-                      //       productBrand: dealOfDay.slug,
-                      //       slug: dealOfDay.slug,
-                      //     ),
-                      //   ),
-                      // );
+                      context.pushNamed(
+                        TagRoutes.viewProducts.name,
+                        pathParameters: {
+                          'productImage': dealOfDay.image,
+                          'productTitle': dealOfDay.product,
+                          'productPrice':
+                              '${getCurrencySymbol(dealOfDay.currency)}${dealOfDay.formattedPrice}',
+                          'productBrand': dealOfDay.product,
+                          'slug': dealOfDay.slug,
+                          'discount':
+                              '${getCurrencySymbol(dealOfDay.currency)}${dealOfDay.formattedDiscountedPrice}',
+                        },
+                      );
                     },
                     child: SizedBox(
                       key: ValueKey(dealOfDay.price),
@@ -450,18 +453,18 @@ class _HomePageState extends ConsumerState<HomePage> {
                               );
                               return GestureDetector(
                                 onTap: () {
-                                  // Navigator.push(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => ViewProducts(
-                                  //       productImage: bestSeller.image,
-                                  //       productTitle: bestSeller.product,
-                                  //       productPrice: bestSeller.price.toString(),
-                                  //       productBrand: bestSeller.slug,
-                                  //       slug: bestSeller.slug,
-                                  //     ),
-                                  //   ),
-                                  // );
+                                  context.pushNamed(
+                                    TagRoutes.viewProducts.name,
+                                    pathParameters: {
+                                      'productImage': categories.image,
+                                      'productTitle': categories.name,
+                                      'productPrice':
+                                          '${getCurrencySymbol(price)}${categories.discountedPriceString}',
+                                      'productBrand': categories.slug,
+                                      'slug': categories.slug,
+                                      'discount': ' ',
+                                    },
+                                  );
                                 },
                                 child: SizedBox(
                                   key: ValueKey(

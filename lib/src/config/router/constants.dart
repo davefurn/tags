@@ -53,7 +53,8 @@ enum TagRoutes {
   ),
   viewProducts(
     name: 'viewProducts',
-    path: '/viewProducts',
+    path:
+        '/viewProducts/:productImage/:productTitle/:productPrice/:productBrand/:slug/:discount',
   ),
   salesPage(
     name: 'salesPage',
