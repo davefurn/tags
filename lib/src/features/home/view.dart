@@ -199,9 +199,16 @@ class _HomePageState extends ConsumerState<HomePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ClipRRect(
-                            borderRadius: BorderRadius.circular(9),
-                            child: SizedBox(
-                              height: 135,
+                            borderRadius: BorderRadius.circular(9.r),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: TagColors.blue,
+                                  width: 0.2,
+                                ),
+                                borderRadius: BorderRadius.circular(9.r),
+                              ),
+                              height: 135.h,
                               width: MediaQuery.sizeOf(context).width * 0.35,
                               child: Image.network(
                                 bestSeller.image.isNotEmpty
@@ -298,14 +305,23 @@ class _HomePageState extends ConsumerState<HomePage> {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(9),
-                            child: SizedBox(
-                              height: 135.h,
-                              width: MediaQuery.sizeOf(context).width * 0.35,
-                              child: Image.network(
-                                dealOfDay.image.isNotEmpty
-                                    ? dealOfDay.image
-                                    : 'https://images.pexels.com/photos/298863/pexels-photo-298863.jpeg?cs=srgb&dl=pexels-solliefoto-298863.jpg&fm=jpg',
-                                fit: BoxFit.fitHeight,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: TagColors.blue,
+                                  width: 0.2,
+                                ),
+                                borderRadius: BorderRadius.circular(9.r),
+                              ),
+                              child: SizedBox(
+                                height: 135.h,
+                                width: MediaQuery.sizeOf(context).width * 0.35,
+                                child: Image.network(
+                                  dealOfDay.image.isNotEmpty
+                                      ? dealOfDay.image
+                                      : 'https://images.pexels.com/photos/298863/pexels-photo-298863.jpeg?cs=srgb&dl=pexels-solliefoto-298863.jpg&fm=jpg',
+                                  fit: BoxFit.contain,
+                                ),
                               ),
                             ),
                           ),
@@ -470,15 +486,24 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   key: ValueKey(
                                     categories.slug,
                                   ),
-                                  height: 200,
+                                  height: 200.h,
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       ClipRRect(
-                                        borderRadius: BorderRadius.circular(9),
-                                        child: SizedBox(
-                                          height: 135,
+                                        borderRadius:
+                                            BorderRadius.circular(9.r),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: TagColors.blue,
+                                              width: 0.2,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(9.r),
+                                          ),
+                                          height: 135.h,
                                           width:
                                               MediaQuery.sizeOf(context).width *
                                                   0.35,
@@ -486,7 +511,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                             categories.image.isNotEmpty
                                                 ? categories.image
                                                 : 'https://images.pexels.com/photos/3028500/pexels-photo-3028500.jpeg?cs=srgb&dl=pexels-phaseexit-3028500.jpg&fm=jpg',
-                                            fit: BoxFit.fitHeight,
+                                            fit: BoxFit.contain,
                                           ),
                                         ),
                                       ),
