@@ -108,9 +108,7 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> body = response.data;
         log(body.toString());
-        List<ViewMoreProduct> eventCat = (body['data'] as List)
-            .map((e) => ViewMoreProduct.fromJson(e))
-            .toList();
+        ViewMoreProduct eventCat = ViewMoreProduct.fromJson(body['data']);
         state = state.copyWith(
           loading: Loader.loaded,
           viewMoreProducts: eventCat,
@@ -1083,7 +1081,7 @@ class ProfileState {
   final List<TodayDeal> todayDealz;
   final List<Product> productz;
   final List<AllCategoriesModel> allNewCatz;
-  final List<ViewMoreProduct>? viewMoreProducts;
+  final ViewMoreProduct? viewMoreProducts;
   String? company_name;
   String? company_email;
   String? company_phone;
@@ -1099,7 +1097,7 @@ class ProfileState {
     List<String>? companies,
     final List<PopularCategoriz>? popularCat,
     final List<Brand>? brandsNames,
-    final List<ViewMoreProduct>? viewMoreProducts,
+    final ViewMoreProduct? viewMoreProducts,
     final List<BrandProduct>? productResponse,
     final List<BestSellingModel>? bestSelling,
     final List<TodayDeal>? todayDealz,

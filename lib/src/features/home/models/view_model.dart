@@ -1,52 +1,57 @@
 class ViewMoreProduct {
   ViewMoreProduct({
-    required this.name,
-    required this.slug,
-    required this.description,
-    required this.price,
-    required this.discount,
-    required this.brand,
-    required this.quantity,
-    required this.condition,
-    required this.color,
-    required this.returnPolicy,
-    required this.images,
-    required this.deliveryType,
+    this.name,
+    this.slug,
+    this.description,
+    this.price,
+    this.discount,
+    this.brand,
+    this.quantity,
+    this.condition,
+    this.color,
     this.manufactureYear,
     this.document,
+    this.returnPolicy,
+    this.images,
+    this.deliveryType,
   });
 
   factory ViewMoreProduct.fromJson(Map<String, dynamic> json) =>
       ViewMoreProduct(
-        name: json['name'],
-        slug: json['slug'],
-        description: json['description'],
-        price: json['price'].toDouble(),
-        discount: json['discount'].toDouble(),
-        brand: BrandViewMore.fromJson(json['brand']),
-        quantity: json['quantity'],
-        condition: json['condition'],
-        color: json['color'],
-        manufactureYear: json['manufacture_year'],
-        document: json['document'],
-        returnPolicy: json['return_policy'],
-        images: List<String>.from(json['images']),
-        deliveryType: json['delivery_type'],
+        name: json['name'] as String?,
+        slug: json['slug'] as String?,
+        description: json['description'] as String?,
+        price: (json['price'] as num?)?.toDouble(),
+        discount: (json['discount'] as num?)?.toDouble(),
+        brand: json['brand'] != null
+            ? BrandViewMore.fromJson(json['brand'] as Map<String, dynamic>)
+            : null,
+        quantity: json['quantity'] as int?,
+        condition: json['condition'] as String?,
+        color: json['color'] as String?,
+        manufactureYear: json['manufacture_year'] as int?,
+        document: json['document'] as String?,
+        returnPolicy: json['return_policy'] as String?,
+        images: (json['images'] as List<dynamic>?)
+            ?.map((item) => item as String)
+            .toList(),
+        deliveryType: json['delivery_type'] as String?,
       );
-  String name;
-  String slug;
-  String description;
-  double price;
-  double discount;
-  BrandViewMore brand;
-  int quantity;
-  String condition;
-  String color;
+
+  String? name;
+  String? slug;
+  String? description;
+  double? price;
+  double? discount;
+  BrandViewMore? brand;
+  int? quantity;
+  String? condition;
+  String? color;
   int? manufactureYear;
   String? document;
-  String returnPolicy;
-  List<String> images;
-  String deliveryType;
+  String? returnPolicy;
+  List<String>? images;
+  String? deliveryType;
 
   Map<String, dynamic> toJson() => {
         'name': name,
@@ -54,7 +59,7 @@ class ViewMoreProduct {
         'description': description,
         'price': price,
         'discount': discount,
-        'brand': brand.toJson(),
+        'brand': brand?.toJson(),
         'quantity': quantity,
         'condition': condition,
         'color': color,
@@ -68,19 +73,20 @@ class ViewMoreProduct {
 
 class BrandViewMore {
   BrandViewMore({
-    required this.name,
-    required this.slug,
-    required this.image,
+    this.name,
+    this.slug,
+    this.image,
   });
 
   factory BrandViewMore.fromJson(Map<String, dynamic> json) => BrandViewMore(
-        name: json['name'],
-        slug: json['slug'],
-        image: json['image'],
+        name: json['name'] as String?,
+        slug: json['slug'] as String?,
+        image: json['image'] as String?,
       );
-  String name;
-  String slug;
-  String image;
+
+  String? name;
+  String? slug;
+  String? image;
 
   Map<String, dynamic> toJson() => {
         'name': name,

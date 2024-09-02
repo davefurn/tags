@@ -372,6 +372,8 @@ class CategoryWidget {
                     child: const Text('Add to Cart'),
                   ),
                 ),
+           
+           
               ],
             ),
           ],

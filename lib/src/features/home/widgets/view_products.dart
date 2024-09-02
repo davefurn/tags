@@ -1,12 +1,18 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tags/src/config/router/constants.dart';
+import 'package:tags/src/config/utils/enums.dart';
 import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/resources/resources.dart';
 import 'package:tags/src/core/riverpod/providers/providers.dart';
+import 'package:tags/src/features/authentication/seller/sign_up/model/profile_viewmodel.dart';
+import 'package:tags/src/features/home/widgets/buildbusinessrow.dart';
 import 'package:tags/src/features/onboarding/widgets/app_texts.dart';
 import 'package:tags/src/features/search/view.dart';
 
@@ -33,12 +39,28 @@ class ViewProducts extends StatefulHookConsumerWidget {
 }
 
 class _ViewProductsState extends ConsumerState<ViewProducts> {
+  int _quantity = 1;
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(profileProvider.notifier).getAProduct(widget.slug);
     });
     super.initState();
+  }
+
+  void _incrementQuantity() {
+    setState(() {
+      _quantity++;
+    });
+  }
+
+  void _decrementQuantity() {
+    if (_quantity > 1) {
+      setState(() {
+        _quantity--;
+      });
+    }
   }
 
   @override
@@ -153,69 +175,49 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(
-                  width: 300.w,
-                  child: Row(
-                    children: [
-                      Container(
-                        height: 40.h,
-                        width: 40.w,
-                        margin: EdgeInsets.only(left: 8.w),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4.r),
-                          image: DecorationImage(
-                            image: NetworkImage(
-                              widget.productImage,
+                if (state.loading != Loader.loading &&
+                    state.viewMoreProducts != null)
+                  SizedBox(
+                    height: 40.h,
+                    width: 300.w,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: state.viewMoreProducts!.images!.length,
+                      itemBuilder: (context, index) {
+                        log(state.viewMoreProducts!.images![index]);
+                        return Container(
+                          height: 40.h,
+                          width: 40.w,
+                          margin: EdgeInsets.only(left: 8.w),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4.r),
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                state.viewMoreProducts!.images![index],
+                              ),
+                              fit: BoxFit.cover,
                             ),
-                            fit: BoxFit.cover,
                           ),
-                        ),
+                        );
+                      },
+                    ),
+                  )
+                else if (state.loading == Loader.loading)
+                  const Center(
+                    child: SpinKitWaveSpinner(
+                      color: TagColors.appThemeColor,
+                    ),
+                  )
+                else
+                  const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text(
+                        'No Images available',
+                        style: TextStyle(color: Colors.grey),
                       ),
-                      Container(
-                        height: 40.h,
-                        width: 40.w,
-                        margin: EdgeInsets.only(left: 8.w),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4.r),
-                          image: DecorationImage(
-                            image: NetworkImage(
-                              widget.productImage,
-                            ),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 40.h,
-                        width: 40.w,
-                        margin: EdgeInsets.only(left: 8.w),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4.r),
-                          image: DecorationImage(
-                            image: NetworkImage(
-                              widget.productImage,
-                            ),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 40.h,
-                        width: 40.w,
-                        margin: EdgeInsets.only(left: 8.w),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4.r),
-                          image: DecorationImage(
-                            image: NetworkImage(
-                              widget.productImage,
-                            ),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
                 SizedBox(
                   width: 50.w,
                   child: Row(
@@ -294,21 +296,408 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
             const SizedBox(
               height: 2,
             ),
-            TagText(
-              text: 'Brand : ${widget.slug}',
-              fontSize: 12,
-              fontWeight: FontWeight.w300,
-              fontColor: TagColors.black,
+            Align(
+              alignment: Alignment.topLeft,
+              child: TagText(
+                text: state.viewMoreProducts != null &&
+                        state.viewMoreProducts!.brand != null
+                    ? 'Brand: ${state.viewMoreProducts!.brand!.name}'
+                    : 'Brand: N/A',
+                fontSize: 10.sp,
+                fontWeight: FontWeight.w300,
+                fontColor: TagColors.black,
+              ),
+            ),
+            16.verticalSpace,
+            buildBusinessInfoRow(),
+            12.verticalSpace,
+
+            Row(
+              children: [
+                Text(
+                  'Quantity',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                10.horizontalSpace,
+                Container(
+                  height: 35.h,
+                  width: 35.h,
+                  decoration: const BoxDecoration(
+                    color: TagColors.appThemeColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: GestureDetector(
+                    onTap: _incrementQuantity,
+                    child: const Icon(Icons.add, color: Colors.white),
+                  ),
+                ),
+                10.horizontalSpace,
+                Text(
+                  _quantity.toString(),
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                10.horizontalSpace,
+                Container(
+                  height: 35.h,
+                  width: 35.h,
+                  decoration: const BoxDecoration(
+                    color: TagColors.appThemeColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: GestureDetector(
+                    onTap: _decrementQuantity,
+                    child: const Icon(Icons.remove, color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+            24.verticalSpace,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: 164.w,
+                  child: TextButton(
+                    style: ButtonStyle(
+                      shape: WidgetStatePropertyAll(
+                        RoundedRectangleBorder(
+                          side: const BorderSide(color: TagColors.lemonGreen),
+                          borderRadius: BorderRadius.circular(4.r),
+                        ),
+                      ),
+                      backgroundColor: const WidgetStatePropertyAll(
+                        TagColors.white,
+                      ),
+                      foregroundColor: const WidgetStatePropertyAll(
+                        TagColors.white,
+                      ),
+                    ),
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showMaterialBanner(
+                        MaterialBanner(
+                          surfaceTintColor: Colors.transparent,
+                          margin: EdgeInsets.zero,
+                          padding: EdgeInsets.zero,
+                          elevation: 1,
+                          shadowColor: Colors.transparent,
+                          backgroundColor: Colors.transparent,
+                          dividerColor: Colors.transparent,
+                          content: Align(
+                            alignment: Alignment.centerRight,
+                            child: Container(
+                              alignment: Alignment.centerRight,
+                              height: 56,
+                              constraints: BoxConstraints(
+                                maxWidth:
+                                    MediaQuery.sizeOf(context).width * 0.8,
+                              ),
+                              color: TagColors.blue,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  const Icon(
+                                    Icons.done,
+                                    color: TagColors.white,
+                                    size: 25,
+                                  ),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  const Text(
+                                    'Cart Successfully updated',
+                                    style: TextStyle(
+                                      color: TagColors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      ScaffoldMessenger.of(context)
+                                          .removeCurrentMaterialBanner();
+                                    },
+                                    icon: const Icon(
+                                      Icons.close,
+                                      color: TagColors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          actions: const [
+                            SizedBox(),
+                            SizedBox(),
+                          ],
+                        ),
+                      );
+                      Future.delayed(const Duration(seconds: 5), () {
+                        ScaffoldMessenger.of(context)
+                            .removeCurrentMaterialBanner();
+                      });
+                    },
+                    child: Text(
+                      'Add to Cart',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: TagColors.lemonGreen,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 164.w,
+                  child: TextButton(
+                    style: ButtonStyle(
+                      shape: WidgetStatePropertyAll(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.r),
+                        ),
+                      ),
+                      backgroundColor: const WidgetStatePropertyAll(
+                        TagColors.lemonGreen,
+                      ),
+                      foregroundColor: const WidgetStatePropertyAll(
+                        TagColors.white,
+                      ),
+                    ),
+                    onPressed: () {},
+                    child: const Text('Buy Now'),
+                  ),
+                ),
+              ],
+            ),
+            24.verticalSpace,
+            Container(
+              width: double.maxFinite,
+              padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 18.h),
+              decoration: BoxDecoration(
+                color: TagColors.paleBlue,
+                borderRadius: BorderRadius.circular(4.r),
+              ),
+              child: Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'About this item',
+                        style: TextStyle(
+                          color: TagColors.black,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      11.verticalSpace,
+                      Text(
+                        'Condition: ${state.viewMoreProducts?.condition ?? ''}',
+                        style: TextStyle(
+                          color: TagColors.black,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      8.verticalSpace,
+                      Text(
+                        'Color: ${state.viewMoreProducts?.color ?? ''}',
+                        style: TextStyle(
+                          color: TagColors.black,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      8.verticalSpace,
+                      Text(
+                        'Brand: ${state.viewMoreProducts?.brand?.name ?? ''}',
+                        style: TextStyle(
+                          color: TagColors.black,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      8.verticalSpace,
+                    ],
+                  ),
+                  30.horizontalSpace,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      11.verticalSpace,
+                      Text(
+                        'Quantity In Stock: ${state.viewMoreProducts?.quantity ?? ''}',
+                        style: TextStyle(
+                          color: TagColors.black,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      8.verticalSpace,
+                      Text(
+                        'Year of Manufacture: ${state.viewMoreProducts?.manufactureYear ?? ''}',
+                        style: TextStyle(
+                          color: TagColors.black,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      8.verticalSpace,
+                    ],
+                  ),
+                ],
+              ),
             ),
 
-            const SizedBox(
-              height: 50,
+            24.verticalSpace,
+            Text(
+              'Product specifications and features:',
+              style: TextStyle(
+                color: TagColors.black,
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-
-            // Container(
-            //   padding: EdgeInsets.all(4),
-            //   decoration: BoxDecoration(color: TagColors.textGrey),
-            // ),
+            24.verticalSpace,
+            DecoratedBox(
+              decoration: BoxDecoration(
+                border: Border.all(color: TagColors.greyColor),
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: ExpansionTile(
+                showTrailingIcon: false,
+                title: Text(
+                  'Description',
+                  style: TextStyle(
+                    color: TagColors.black,
+                    fontSize: 12.sp,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                children: [
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                    child: Text(
+                      state.viewMoreProducts?.description ?? '',
+                      style: TextStyle(
+                        color: TagColors.black,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            8.verticalSpace,
+            DecoratedBox(
+              decoration: BoxDecoration(
+                border: Border.all(color: TagColors.greyColor),
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: ExpansionTile(
+                showTrailingIcon: false,
+                title: Text(
+                  'Shipping',
+                  style: TextStyle(
+                    color: TagColors.black,
+                    fontSize: 12.sp,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                children: [
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                    child: Text(
+                      state.viewMoreProducts?.deliveryType ?? '',
+                      style: TextStyle(
+                        color: TagColors.black,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            8.verticalSpace,
+            DecoratedBox(
+              decoration: BoxDecoration(
+                border: Border.all(color: TagColors.greyColor),
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: ExpansionTile(
+                showTrailingIcon: false,
+                title: Text(
+                  'Return Policy',
+                  style: TextStyle(
+                    color: TagColors.black,
+                    fontSize: 12.sp,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                children: [
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                    child: Text(
+                      state.viewMoreProducts?.returnPolicy ?? '',
+                      style: TextStyle(
+                        color: TagColors.black,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            8.verticalSpace,
+            DecoratedBox(
+              decoration: BoxDecoration(
+                border: Border.all(color: TagColors.greyColor),
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: ExpansionTile(
+                expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                showTrailingIcon: false,
+                title: Text(
+                  'Ratings & Reviews',
+                  style: TextStyle(
+                    color: TagColors.black,
+                    fontSize: 12.sp,
+                    fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                children: [
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                    child: Text(
+                      state.viewMoreProducts?.description ?? '',
+                      style: TextStyle(
+                        color: TagColors.black,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            4.verticalSpace,
+            50.verticalSpace
           ],
         ),
       ),
