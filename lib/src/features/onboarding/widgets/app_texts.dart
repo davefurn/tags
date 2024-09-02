@@ -112,17 +112,19 @@ class TagLoginButton extends StatelessWidget {
     super.key,
     this.borderColor,
     this.myColor,
+    this.height,
   });
   final Widget child;
   final void Function() onTap;
   final Color? myColor;
   final Color? borderColor;
+  final double? height;
 
   @override
   Widget build(BuildContext context) => InkWell(
         onTap: onTap,
         child: Container(
-          height: 57.h,
+          height: height ?? 57.h,
           width: MediaQuery.of(context).size.width - 40.w,
           alignment: Alignment.center,
           decoration: BoxDecoration(
@@ -130,7 +132,7 @@ class TagLoginButton extends StatelessWidget {
             border: Border.all(
               color: borderColor ?? TagColors.white,
             ),
-            borderRadius: BorderRadius.circular(32.r),
+            borderRadius: BorderRadius.circular(9.r),
           ),
           child: child,
         ),

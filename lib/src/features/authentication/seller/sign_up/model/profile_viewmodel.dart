@@ -30,6 +30,70 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
         );
 
   final Ref _reader;
+  Future<ApiResponse> getAllCart() async {
+    state = state.copyWith(
+      loading: Loader.loading,
+    );
+
+    try {
+      final response = await _reader.read(serviceProvider).getWithToken(
+            path: 'api/cart/list/',
+          );
+      log(response.toString());
+      if (response.statusCode == 200) {
+        log('Success gotten carts product');
+        final Map<String, dynamic> body = response.data;
+        List<CartProducts> eventCat = (body['data'] as List)
+            .map((e) => CartProducts.fromJson(e))
+            .toList();
+        state = state.copyWith(
+          loading: Loader.loaded,
+          cartProducts: eventCat,
+        );
+        return ApiResponse(
+          successMessage: body['message'],
+        );
+      } else {
+        log('failed gotten brand product');
+        state = state.copyWith(
+          loading: Loader.error,
+        );
+        return ApiResponse(
+          errorMessage: response.data['message'],
+        );
+      }
+    } on DioError catch (e) {
+      state = state.copyWith(loading: Loader.error);
+
+      if (e.response != null &&
+          e.response!.data['message'] != null &&
+          e.response!.data['errors'] is List &&
+          e.response!.data['message'].isNotEmpty) {
+        // Join the error messages if there are multiple
+        String errorMessage = e.response!.data['errors'].join('\n');
+        return ApiResponse(errorMessage: errorMessage);
+      } else if (e.type == DioErrorType.badResponse ||
+          e.type == DioErrorType.receiveTimeout ||
+          e.type == DioErrorType.unknown) {
+        // Handle no internet connection or connection error here
+        return ApiResponse(
+          errorMessage:
+              e.response!.data['message'] ?? e.response!.data['error'],
+          // "Check your data connection / Connection error."
+        );
+      } else {
+        // Handle other DioErrors
+        // return ApiResponse(errorMessage: "Connection error, Please try again.");
+        return ApiResponse(errorMessage: e.response!.data['message']);
+      }
+    } catch (e) {
+      state = state.copyWith(
+        loading: Loader.error,
+      );
+      rethrow;
+    }
+  }
+
   Future<ApiResponse> getAllBrandsProduct(String category) async {
     state = state.copyWith(
       loading: Loader.loading,
@@ -1062,7 +1126,7 @@ class ProfileState {
     this.popularCat = const [],
     this.todayDealz = const [],
     this.allNewCatz = const [],
-
+    this.cartProducts = const [],
     // required this.user,
     // this.otpResponse,
     // this.bankFlexUser,
@@ -1081,6 +1145,7 @@ class ProfileState {
   final List<BrandProduct> productResponse;
   final List<Brand> brandsNames;
   final List<TodayDeal> todayDealz;
+  final List<CartProducts>? cartProducts;
   final List<Product> productz;
   final List<AllCategoriesModel> allNewCatz;
   final List<ViewMoreProduct>? viewMoreProducts;
@@ -1101,6 +1166,7 @@ class ProfileState {
     final List<Brand>? brandsNames,
     final List<ViewMoreProduct>? viewMoreProducts,
     final List<BrandProduct>? productResponse,
+    final List<CartProducts>? cartProducts,
     final List<BestSellingModel>? bestSelling,
     final List<TodayDeal>? todayDealz,
     final List<AllCategoriesModel>? allNewCatz,
@@ -1123,7 +1189,7 @@ class ProfileState {
         viewMoreProducts: viewMoreProducts ?? this.viewMoreProducts,
         productz: productz ?? this.productz,
         company_name: company_name ?? this.company_name,
-
+        cartProducts: cartProducts ?? this.cartProducts,
         company_email: company_email ?? this.company_email,
 
         company_phone: company_phone ?? this.company_phone,

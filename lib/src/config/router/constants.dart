@@ -124,6 +124,10 @@ enum TagRoutes {
     name: 'subCategoryScreen',
     path: '/subCategoryScreen/:brandName',
   ),
+  cart(
+    name: 'cart',
+    path: '/cart',
+  ),
   me(
     name: 'me',
     path: '/me',

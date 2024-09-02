@@ -50,9 +50,12 @@ class LoginViewModel extends StateNotifier<LoginState> {
           body['data']['user']['is_verified'] ?? '',
         );
 
+        String name = body['data']['user']['first_name'] +
+            ' ' +
+            body['data']['user']['last_name'];
         await HiveStorage.put(
           HiveKeys.name,
-          body['data']['user']['full_name'] ?? '',
+          name,
         );
         await HiveStorage.put(
           HiveKeys.image,
@@ -69,6 +72,19 @@ class LoginViewModel extends StateNotifier<LoginState> {
         );
 
         await HiveStorage.put(HiveKeys.hasLoggedIn, true);
+
+        String? role = body['data']['user']['role'];
+
+        if (role == 'buyer') {
+          HiveStorage.put(HiveKeys.seller, '');
+          HiveStorage.put(HiveKeys.buyer, 'Buyer');
+          // await HiveStorage.put(HiveKeys.firstname, body['firstName'] ?? '');
+        }
+        if (role == 'seller') {
+          HiveStorage.put(HiveKeys.seller, 'Seller');
+          HiveStorage.put(HiveKeys.buyer, '');
+          // await HiveStorage.put(HiveKeys.firstname, body['firstName'] ?? '');
+        }
 
         if (existingUser == null) {
           await HiveStorage.put(HiveKeys.userEmail, formData['email'] ?? '');

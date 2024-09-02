@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -12,6 +11,8 @@ import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/resources/resources.dart';
 import 'package:tags/src/core/riverpod/providers/providers.dart';
 import 'package:tags/src/core/widget/tag_appbar.dart';
+import 'package:tags/src/data/hivekeys.dart';
+import 'package:tags/src/data/localdatabase.dart';
 import 'package:tags/src/features/search/view.dart';
 
 class HomePage extends StatefulHookConsumerWidget {
@@ -22,11 +23,13 @@ class HomePage extends StatefulHookConsumerWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
+  String? token;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(profileProvider.notifier).getAllProducts();
     });
+    token = HiveStorage.get(HiveKeys.token);
     super.initState();
   }
 
@@ -52,22 +55,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       appBar: TagBar(
         isHome: true,
         title: ' ',
-        actions: [
-          const InkWell(
-            child: Icon(
-              Icons.favorite_outline_rounded,
-              color: Color(0xff5E5E5E),
-            ),
-          ),
-          4.horizontalSpace,
-          Padding(
-            padding: EdgeInsets.only(right: 16.w),
-            child: const Icon(
-              Icons.shopping_bag_outlined,
-              color: Color(0xff474747),
-            ),
-          ),
-        ],
+        token: token,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -144,7 +132,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                   padding: EdgeInsets.all(8),
                   child: Text(
                     'No Categories available',
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
                   ),
                 ),
               ),

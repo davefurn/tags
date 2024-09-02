@@ -10,6 +10,7 @@ class AssetsImages {
   static const String samsung = 'assets/images/Samsung.png';
   static const String sony = 'assets/images/Sony.png';
   static const String tecno = 'assets/images/Tecno.png';
+  static const String cart = 'assets/images/cart.png';
   static const String xiaomi = 'assets/images/Xiaomi.png';
   static const String airConditionerDeal =
       'assets/images/air_conditioner_deal.png';
