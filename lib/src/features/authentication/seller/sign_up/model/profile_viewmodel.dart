@@ -30,6 +30,74 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
         );
 
   final Ref _reader;
+
+  Future<ApiResponse> postCart({
+    required Map<String, dynamic> formData,
+  }) async {
+    state = state.copyWith(
+      loading: Loader.loading,
+    );
+
+    try {
+      final response = await _reader.read(serviceProvider).post(
+            formData: formData,
+            path: '/api/cart/add/',
+          );
+      log(response.toString());
+      if (response.statusCode == 200) {
+        log('Successfully added product to cart');
+        final Map<String, dynamic> body = response.data;
+        // List<CartProducts> eventCat = (body['data'] as List)
+        //     .map((e) => CartProducts.fromJson(e))
+        //     .toList();
+        // state = state.copyWith(
+        //   loading: Loader.loaded,
+        //   cartProducts: eventCat,
+        // );
+        return ApiResponse(
+          successMessage: body['message'],
+        );
+      } else {
+       
+        state = state.copyWith(
+          loading: Loader.error,
+        );
+        return ApiResponse(
+          errorMessage: response.data['message'],
+        );
+      }
+    } on DioError catch (e) {
+      state = state.copyWith(loading: Loader.error);
+
+      if (e.response != null &&
+          e.response!.data['message'] != null &&
+          e.response!.data['errors'] is List &&
+          e.response!.data['message'].isNotEmpty) {
+        // Join the error messages if there are multiple
+        String errorMessage = e.response!.data['errors'].join('\n');
+        return ApiResponse(errorMessage: errorMessage);
+      } else if (e.type == DioErrorType.badResponse ||
+          e.type == DioErrorType.receiveTimeout ||
+          e.type == DioErrorType.unknown) {
+        // Handle no internet connection or connection error here
+        return ApiResponse(
+          errorMessage:
+              e.response!.data['message'] ?? e.response!.data['error'],
+          // "Check your data connection / Connection error."
+        );
+      } else {
+        // Handle other DioErrors
+        // return ApiResponse(errorMessage: "Connection error, Please try again.");
+        return ApiResponse(errorMessage: e.response!.data['message']);
+      }
+    } catch (e) {
+      state = state.copyWith(
+        loading: Loader.error,
+      );
+      rethrow;
+    }
+  }
+
   Future<ApiResponse> getAllCart() async {
     state = state.copyWith(
       loading: Loader.loading,
@@ -54,7 +122,7 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
           successMessage: body['message'],
         );
       } else {
-        log('failed gotten brand product');
+        log('failed gotten cart products');
         state = state.copyWith(
           loading: Loader.error,
         );
