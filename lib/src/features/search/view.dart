@@ -70,8 +70,9 @@ class CustomTextInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SizedBox(
-        height: 60.h,
+        height: 40.h,
         child: TextField(
+          cursorHeight: 15.h,
           cursorColor: TagColors.black,
           textAlignVertical: TextAlignVertical.bottom,
           decoration: InputDecoration(
@@ -107,13 +108,13 @@ class CustomTextInput extends StatelessWidget {
                     Icon(
                       Icons.mic_none_outlined,
                       color: TagColors.greyColor,
-                      size: 24.sp,
+                      size: 20.sp,
                     ),
                     2.horizontalSpace,
                     Icon(
                       Icons.image_outlined,
                       color: TagColors.greyColor,
-                      size: 24.sp,
+                      size: 20.sp,
                     ),
                   ],
                 ),

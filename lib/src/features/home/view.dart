@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -12,6 +11,8 @@ import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/resources/resources.dart';
 import 'package:tags/src/core/riverpod/providers/providers.dart';
 import 'package:tags/src/core/widget/tag_appbar.dart';
+import 'package:tags/src/data/hivekeys.dart';
+import 'package:tags/src/data/localdatabase.dart';
 import 'package:tags/src/features/search/view.dart';
 
 class HomePage extends StatefulHookConsumerWidget {
@@ -22,11 +23,13 @@ class HomePage extends StatefulHookConsumerWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
+  String? token;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(profileProvider.notifier).getAllProducts();
     });
+    token = HiveStorage.get(HiveKeys.token);
     super.initState();
   }
 
@@ -52,22 +55,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       appBar: TagBar(
         isHome: true,
         title: ' ',
-        actions: [
-          const InkWell(
-            child: Icon(
-              Icons.favorite_outline_rounded,
-              color: Color(0xff5E5E5E),
-            ),
-          ),
-          4.horizontalSpace,
-          Padding(
-            padding: EdgeInsets.only(right: 16.w),
-            child: const Icon(
-              Icons.shopping_bag_outlined,
-              color: Color(0xff474747),
-            ),
-          ),
-        ],
+        token: token,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -144,7 +132,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                   padding: EdgeInsets.all(8),
                   child: Text(
                     'No Categories available',
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
                   ),
                 ),
               ),
@@ -199,9 +189,16 @@ class _HomePageState extends ConsumerState<HomePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ClipRRect(
-                            borderRadius: BorderRadius.circular(9),
-                            child: SizedBox(
-                              height: 135,
+                            borderRadius: BorderRadius.circular(9.r),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: TagColors.blue,
+                                  width: 0.2,
+                                ),
+                                borderRadius: BorderRadius.circular(9.r),
+                              ),
+                              height: 135.h,
                               width: MediaQuery.sizeOf(context).width * 0.35,
                               child: Image.network(
                                 bestSeller.image.isNotEmpty
@@ -298,14 +295,23 @@ class _HomePageState extends ConsumerState<HomePage> {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(9),
-                            child: SizedBox(
-                              height: 135.h,
-                              width: MediaQuery.sizeOf(context).width * 0.35,
-                              child: Image.network(
-                                dealOfDay.image.isNotEmpty
-                                    ? dealOfDay.image
-                                    : 'https://images.pexels.com/photos/298863/pexels-photo-298863.jpeg?cs=srgb&dl=pexels-solliefoto-298863.jpg&fm=jpg',
-                                fit: BoxFit.fitHeight,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: TagColors.blue,
+                                  width: 0.2,
+                                ),
+                                borderRadius: BorderRadius.circular(9.r),
+                              ),
+                              child: SizedBox(
+                                height: 135.h,
+                                width: MediaQuery.sizeOf(context).width * 0.35,
+                                child: Image.network(
+                                  dealOfDay.image.isNotEmpty
+                                      ? dealOfDay.image
+                                      : 'https://images.pexels.com/photos/298863/pexels-photo-298863.jpeg?cs=srgb&dl=pexels-solliefoto-298863.jpg&fm=jpg',
+                                  fit: BoxFit.contain,
+                                ),
                               ),
                             ),
                           ),
@@ -470,15 +476,24 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   key: ValueKey(
                                     categories.slug,
                                   ),
-                                  height: 200,
+                                  height: 200.h,
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       ClipRRect(
-                                        borderRadius: BorderRadius.circular(9),
-                                        child: SizedBox(
-                                          height: 135,
+                                        borderRadius:
+                                            BorderRadius.circular(9.r),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: TagColors.blue,
+                                              width: 0.2,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(9.r),
+                                          ),
+                                          height: 135.h,
                                           width:
                                               MediaQuery.sizeOf(context).width *
                                                   0.35,
@@ -486,7 +501,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                             categories.image.isNotEmpty
                                                 ? categories.image
                                                 : 'https://images.pexels.com/photos/3028500/pexels-photo-3028500.jpeg?cs=srgb&dl=pexels-phaseexit-3028500.jpg&fm=jpg',
-                                            fit: BoxFit.fitHeight,
+                                            fit: BoxFit.contain,
                                           ),
                                         ),
                                       ),

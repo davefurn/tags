@@ -14,6 +14,7 @@ import 'package:tags/src/features/authentication/seller/sign_up/otp.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/passW.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/signup_page.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/signup_page2.dart';
+import 'package:tags/src/features/cart/view.dart';
 import 'package:tags/src/features/categories/sub_categories.dart';
 import 'package:tags/src/features/categories/view.dart';
 import 'package:tags/src/features/home/view.dart';
@@ -159,6 +160,13 @@ GoRouter router = GoRouter(
       path: TagRoutes.deliveryPage.path,
       pageBuilder: (context, state) => const CupertinoPage(
         child: DeliveryPage(),
+      ),
+    ),
+    GoRoute(
+      name: TagRoutes.cart.name,
+      path: TagRoutes.cart.path,
+      pageBuilder: (context, state) => const CupertinoPage(
+        child: Cart(),
       ),
     ),
     GoRoute(

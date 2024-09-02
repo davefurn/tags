@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tags/src/config/router/constants.dart';
 
 import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/resources/resources.dart';
@@ -13,10 +14,12 @@ class TagBar extends StatefulWidget implements PreferredSizeWidget {
     // required this.onTap,
     this.myColor,
     this.actions,
+    this.token,
   });
   final String title;
   final bool isHome;
   final Color? myColor;
+  final String? token;
   // final void Function() onTap;
   final List<Widget>? actions;
 
@@ -44,7 +47,32 @@ class _TagBarState extends State<TagBar> {
         elevation: 0,
         centerTitle: true,
         automaticallyImplyLeading: false,
-        actions: widget.actions,
+        actions: widget.actions ??
+            [
+              const InkWell(
+                child: Icon(
+                  Icons.favorite_outline_rounded,
+                  color: Color(0xff5E5E5E),
+                ),
+              ),
+              4.horizontalSpace,
+              InkWell(
+                onTap: widget.token == null || widget.token!.isEmpty
+                    ? () {
+                        context.goNamed(TagRoutes.sellerLogin.name);
+                      }
+                    : () {
+                        context.pushNamed(TagRoutes.cart.name);
+                      },
+                child: Padding(
+                  padding: EdgeInsets.only(right: 16.w),
+                  child: const Icon(
+                    Icons.shopping_bag_outlined,
+                    color: Color(0xff474747),
+                  ),
+                ),
+              ),
+            ],
         leadingWidth: 55.w,
         leading: widget.isHome ==
                 false // condition to allow us to resuse this TagBar in the Home Screen
@@ -59,9 +87,9 @@ class _TagBarState extends State<TagBar> {
                     top: 12.h,
                     bottom: 8.h,
                   ),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: TagColors.appThemeColor,
-                    borderRadius: BorderRadius.circular(1000.r),
+                    shape: BoxShape.circle,
                   ),
                   child: const Icon(
                     Icons.arrow_back,

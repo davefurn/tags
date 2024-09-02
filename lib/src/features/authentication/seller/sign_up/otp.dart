@@ -10,6 +10,8 @@ import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/riverpod/providers/providers.dart';
 import 'package:tags/src/core/widget/tag_dialog.dart';
 import 'package:tags/src/core/widget/tag_loader.dart';
+import 'package:tags/src/data/hivekeys.dart';
+import 'package:tags/src/data/localdatabase.dart';
 import 'package:tags/src/features/authentication/seller/widget/indicator.dart';
 import 'package:tags/src/features/onboarding/widgets/app_texts.dart';
 
@@ -288,9 +290,16 @@ class _SellOtpPageState extends ConsumerState<SellOtpPage> {
                           );
 
                           if (response.successMessage.isNotEmpty) {
-                            context.pushReplacementNamed(
-                              TagRoutes.createStore.name,
-                            );
+                            String buyer = HiveStorage.get(HiveKeys.buyer);
+                            if (buyer != 'Buyer' && buyer == '') {
+                              context.pushReplacementNamed(
+                                TagRoutes.createStore.name,
+                              );
+                            } else {
+                              context.pushReplacementNamed(
+                                TagRoutes.sellerLogin.name,
+                              );
+                            }
                           } else if (response.errorMessage.isNotEmpty) {
                             await showDialog(
                               context: context,

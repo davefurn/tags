@@ -59,6 +59,11 @@ class _MePageState extends State<MePage> {
           image: Assets.drafts,
           title: 'Drafts',
         ),
+        ProfileModel(
+          action: () {},
+          image: Assets.logout,
+          title: 'Log Out',
+        ),
       ],
       ProfileModel(
         action: () {},
@@ -67,16 +72,18 @@ class _MePageState extends State<MePage> {
       ),
       ProfileModel(
         action: () {
-          // Navigator.push(context, MaterialPageRoute(builder: (context) {
-          //   return const BuyerSettingsPage();
-          // }));
+          context.pushNamed(TagRoutes.settings.name);
         },
         image: Assets.setting,
         title: 'Settings',
       ),
-      if (token == null || token!.isEmpty) ...[
+      if (token != null || token!.isNotEmpty) ...[
         ProfileModel(
-          action: () {},
+          action: () async {
+            await HiveStorage.put(HiveKeys.hasLoggedIn, false);
+            await HiveStorage.put(HiveKeys.token, '');
+            context.goNamed(TagRoutes.sellerLogin.name);
+          },
           image: Assets.logout,
           title: 'Log Out',
         ),
@@ -97,6 +104,7 @@ class _MePageState extends State<MePage> {
       appBar: const TagBar(
         isHome: true,
         myColor: Color(0xffF8F9FF),
+        actions: [],
         title: 'Me',
       ),
       body: Padding(
@@ -183,27 +191,30 @@ class _MePageState extends State<MePage> {
                         horizontal: 8,
                         vertical: 10,
                       ),
-                      child: Row(
-                        children: [
-                          //
-                          SvgPicture.asset(
-                            profileItems[index].image,
-                            // height: 30,
-                          ),
-
-                          const SizedBox(width: 20),
-
-                          Text(
-                            profileItems[index].title,
-                            style: const TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w300,
-                              letterSpacing: 0.2,
-                              color: Color(0xff1B1B1B),
-                              fontSize: 13,
+                      child: InkWell(
+                        onTap: profileItems[index].action,
+                        child: Row(
+                          children: [
+                            //
+                            SvgPicture.asset(
+                              profileItems[index].image,
+                              // height: 30,
                             ),
-                          ),
-                        ],
+
+                            const SizedBox(width: 20),
+
+                            Text(
+                              profileItems[index].title,
+                              style: const TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w300,
+                                letterSpacing: 0.2,
+                                color: Color(0xff1B1B1B),
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

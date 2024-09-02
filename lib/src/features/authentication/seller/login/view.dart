@@ -278,26 +278,11 @@ class _SellLoginPageState extends State<SellLoginPage> {
                                     },
                                   );
                                   if (response.successMessage.isNotEmpty) {
-                                    await Future.delayed(
-                                        const Duration(milliseconds: 100),
-                                        () async {
-                                      await HiveStorage.put(
-                                        HiveKeys.userEmail,
-                                        emailController.text,
-                                      );
-                                      await HiveStorage.put(
-                                        HiveKeys.userPassword,
-                                        passwordController.text,
-                                      );
-                                      await HiveStorage.put(
-                                        HiveKeys.hasLoggedIn,
-                                        true,
-                                      );
-                                    });
-
                                     setState(() {
                                       _hasLoggedIn = true;
                                     });
+
+                                    
 
                                     context.goNamed(TagRoutes.home.name);
                                   } else if (response.errorMessage.isNotEmpty) {

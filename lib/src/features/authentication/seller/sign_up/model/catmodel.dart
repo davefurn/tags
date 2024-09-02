@@ -324,4 +324,49 @@ class BrandProduct {
       };
 }
 
+class CartProducts {
+  CartProducts({
+    this.name,
+    this.slug,
+    this.image,
+    this.price,
+    this.discountedPrice,
+    this.brand,
+    this.color,
+    this.quantity,
+  });
+  final String? name;
+  final String? slug;
+  final String? image;
+  final double? price;
+  final double? discountedPrice;
+  final String? brand;
+  final String? color;
+  final int? quantity;
 
+  // Factory method to create an instance from a JSON object
+  factory CartProducts.fromJson(Map<String, dynamic> json) => CartProducts(
+        name: json['name'] ?? '',
+        slug: json['slug'] ?? '',
+        image: json['image'] ?? '',
+        price: json['price'] != null ? double.tryParse(json['price']) : 0.0,
+        discountedPrice: json['discounted_price'] != null
+            ? double.tryParse(json['discounted_price'])
+            : 0.0,
+        brand: json['brand'] ?? '',
+        color: json['color'] ?? '',
+        quantity: json['quantity'] ?? 0,
+      );
+
+  // Method to convert an instance to a JSON object
+  Map<String, dynamic> toJson() => {
+        'name': name ?? '',
+        'slug': slug ?? '',
+        'image': image ?? '',
+        'price': price?.toString() ?? '0.0',
+        'discounted_price': discountedPrice?.toString() ?? '0.0',
+        'brand': brand ?? '',
+        'color': color ?? '',
+        'quantity': quantity ?? 0,
+      };
+}
