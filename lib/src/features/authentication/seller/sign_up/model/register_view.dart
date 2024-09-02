@@ -1,7 +1,5 @@
 // ignore_for_file: unnecessary_null_comparison, deprecated_member_use, avoid_dynamic_calls, avoid_catches_without_on_clauses, type_annotate_public_apis
 
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tags/src/config/utils/enums.dart';
@@ -35,10 +33,9 @@ class RegisterViewmodel extends StateNotifier<RegisterState> {
             path: 'api/auth/registration/',
           );
       var body = response.data;
-      log(body.toString());
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         var token = body['data']['access']; // Extract the id from the response
-        log('token $token');
 
         state = state.copyWith(
           loadStatus: Loader.loaded,
@@ -436,7 +433,7 @@ class RegisterViewmodel extends StateNotifier<RegisterState> {
             path: 'api/auth/password/reset/',
           );
       var body = response.data;
-      log(response.data.toString());
+
       if (response.statusCode == 200 && response.data['status'] == 'success') {
         state = state.copyWith(
           loadStatus: Loader.loaded,
@@ -456,7 +453,7 @@ class RegisterViewmodel extends StateNotifier<RegisterState> {
       state = state.copyWith(
         loadStatus: Loader.error,
       );
-      log(e.toString());
+
       if (e.response != null && e.response!.data['message'] is String) {
         return ApiResponse(
           errorMessage: e.response!.data['message'] as String,
@@ -486,7 +483,7 @@ class RegisterViewmodel extends StateNotifier<RegisterState> {
             path: 'api/auth/password/reset/confirm/',
           );
       var body = response.data;
-      log(response.data.toString());
+
       if (response.statusCode == 200 && response.data['status'] == 'success') {
         state = state.copyWith(
           loadStatus: Loader.loaded,
@@ -506,7 +503,7 @@ class RegisterViewmodel extends StateNotifier<RegisterState> {
       state = state.copyWith(
         loadStatus: Loader.error,
       );
-      log(e.toString());
+
       if (e.response != null && e.response!.data['message'] is String) {
         return ApiResponse(
           errorMessage: e.response!.data['message'] as String,

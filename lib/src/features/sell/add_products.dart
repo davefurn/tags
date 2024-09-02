@@ -674,9 +674,7 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
                                   selectedBrand.toString().isNotEmpty &&
                                   selectedColor.toString().isNotEmpty) {
                                 // String pinCode = otpController.text;
-                                log('running');
-                                log(documents.value[0].path.toString());
-                                log(imagesList.value.length.toString());
+
                                 final response = await model.createItem(
                                   formData: {
                                     'name': productName.text,

@@ -12,6 +12,7 @@ class AssetsImages {
   static const String tecno = 'assets/images/Tecno.png';
   static const String cart = 'assets/images/cart.png';
   static const String xiaomi = 'assets/images/Xiaomi.png';
+  static const String delete = 'assets/images/delete.png';
   static const String airConditionerDeal =
       'assets/images/air_conditioner_deal.png';
   static const String airpods = 'assets/images/airpods.png';

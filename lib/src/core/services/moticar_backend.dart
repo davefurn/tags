@@ -306,7 +306,7 @@ class AgencyBackEnd implements AgencyNetwork {
           },
         ),
       );
-      log(data.toString());
+      log(data.statusCode.toString());
       return data;
     } on DioError catch (e) {
       if (e.response != null && e.response!.statusCode! >= 500) {

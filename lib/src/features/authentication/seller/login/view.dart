@@ -18,11 +18,7 @@ import 'package:tags/src/data/localdatabase.dart';
 import 'package:tags/src/features/authentication/seller/widget/indicator.dart';
 import 'package:tags/src/features/onboarding/widgets/app_texts.dart';
 
-// import 'package:tags/seller_bottom_bar.dart';
 
-// import 'package:tags/splashscreen/seller_page.dart';
-
-// import '../../widgets/tag_dialog.dart';
 
 class SellLoginPage extends StatefulWidget {
   const SellLoginPage({super.key});
@@ -48,17 +44,6 @@ class _SellLoginPageState extends State<SellLoginPage> {
   bool _isObscure = true;
 
   bool _hasLoggedIn = false;
-
-  // void _handleLogin(BuildContext context) {
-  //   setState(() {
-  //     _hasLoggedIn = true;
-  //   });
-  //   // Navigate to MarketPage
-  //   Navigator.pushReplacement(
-  //     context,
-  //     MaterialPageRoute(builder: (context) => const SellPage()),
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) => WillPopScope(

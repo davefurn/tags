@@ -9,6 +9,7 @@ import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/resources/resources.dart';
 import 'package:tags/src/core/riverpod/providers/providers.dart';
 import 'package:tags/src/core/widget/tag_appbar.dart';
+import 'package:tags/src/features/cart/cart_item.dart';
 import 'package:tags/src/features/onboarding/widgets/app_texts.dart';
 import 'package:tags/src/features/search/view.dart';
 
@@ -22,8 +23,12 @@ class Cart extends ConsumerStatefulWidget {
 class _CartState extends ConsumerState<Cart> {
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(profileProvider.notifier).getAllCart();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      final response = await ref.read(profileProvider.notifier).getAllCart();
+      if (response.errorMessage ==
+          'Authentication credentials were not provided.') {
+        await context.pushNamed(TagRoutes.sellerLogin.name);
+      }
     });
     super.initState();
   }
@@ -31,6 +36,7 @@ class _CartState extends ConsumerState<Cart> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(profileProvider);
+
     return Scaffold(
       appBar: TagBar(
         isHome: false,
@@ -46,16 +52,58 @@ class _CartState extends ConsumerState<Cart> {
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 10.h),
+        padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 15.h),
         child: ListView(
           physics: const BouncingScrollPhysics(),
           children: [
             const CustomTextInput(),
-            56.verticalSpace,
+            25.verticalSpace,
             if (state.loading != Loader.loading &&
                 state.cartProducts!.isNotEmpty)
-              const SizedBox(
-                height: 20,
+              Column(
+                children: [
+                  LimitedBox(
+                    maxHeight: 550.h,
+                    child: ListView.builder(
+                      itemCount: state.cartProducts!
+                          .length, // Assuming there are 2 items in the cart
+                      itemBuilder: (context, index) => CartItem(
+                        image: state.cartProducts![index].image.toString(),
+                        productName: state.cartProducts![index].name.toString(),
+                        price: state.cartProducts![index].price.toString(),
+                        discount: state.cartProducts![index].discountedPrice
+                            .toString(),
+                        brand: state.cartProducts![index].brand.toString(),
+                        color: state.cartProducts![index].color.toString(),
+                        quantity:
+                            state.cartProducts![index].quantity.toString(),
+                        delete: () {},
+                      ),
+                    ),
+                  ),
+                  24.verticalSpace,
+                  TagLoginButton(
+                    height: 50.h,
+                    child: Text(
+                      'Check out',
+                      style: TextStyle(
+                        fontFamily: 'Poppings',
+                        fontSize: 12.sp,
+                        letterSpacing: 1,
+                        color: TagColors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    onTap: () {},
+                  ),
+                ],
+              )
+            else if (state.loading != Loader.loading &&
+                state.cartProducts!.isNotEmpty)
+              const Center(
+                child: SpinKitWaveSpinner(
+                  color: TagColors.appThemeColor,
+                ),
               )
             else if (state.loading == Loader.loading)
               const Center(

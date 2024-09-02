@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tags/src/config/router/constants.dart';
-
 import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/resources/resources.dart';
+import 'package:tags/src/features/authentication/seller/sign_up/model/profile_viewmodel.dart';
 
 class TagBar extends StatefulWidget implements PreferredSizeWidget {
   const TagBar({
@@ -15,11 +15,13 @@ class TagBar extends StatefulWidget implements PreferredSizeWidget {
     this.myColor,
     this.actions,
     this.token,
+    this.state,
   });
   final String title;
   final bool isHome;
   final Color? myColor;
   final String? token;
+  final ProfileState? state;
   // final void Function() onTap;
   final List<Widget>? actions;
 
@@ -66,9 +68,13 @@ class _TagBarState extends State<TagBar> {
                       },
                 child: Padding(
                   padding: EdgeInsets.only(right: 16.w),
-                  child: const Icon(
-                    Icons.shopping_bag_outlined,
-                    color: Color(0xff474747),
+                  child: Badge(
+                    backgroundColor: TagColors.appThemeColor,
+                    isLabelVisible: widget.state!.cartProducts!.isNotEmpty,
+                    child: const Icon(
+                      Icons.shopping_bag_outlined,
+                      color: Color(0xff474747),
+                    ),
                   ),
                 ),
               ),

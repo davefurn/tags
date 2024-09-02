@@ -349,10 +349,12 @@ class CartProducts {
         name: json['name'] ?? '',
         slug: json['slug'] ?? '',
         image: json['image'] ?? '',
-        price: json['price'] != null ? double.tryParse(json['price']) : 0.0,
-        discountedPrice: json['discounted_price'] != null
-            ? double.tryParse(json['discounted_price'])
-            : 0.0,
+        price: json['price'] is String
+            ? double.tryParse(json['price']) ?? 0.0
+            : json['price'] ?? 0.0,
+        discountedPrice: json['discounted_price'] is String
+            ? double.tryParse(json['discounted_price']) ?? 0.0
+            : json['discounted_price'] ?? 0.0,
         brand: json['brand'] ?? '',
         color: json['color'] ?? '',
         quantity: json['quantity'] ?? 0,

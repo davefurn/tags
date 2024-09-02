@@ -4,10 +4,13 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/config/utils/enums.dart';
 import 'package:tags/src/core/riverpod/providers/providers.dart';
 import 'package:tags/src/core/services/dio_utils.dart';
@@ -34,18 +37,17 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
   Future<ApiResponse> postCart({
     required Map<String, dynamic> formData,
   }) async {
-    state = state.copyWith(
-      loading: Loader.loading,
-    );
+    // state = state.copyWith(
+    //   loading: Loader.loading,
+    // );
 
     try {
-      final response = await _reader.read(serviceProvider).post(
+      final response = await _reader.read(serviceProvider).postWithToken(
             formData: formData,
             path: '/api/cart/add/',
           );
-      log(response.toString());
-      if (response.statusCode == 200) {
-        log('Successfully added product to cart');
+      log(response.data.toString());
+      if (response.statusCode == 201 || response.statusCode == 200) {
         final Map<String, dynamic> body = response.data;
         // List<CartProducts> eventCat = (body['data'] as List)
         //     .map((e) => CartProducts.fromJson(e))
@@ -57,8 +59,11 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
         return ApiResponse(
           successMessage: body['message'],
         );
+      } else if (response.statusCode == 401) {
+        return ApiResponse(
+          errorMessage: '401',
+        );
       } else {
-       
         state = state.copyWith(
           loading: Loader.error,
         );
@@ -107,9 +112,8 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
       final response = await _reader.read(serviceProvider).getWithToken(
             path: 'api/cart/list/',
           );
-      log(response.toString());
+
       if (response.statusCode == 200) {
-        log('Success gotten carts product');
         final Map<String, dynamic> body = response.data;
         List<CartProducts> eventCat = (body['data'] as List)
             .map((e) => CartProducts.fromJson(e))
@@ -121,8 +125,11 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
         return ApiResponse(
           successMessage: body['message'],
         );
+      } else if (response.statusCode == 401) {
+        return ApiResponse(
+          errorMessage: '401',
+        );
       } else {
-        log('failed gotten cart products');
         state = state.copyWith(
           loading: Loader.error,
         );
@@ -166,14 +173,13 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
     state = state.copyWith(
       loading: Loader.loading,
     );
-    log(category);
+
     try {
       final response = await _reader.read(serviceProvider).getWithToken(
             path: 'api/category/$category/products/',
           );
-      log(response.toString());
+
       if (response.statusCode == 200) {
-        log('Success gotten brand product');
         final Map<String, dynamic> body = response.data;
         List<BrandProduct> eventCat = (body['data']['results'] as List)
             .map((e) => BrandProduct.fromJson(e))
@@ -186,7 +192,6 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
           successMessage: body['message'],
         );
       } else {
-        log('failed gotten brand product');
         state = state.copyWith(
           loading: Loader.error,
         );
@@ -232,14 +237,14 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
     state = state.copyWith(
       loading: Loader.loading,
     );
-    log(slug);
+
     try {
       final response = await _reader.read(serviceProvider).getWithToken(
             path: 'api/product/$slug/',
           );
       if (response.statusCode == 200) {
         final Map<String, dynamic> body = response.data;
-        log(body.toString());
+
         ViewMoreProduct eventCat = ViewMoreProduct.fromJson(body['data']);
         state = state.copyWith(
           loading: Loader.loaded,
@@ -249,7 +254,6 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
           successMessage: body['message'],
         );
       } else {
-        log('failed gotten brand product');
         state = state.copyWith(
           loading: Loader.error,
         );
@@ -298,7 +302,7 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
       final response = await _reader.read(serviceProvider).getWithToken(
             path: 'api/category/$category/',
           );
-      log(response.toString());
+
       if (response.statusCode == 200) {
         final Map<String, dynamic> body = response.data;
         List<Brand> eventCat = (body['data']['brands'] as List)
@@ -516,7 +520,7 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
       final response = await _reader.read(serviceProvider).get(
             path: 'api/home/',
           );
-      log(response.statusCode.toString());
+
       if (response.statusCode == 200) {
         final Map<String, dynamic> body = response.data;
 
@@ -532,7 +536,7 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
             (body['data']['best_selling'] as List)
                 .map((e) => BestSellingModel.fromJson(e))
                 .toList();
-        log(allbestSelling[0].price.toString());
+
         //today deals
         List<TodayDeal> todayDeals = (body['data']['today_deals'] as List)
             .map((e) => TodayDeal.fromJson(e))
@@ -611,7 +615,6 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
     );
 
     try {
-      log(formData.toString());
       final response = await _reader.read(serviceProvider).postMultipart(
             path: 'api/company/product/create/',
             files: [image, image2],
@@ -619,7 +622,7 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
             pathName: 'images',
           );
       var body = json.decode(response.body);
-      log(response.statusCode.toString());
+
       // var body = response.body;
       if (response.statusCode == 200 || response.statusCode == 201) {
         state = state.copyWith(

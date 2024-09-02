@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -28,6 +27,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(profileProvider.notifier).getAllProducts();
+      ref.read(profileProvider.notifier).getAllCart();
     });
     token = HiveStorage.get(HiveKeys.token);
     super.initState();
@@ -56,6 +56,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         isHome: true,
         title: ' ',
         token: token,
+        state: state,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -166,7 +167,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                   final format = NumberFormat('#,##0', 'en_US');
                   String price = format.format(bestSeller.price);
 
-                  log(bestSeller.price.toString());
                   return GestureDetector(
                     onTap: () {
                       context.pushNamed(
@@ -453,10 +453,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                               final format = NumberFormat('#,##0', 'en_US');
                               String price = format.format(categories.price);
 
-                              log(
-                                state.allNewCatz[index].products.length
-                                    .toString(),
-                              );
                               return GestureDetector(
                                 onTap: () {
                                   context.pushNamed(

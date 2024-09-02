@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -11,8 +10,10 @@ import 'package:tags/src/config/utils/enums.dart';
 import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/resources/resources.dart';
 import 'package:tags/src/core/riverpod/providers/providers.dart';
-import 'package:tags/src/features/authentication/seller/sign_up/model/profile_viewmodel.dart';
+import 'package:tags/src/core/widget/show_banner.dart';
+import 'package:tags/src/core/widget/tag_dialog.dart';
 import 'package:tags/src/features/home/widgets/buildbusinessrow.dart';
+import 'package:tags/src/features/home/widgets/product_tiles_specs.dart';
 import 'package:tags/src/features/onboarding/widgets/app_texts.dart';
 import 'package:tags/src/features/search/view.dart';
 
@@ -49,23 +50,27 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
     super.initState();
   }
 
-  void _incrementQuantity() {
-    setState(() {
-      _quantity++;
-    });
-  }
-
-  void _decrementQuantity() {
-    if (_quantity > 1) {
-      setState(() {
-        _quantity--;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(profileProvider);
+    final model = ref.read(profileProvider.notifier);
+    final theme = Theme.of(context).copyWith(dividerColor: Colors.transparent);
+    void incrementQuantity() {
+      if (_quantity < (state.viewMoreProducts?.quantity ?? 0)) {
+        setState(() {
+          _quantity++;
+        });
+      }
+    }
+
+    void decrementQuantity() {
+      if (_quantity > 1) {
+        setState(() {
+          _quantity--;
+        });
+      }
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xffFFFFFF),
       appBar: AppBar(
@@ -183,30 +188,25 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: state.viewMoreProducts!.images!.length,
-                      itemBuilder: (context, index) {
-                        log(state.viewMoreProducts!.images![index]);
-                        return Container(
-                          height: 40.h,
-                          width: 40.w,
-                          margin: EdgeInsets.only(left: 8.w),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4.r),
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                state.viewMoreProducts!.images![index],
-                              ),
-                              fit: BoxFit.cover,
+                      itemBuilder: (context, index) => Container(
+                        height: 40.h,
+                        width: 40.w,
+                        margin: EdgeInsets.only(left: 8.w),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4.r),
+                          image: DecorationImage(
+                            image: NetworkImage(
+                              state.viewMoreProducts!.images![index],
                             ),
+                            fit: BoxFit.cover,
                           ),
-                        );
-                      },
+                        ),
+                      ),
                     ),
                   )
                 else if (state.loading == Loader.loading)
                   const Center(
-                    child: SpinKitWaveSpinner(
-                      color: TagColors.appThemeColor,
-                    ),
+                    child: SizedBox.shrink(),
                   )
                 else
                   const Center(
@@ -330,7 +330,7 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
                     shape: BoxShape.circle,
                   ),
                   child: GestureDetector(
-                    onTap: _incrementQuantity,
+                    onTap: incrementQuantity,
                     child: const Icon(Icons.add, color: Colors.white),
                   ),
                 ),
@@ -351,7 +351,7 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
                     shape: BoxShape.circle,
                   ),
                   child: GestureDetector(
-                    onTap: _decrementQuantity,
+                    onTap: decrementQuantity,
                     child: const Icon(Icons.remove, color: Colors.white),
                   ),
                 ),
@@ -378,67 +378,49 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
                         TagColors.white,
                       ),
                     ),
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showMaterialBanner(
-                        MaterialBanner(
-                          surfaceTintColor: Colors.transparent,
-                          margin: EdgeInsets.zero,
-                          padding: EdgeInsets.zero,
-                          elevation: 1,
-                          shadowColor: Colors.transparent,
-                          backgroundColor: Colors.transparent,
-                          dividerColor: Colors.transparent,
-                          content: Align(
-                            alignment: Alignment.centerRight,
-                            child: Container(
-                              alignment: Alignment.centerRight,
-                              height: 56,
-                              constraints: BoxConstraints(
-                                maxWidth:
-                                    MediaQuery.sizeOf(context).width * 0.8,
-                              ),
-                              color: TagColors.blue,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  const Icon(
-                                    Icons.done,
-                                    color: TagColors.white,
-                                    size: 25,
-                                  ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  const Text(
-                                    'Cart Successfully updated',
-                                    style: TextStyle(
-                                      color: TagColors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      ScaffoldMessenger.of(context)
-                                          .removeCurrentMaterialBanner();
-                                    },
-                                    icon: const Icon(
-                                      Icons.close,
-                                      color: TagColors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          actions: const [
-                            SizedBox(),
-                            SizedBox(),
-                          ],
-                        ),
+                    onPressed: () async {
+                      final response = await model.postCart(
+                        formData: {
+                          'product_slug': state.viewMoreProducts!.slug,
+                          'quantity': _quantity,
+                        },
                       );
-                      Future.delayed(const Duration(seconds: 5), () {
+
+                      if (response.successMessage.isNotEmpty &&
+                          context.mounted) {
+                        showSuccessBanner(context, response.successMessage);
+                      } else if (response.errorMessage.isNotEmpty &&
+                          context.mounted &&
+                          response.errorMessage ==
+                              'Authentication credentials were not provided.') {
+                        await context.pushNamed(TagRoutes.sellerLogin.name);
+                      } else if (response.errorMessage.isNotEmpty &&
+                          context.mounted &&
+                          response.errorMessage !=
+                              'Authentication credentials were not provided.') {
+                        await showDialog(
+                          context: context,
+                          builder: (context) => TagDialog(
+                            icon: const Icon(
+                              Icons.error,
+                              color: TagColors.red,
+                              size: 50,
+                            ),
+                            title: 'Failed',
+                            subtitle: response.errorMessage,
+                            buttonColor: TagColors.red,
+                            textColor: Colors.white,
+                            buttonText: 'Dismiss',
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        );
+                      } else {
+                        log(response.error!.response!.statusCode.toString());
+                      }
+
+                      Future.delayed(const Duration(seconds: 2), () {
                         ScaffoldMessenger.of(context)
                             .removeCurrentMaterialBanner();
                       });
@@ -564,140 +546,29 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
               ),
             ),
             24.verticalSpace,
-            DecoratedBox(
-              decoration: BoxDecoration(
-                border: Border.all(color: TagColors.greyColor),
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: ExpansionTile(
-                showTrailingIcon: false,
-                title: Text(
-                  'Description',
-                  style: TextStyle(
-                    color: TagColors.black,
-                    fontSize: 12.sp,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                children: [
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                    child: Text(
-                      state.viewMoreProducts?.description ?? '',
-                      style: TextStyle(
-                        color: TagColors.black,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            ProductSpecTiles(
+              theme: theme,
+              state: state,
+              title: 'Description',
+              subDetails: state.viewMoreProducts?.description,
             ),
             8.verticalSpace,
-            DecoratedBox(
-              decoration: BoxDecoration(
-                border: Border.all(color: TagColors.greyColor),
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: ExpansionTile(
-                showTrailingIcon: false,
-                title: Text(
-                  'Shipping',
-                  style: TextStyle(
-                    color: TagColors.black,
-                    fontSize: 12.sp,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                children: [
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                    child: Text(
-                      state.viewMoreProducts?.deliveryType ?? '',
-                      style: TextStyle(
-                        color: TagColors.black,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            ProductSpecTiles(
+              theme: theme,
+              state: state,
+              title: 'Shipping',
+              subDetails: state.viewMoreProducts?.deliveryType,
             ),
+
             8.verticalSpace,
-            DecoratedBox(
-              decoration: BoxDecoration(
-                border: Border.all(color: TagColors.greyColor),
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: ExpansionTile(
-                showTrailingIcon: false,
-                title: Text(
-                  'Return Policy',
-                  style: TextStyle(
-                    color: TagColors.black,
-                    fontSize: 12.sp,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                children: [
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                    child: Text(
-                      state.viewMoreProducts?.returnPolicy ?? '',
-                      style: TextStyle(
-                        color: TagColors.black,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            ProductSpecTiles(
+              theme: theme,
+              state: state,
+              title: 'Return Policy',
+              subDetails: state.viewMoreProducts?.returnPolicy,
             ),
+
             8.verticalSpace,
-            DecoratedBox(
-              decoration: BoxDecoration(
-                border: Border.all(color: TagColors.greyColor),
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: ExpansionTile(
-                expandedCrossAxisAlignment: CrossAxisAlignment.start,
-                showTrailingIcon: false,
-                title: Text(
-                  'Ratings & Reviews',
-                  style: TextStyle(
-                    color: TagColors.black,
-                    fontSize: 12.sp,
-                    fontFamily: 'Montserrat',
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                children: [
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                    child: Text(
-                      state.viewMoreProducts?.description ?? '',
-                      style: TextStyle(
-                        color: TagColors.black,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            4.verticalSpace,
-            50.verticalSpace
           ],
         ),
       ),
