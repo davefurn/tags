@@ -77,7 +77,7 @@ class _MePageState extends State<MePage> {
         image: Assets.setting,
         title: 'Settings',
       ),
-      if (token != null || token!.isNotEmpty) ...[
+      if (token != null || token != '') ...[
         ProfileModel(
           action: () async {
             await HiveStorage.put(HiveKeys.hasLoggedIn, false);

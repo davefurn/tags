@@ -113,12 +113,14 @@ class TagLoginButton extends StatelessWidget {
     this.borderColor,
     this.myColor,
     this.height,
+    this.radius,
   });
   final Widget child;
   final void Function() onTap;
   final Color? myColor;
   final Color? borderColor;
   final double? height;
+  final double? radius;
 
   @override
   Widget build(BuildContext context) => InkWell(
@@ -132,7 +134,7 @@ class TagLoginButton extends StatelessWidget {
             border: Border.all(
               color: borderColor ?? TagColors.white,
             ),
-            borderRadius: BorderRadius.circular(9.r),
+            borderRadius: BorderRadius.circular(radius ?? 9.r),
           ),
           child: child,
         ),

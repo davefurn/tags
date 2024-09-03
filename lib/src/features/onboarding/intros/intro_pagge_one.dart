@@ -101,6 +101,7 @@ class _IntroPageOneState extends State<IntroPageOne> {
                       ),
                       40.verticalSpace,
                       TagLoginButton(
+                        radius: 32.r,
                         myColor: TagColors.appThemeColor,
                         borderColor: Colors.transparent,
                         onTap: () async {

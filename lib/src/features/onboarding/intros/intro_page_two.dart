@@ -91,6 +91,7 @@ class _IntroPageTwoState extends State<IntroPageTwo> {
                     ),
                     24.verticalSpace,
                     TagLoginButton(
+                      radius: 32.r,
                       borderColor: TagColors.appThemeColor,
                       myColor: Colors.white,
                       onTap: () {
@@ -107,6 +108,7 @@ class _IntroPageTwoState extends State<IntroPageTwo> {
                     ),
                     12.verticalSpace,
                     TagLoginButton(
+                      radius: 32.r,
                       myColor: TagColors.appThemeColor,
                       borderColor: Colors.transparent,
                       onTap: () {

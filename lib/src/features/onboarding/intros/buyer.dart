@@ -90,6 +90,7 @@ class _BuyerPageState extends State<BuyerPage> {
                   ),
                   40.verticalSpace,
                   TagLoginButton(
+                    radius: 32.r,
                     myColor: TagColors.white,
                     borderColor: Colors.transparent,
                     onTap: () async {
