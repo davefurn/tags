@@ -22,9 +22,11 @@ class HomePage extends StatefulHookConsumerWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
+  late TextEditingController controller;
   String? token;
   @override
   void initState() {
+    controller = TextEditingController();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(profileProvider.notifier).getAllProducts();
       ref.read(profileProvider.notifier).getAllCart();
@@ -63,7 +65,21 @@ class _HomePageState extends ConsumerState<HomePage> {
         child: ListView(
           physics: const BouncingScrollPhysics(),
           children: [
-            const CustomTextInput(),
+            CustomTextInput(
+              controller: controller,
+              onSubmitted: (p0) async {
+                await ref.read(profileProvider.notifier).getSearches(query: p0);
+                if (context.mounted) {
+                  context.goNamed(TagRoutes.search.name);
+                }
+              },
+              onEditingComplete: () {
+                ref
+                    .read(profileProvider.notifier)
+                    .getSearches(query: controller.text);
+                context.goNamed(TagRoutes.search.name);
+              },
+            ),
             const SizedBox(height: 30),
             Image.asset(AssetsImages.blackFridaySales),
             const SizedBox(height: 15),
@@ -310,7 +326,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   dealOfDay.image.isNotEmpty
                                       ? dealOfDay.image
                                       : 'https://images.pexels.com/photos/298863/pexels-photo-298863.jpeg?cs=srgb&dl=pexels-solliefoto-298863.jpg&fm=jpg',
-                                  fit: BoxFit.contain,
+                                  fit: BoxFit.fitHeight,
                                 ),
                               ),
                             ),
@@ -497,7 +513,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                             categories.image.isNotEmpty
                                                 ? categories.image
                                                 : 'https://images.pexels.com/photos/3028500/pexels-photo-3028500.jpeg?cs=srgb&dl=pexels-phaseexit-3028500.jpg&fm=jpg',
-                                            fit: BoxFit.contain,
+                                            fit: BoxFit.fitHeight,
                                           ),
                                         ),
                                       ),

@@ -86,7 +86,11 @@ class _ScaffoldWithNavBarState extends ConsumerState<ScaffoldWithNavBar> {
                                 padding:
                                     EdgeInsets.symmetric(horizontal: 21.5.w),
                                 child: _buildNavItem(
-                                    context, 4, Assets.sell, 'Sell'),
+                                  context,
+                                  4,
+                                  Assets.sell,
+                                  'Sell',
+                                ),
                               )
                             else if (buyer == 'Buyer' && seller == '')
                               Padding(

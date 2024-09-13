@@ -7,10 +7,9 @@ import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/resources/resources.dart';
 import 'package:tags/src/data/hivekeys.dart';
+import 'package:tags/src/data/localdatabase.dart';
 import 'package:tags/src/features/onboarding/widgets/app_texts.dart';
 import 'package:tags/src/features/onboarding/widgets/page_indicator.dart';
-
-import '../../../data/localdatabase.dart';
 
 class IntroPageOne extends StatefulWidget {
   const IntroPageOne({super.key});

@@ -41,12 +41,13 @@ class ViewProducts extends StatefulHookConsumerWidget {
 
 class _ViewProductsState extends ConsumerState<ViewProducts> {
   int _quantity = 1;
-
+  bool addedToCart = false;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(profileProvider.notifier).getAProduct(widget.slug);
     });
+
     super.initState();
   }
 
@@ -371,8 +372,10 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
                           borderRadius: BorderRadius.circular(4.r),
                         ),
                       ),
-                      backgroundColor: const WidgetStatePropertyAll(
-                        TagColors.white,
+                      backgroundColor: WidgetStatePropertyAll(
+                        addedToCart
+                            ? TagColors.greyColor.withOpacity(.5)
+                            : TagColors.white,
                       ),
                       foregroundColor: const WidgetStatePropertyAll(
                         TagColors.white,
@@ -388,6 +391,9 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
 
                       if (response.successMessage.isNotEmpty &&
                           context.mounted) {
+                        setState(() {
+                          addedToCart = true;
+                        });
                         showSuccessBanner(context, response.successMessage);
                       } else if (response.errorMessage.isNotEmpty &&
                           context.mounted &&
@@ -426,7 +432,7 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
                       });
                     },
                     child: Text(
-                      'Add to Cart',
+                      addedToCart ? 'Added to Cart' : 'Add to Cart',
                       style: TextStyle(
                         fontSize: 12.sp,
                         color: TagColors.lemonGreen,

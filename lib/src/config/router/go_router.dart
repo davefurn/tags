@@ -9,7 +9,6 @@ import 'package:tags/src/features/authentication/seller/login/view.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/create_company/create_company.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/create_company/successful_sign_up.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/create_company/what2sell.dart';
-import 'package:tags/src/features/authentication/seller/sign_up/model/profile_viewmodel.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/otp.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/passW.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/signup_page.dart';

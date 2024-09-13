@@ -1,13 +1,20 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/config/utils/enums.dart';
 import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/riverpod/providers/providers.dart';
+import 'package:tags/src/core/widget/show_banner.dart';
 import 'package:tags/src/core/widget/tag_appbar.dart';
+import 'package:tags/src/core/widget/tag_dialog.dart';
 import 'package:tags/src/features/categories/widget/category_widgets.dart';
+import 'package:tags/src/features/categories/widget/toggle_button.dart';
 import 'package:tags/src/features/search/view.dart';
 
 class SubCategoryScreen extends StatefulHookConsumerWidget {
@@ -23,6 +30,7 @@ class SubCategoryScreen extends StatefulHookConsumerWidget {
 
 class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
   bool isGrid = false;
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -39,6 +47,12 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
     'GBP': '£', // Pound
     // Add other currencies as needed
   };
+  void toggleView({bool grid = false}) {
+    setState(() {
+      isGrid = grid;
+    });
+  }
+
   final format = NumberFormat('#,##0', 'en_US');
 // Function to get the currency symbol
   String getCurrencySymbol(String currencyCode) =>
@@ -48,6 +62,7 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(profileProvider);
+    final model = ref.read(profileProvider.notifier);
     return Scaffold(
       appBar: TagBar(
         isHome: false,
@@ -111,7 +126,7 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
                         TextButton(
                           style: const ButtonStyle(
                             backgroundColor:
-                                MaterialStatePropertyAll(TagColors.paleBlue),
+                                WidgetStatePropertyAll(TagColors.paleBlue),
                           ),
                           onPressed: () {},
                           child: const Row(
@@ -130,7 +145,7 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
                         TextButton(
                           style: const ButtonStyle(
                             backgroundColor:
-                                MaterialStatePropertyAll(TagColors.paleBlue),
+                                WidgetStatePropertyAll(TagColors.paleBlue),
                           ),
                           onPressed: () {},
                           child: const Row(
@@ -149,7 +164,7 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
                         TextButton(
                           style: const ButtonStyle(
                             backgroundColor:
-                                MaterialStatePropertyAll(TagColors.paleBlue),
+                                WidgetStatePropertyAll(TagColors.paleBlue),
                           ),
                           onPressed: () {},
                           child: const Row(
@@ -168,7 +183,7 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
                         TextButton(
                           style: const ButtonStyle(
                             backgroundColor:
-                                MaterialStatePropertyAll(TagColors.paleBlue),
+                                WidgetStatePropertyAll(TagColors.paleBlue),
                           ),
                           onPressed: () {},
                           child: Row(
@@ -198,7 +213,7 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
                       child: TextButton(
                         style: const ButtonStyle(
                           backgroundColor:
-                              MaterialStatePropertyAll(TagColors.paleBlue),
+                              WidgetStatePropertyAll(TagColors.paleBlue),
                         ),
                         onPressed: () {},
                         child: const Row(
@@ -269,62 +284,92 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
             SliverToBoxAdapter(
               child: Row(
                 children: [
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        isGrid = false;
-                      });
-                    },
-                    icon: CircleAvatar(
-                      backgroundColor: isGrid == false
-                          ? TagColors.paleBlue
-                          : Colors.transparent,
-                      child: Image.asset(
-                        'assets/images/listview_icon.png',
-                        height: 14,
-                      ),
-                    ),
+                  ToggleButton(
+                    isSelected: !isGrid,
+                    iconPath: 'assets/images/listview_icon.png',
+                    onPressed: toggleView,
                   ),
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        isGrid = true;
-                      });
-                    },
-                    icon: CircleAvatar(
-                      backgroundColor: isGrid == false
-                          ? Colors.transparent
-                          : TagColors.paleBlue,
-                      child: const Icon(
-                        Icons.grid_view_outlined,
-                        size: 24,
-                      ),
-                    ),
+                  ToggleButton(
+                    isSelected: isGrid,
+                    icon: Icons.grid_view_outlined,
+                    onPressed: () => toggleView(grid: true),
                   ),
                 ],
               ),
             ),
             if (state.loading == Loader.loading)
               const SliverToBoxAdapter(
-                  child: Center(
-                child: SpinKitWaveSpinner(
-                  color: TagColors.appThemeColor,
+                child: Center(
+                  child: SpinKitWaveSpinner(
+                    color: TagColors.appThemeColor,
+                  ),
                 ),
-              ))
-            else if (isGrid == false &&
-                state.loading != Loader.loading &&
-                state.productResponse.isNotEmpty)
+              )
+            else if (!isGrid && state.productResponse.isNotEmpty)
               SliverList.builder(
                 itemCount: state.productResponse.length,
                 itemBuilder: (context, index) {
                   final dealOfDay = state.productResponse[index];
-
                   return CategoryWidget.listCard(
-                    context,
-                    dealOfDay.image,
-                    dealOfDay.name,
-                    '${getCurrencySymbol(dealOfDay.currency)}${format.format(dealOfDay.discountedPrice)}',
-                    '${getCurrencySymbol(dealOfDay.currency)}${format.format(dealOfDay.price)}',
+                    context: context,
+                    image: dealOfDay.image,
+                    name: dealOfDay.name,
+                    discountedPrice:
+                        '${getCurrencySymbol(dealOfDay.currency)}${format.format(dealOfDay.discountedPrice)}',
+                    price:
+                        '${getCurrencySymbol(dealOfDay.currency)}${format.format(dealOfDay.price)}',
+                    function: () async {
+                      final response = await model.postCart(
+                        formData: {
+                          'product_slug': dealOfDay.slug,
+                          'quantity': 1,
+                        },
+                      );
+
+                      if (response.successMessage.isNotEmpty &&
+                          context.mounted) {
+                        showSuccessBanner(
+                          context,
+                          response.successMessage,
+                        );
+                      } else if (response.errorMessage.isNotEmpty &&
+                          context.mounted &&
+                          response.errorMessage ==
+                              'Authentication credentials were not provided.') {
+                        await context.pushNamed(TagRoutes.sellerLogin.name);
+                      } else if (response.errorMessage.isNotEmpty &&
+                          context.mounted &&
+                          response.errorMessage !=
+                              'Authentication credentials were not provided.') {
+                        await showDialog(
+                          context: context,
+                          builder: (context) => TagDialog(
+                            icon: const Icon(
+                              Icons.error,
+                              color: TagColors.red,
+                              size: 50,
+                            ),
+                            title: 'Failed',
+                            subtitle: response.errorMessage,
+                            buttonColor: TagColors.red,
+                            textColor: Colors.white,
+                            buttonText: 'Dismiss',
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        );
+                      } else {
+                        log(
+                          response.error!.response!.statusCode.toString(),
+                        );
+                      }
+
+                      Future.delayed(const Duration(seconds: 2), () {
+                        ScaffoldMessenger.of(context)
+                            .removeCurrentMaterialBanner();
+                      });
+                    },
                   );
                 },
               )
@@ -334,11 +379,65 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
                 itemBuilder: (context, index) {
                   final dealOfDay = state.productResponse[index];
                   return CategoryWidget.gridCard(
-                    context,
-                    dealOfDay.image,
-                    dealOfDay.name,
-                    '${getCurrencySymbol(dealOfDay.currency)}${format.format(dealOfDay.discountedPrice)}',
-                    '${getCurrencySymbol(dealOfDay.currency)}${format.format(dealOfDay.price)}',
+                    context: context,
+                    image: dealOfDay.image,
+                    name: dealOfDay.name,
+                    discountedPrice:
+                        '${getCurrencySymbol(dealOfDay.currency)}${format.format(dealOfDay.discountedPrice)}',
+                    price:
+                        '${getCurrencySymbol(dealOfDay.currency)}${format.format(dealOfDay.price)}',
+                    function: () async {
+                      final response = await model.postCart(
+                        formData: {
+                          'product_slug': dealOfDay.slug,
+                          'quantity': 1,
+                        },
+                      );
+
+                      if (response.successMessage.isNotEmpty &&
+                          context.mounted) {
+                        showSuccessBanner(
+                          context,
+                          response.successMessage,
+                        );
+                      } else if (response.errorMessage.isNotEmpty &&
+                          context.mounted &&
+                          response.errorMessage ==
+                              'Authentication credentials were not provided.') {
+                        await context.pushNamed(TagRoutes.sellerLogin.name);
+                      } else if (response.errorMessage.isNotEmpty &&
+                          context.mounted &&
+                          response.errorMessage !=
+                              'Authentication credentials were not provided.') {
+                        await showDialog(
+                          context: context,
+                          builder: (context) => TagDialog(
+                            icon: const Icon(
+                              Icons.error,
+                              color: TagColors.red,
+                              size: 50,
+                            ),
+                            title: 'Failed',
+                            subtitle: response.errorMessage,
+                            buttonColor: TagColors.red,
+                            textColor: Colors.white,
+                            buttonText: 'Dismiss',
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        );
+                      } else {
+                        log(
+                          response.error!.response!.statusCode.toString(),
+                        );
+                      }
+
+                      Future.delayed(const Duration(seconds: 2), () {
+                        ScaffoldMessenger.of(context)
+                            .removeCurrentMaterialBanner();
+                      });
+                    },
                   );
                 },
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

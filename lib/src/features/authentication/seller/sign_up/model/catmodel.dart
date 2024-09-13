@@ -335,14 +335,6 @@ class CartProducts {
     this.color,
     this.quantity,
   });
-  final String? name;
-  final String? slug;
-  final String? image;
-  final double? price;
-  final double? discountedPrice;
-  final String? brand;
-  final String? color;
-  final int? quantity;
 
   // Factory method to create an instance from a JSON object
   factory CartProducts.fromJson(Map<String, dynamic> json) => CartProducts(
@@ -359,6 +351,14 @@ class CartProducts {
         color: json['color'] ?? '',
         quantity: json['quantity'] ?? 0,
       );
+  final String? name;
+  final String? slug;
+  final String? image;
+  final double? price;
+  final double? discountedPrice;
+  final String? brand;
+  final String? color;
+  final int? quantity;
 
   // Method to convert an instance to a JSON object
   Map<String, dynamic> toJson() => {
@@ -370,5 +370,50 @@ class CartProducts {
         'brand': brand ?? '',
         'color': color ?? '',
         'quantity': quantity ?? 0,
+      };
+}
+
+class SearchResult {
+  SearchResult({
+    this.name,
+    this.slug,
+    this.image,
+    this.price,
+    this.currency,
+    this.discount,
+    this.discountedPrice,
+    this.tagOne,
+  });
+
+  // Factory method to create a SearchResult from JSON
+  factory SearchResult.fromJson(Map<String, dynamic> json) => SearchResult(
+        name: json['name'] as String?,
+        slug: json['slug'] as String?,
+        image: json['image'] as String?,
+        price: json['price'] as double?,
+        currency: json['currency'] as String?,
+        discount: json['discount'] as double?,
+        discountedPrice: json['discounted_price'] as double?,
+        tagOne: json['tag_one'] as bool?,
+      );
+  final String? name;
+  final String? slug;
+  final String? image;
+  final double? price;
+  final String? currency;
+  final double? discount;
+  final double? discountedPrice;
+  final bool? tagOne;
+
+  // Method to convert a SearchResult to JSON
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'slug': slug,
+        'image': image,
+        'price': price,
+        'currency': currency,
+        'discount': discount,
+        'discounted_price': discountedPrice,
+        'tag_one': tagOne,
       };
 }

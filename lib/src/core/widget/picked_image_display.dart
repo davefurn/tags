@@ -17,47 +17,49 @@ class PickedImageDisplay extends StatelessWidget {
         spacing: 10, // spacing between images
         runSpacing: 10, // spacing between rows
         children: imageList.value
-            .map((image) => Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      clipBehavior: Clip.antiAlias,
-                      margin: const EdgeInsets.only(bottom: 15),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Image.file(
-                        File(image.path),
-                        fit: BoxFit.cover,
-                        width: 84,
-                        height: 84,
-                      ),
+            .map(
+              (image) => Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    clipBehavior: Clip.antiAlias,
+                    margin: const EdgeInsets.only(bottom: 15),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    Positioned(
-                      top: -10,
-                      right: -10,
-                      child: GestureDetector(
-                        onTap: () {
-                          imageList.value = imageList.value
-                              .where((i) => i != image)
-                              .toList(); // Remove the image from the list
-                        },
-                        child: const DecoratedBox(
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.red,
-                          ),
-                          child: Icon(
-                            Icons.close,
-                            color: Colors.white,
-                            size: 20,
-                          ),
+                    child: Image.file(
+                      File(image.path),
+                      fit: BoxFit.cover,
+                      width: 84,
+                      height: 84,
+                    ),
+                  ),
+                  Positioned(
+                    top: -10,
+                    right: -10,
+                    child: GestureDetector(
+                      onTap: () {
+                        imageList.value = imageList.value
+                            .where((i) => i != image)
+                            .toList(); // Remove the image from the list
+                      },
+                      child: const DecoratedBox(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.red,
+                        ),
+                        child: Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 20,
                         ),
                       ),
                     ),
-                  ],
-                ))
+                  ),
+                ],
+              ),
+            )
             .toList(),
       );
 }

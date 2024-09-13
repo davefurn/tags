@@ -293,11 +293,11 @@ class _SellOtpPageState extends ConsumerState<SellOtpPage> {
                             String buyer = HiveStorage.get(HiveKeys.buyer);
                             if (buyer != 'Buyer' && buyer == '') {
                               context.pushReplacementNamed(
-                                TagRoutes.createStore.name,
+                                TagRoutes.sellerLogin.name,
                               );
                             } else {
                               context.pushReplacementNamed(
-                                TagRoutes.sellerLogin.name,
+                                TagRoutes.createStore.name,
                               );
                             }
                           } else if (response.errorMessage.isNotEmpty) {

@@ -4,13 +4,10 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:image_picker/image_picker.dart';
-import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/config/utils/enums.dart';
 import 'package:tags/src/core/riverpod/providers/providers.dart';
 import 'package:tags/src/core/services/dio_utils.dart';
@@ -33,6 +30,72 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
         );
 
   final Ref _reader;
+
+  Future<ApiResponse> getSearches({String? query}) async {
+    state = state.copyWith(
+      loading: Loader.loading,
+    );
+
+    try {
+      final response = await _reader.read(serviceProvider).getWithToken(
+            path: query != null ? 'api/search/?s=$query' : 'api/search/?s',
+          );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> body = response.data;
+        List<SearchResult> eventCat = (body['data']['results'] as List)
+            .map((e) => SearchResult.fromJson(e))
+            .toList();
+        state = state.copyWith(
+          loading: Loader.loaded,
+          searchResults: eventCat,
+        );
+        return ApiResponse(
+          successMessage: body['message'],
+        );
+      } else if (response.statusCode == 401) {
+        return ApiResponse(
+          errorMessage: '401',
+        );
+      } else {
+        state = state.copyWith(
+          loading: Loader.error,
+        );
+        return ApiResponse(
+          errorMessage: response.data['message'],
+        );
+      }
+    } on DioError catch (e) {
+      state = state.copyWith(loading: Loader.error);
+
+      if (e.response != null &&
+          e.response!.data['message'] != null &&
+          e.response!.data['errors'] is List &&
+          e.response!.data['message'].isNotEmpty) {
+        // Join the error messages if there are multiple
+        String errorMessage = e.response!.data['errors'].join('\n');
+        return ApiResponse(errorMessage: errorMessage);
+      } else if (e.type == DioErrorType.badResponse ||
+          e.type == DioErrorType.receiveTimeout ||
+          e.type == DioErrorType.unknown) {
+        // Handle no internet connection or connection error here
+        return ApiResponse(
+          errorMessage:
+              e.response!.data['message'] ?? e.response!.data['error'],
+          // "Check your data connection / Connection error."
+        );
+      } else {
+        // Handle other DioErrors
+        // return ApiResponse(errorMessage: "Connection error, Please try again.");
+        return ApiResponse(errorMessage: e.response!.data['message']);
+      }
+    } catch (e) {
+      state = state.copyWith(
+        loading: Loader.error,
+      );
+      rethrow;
+    }
+  }
 
   Future<ApiResponse> postCart({
     required Map<String, dynamic> formData,
@@ -1182,6 +1245,7 @@ class ProfileState {
     this.viewMoreProducts,
     this.company_email,
     this.brandsNames = const [],
+    this.searchResults = const [],
     this.company_phone,
     this.company_logo,
     this.company_cover,
@@ -1217,6 +1281,7 @@ class ProfileState {
   final List<CartProducts>? cartProducts;
   final List<Product> productz;
   final List<AllCategoriesModel> allNewCatz;
+  final List<SearchResult>? searchResults;
   final ViewMoreProduct? viewMoreProducts;
   String? company_name;
   String? company_email;
@@ -1236,6 +1301,7 @@ class ProfileState {
     final ViewMoreProduct? viewMoreProducts,
     final List<BrandProduct>? productResponse,
     final List<CartProducts>? cartProducts,
+    final List<SearchResult>? searchResults,
     final List<BestSellingModel>? bestSelling,
     final List<TodayDeal>? todayDealz,
     final List<AllCategoriesModel>? allNewCatz,
@@ -1260,7 +1326,7 @@ class ProfileState {
         company_name: company_name ?? this.company_name,
         cartProducts: cartProducts ?? this.cartProducts,
         company_email: company_email ?? this.company_email,
-
+        searchResults: searchResults ?? this.searchResults,
         company_phone: company_phone ?? this.company_phone,
         company_logo: company_logo ?? this.company_logo,
         company_cover: company_cover ?? this.company_cover,

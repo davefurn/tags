@@ -1,4 +1,4 @@
-// ignore_for_file: type_annotate_public_apis
+// ignore_for_file: type_annotate_public_apis, unnecessary_await_in_return
 
 import 'dart:async';
 import 'package:hive_flutter/hive_flutter.dart';

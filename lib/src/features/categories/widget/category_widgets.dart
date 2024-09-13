@@ -5,7 +5,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:tags/src/core/constant/colors.dart';
 
 class CategoryWidget {
-  static Widget listCard(context, image, name, price, discountedPrice) =>
+  static Widget listCard({
+    bool addedToCart = false,
+    context,
+    image,
+    name,
+    price,
+    discountedPrice,
+    VoidCallback? function,
+  }) =>
       SizedBox(
         height: 135.h,
         width: MediaQuery.sizeOf(context).width,
@@ -105,79 +113,19 @@ class CategoryWidget {
                   const Spacer(),
                   TextButton(
                     style: ButtonStyle(
-                      shape: MaterialStatePropertyAll(
+                      shape: WidgetStatePropertyAll(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(9),
                         ),
                       ),
-                      backgroundColor: const MaterialStatePropertyAll(
+                      backgroundColor: const WidgetStatePropertyAll(
                         TagColors.lemonGreen,
                       ),
-                      foregroundColor: const MaterialStatePropertyAll(
+                      foregroundColor: const WidgetStatePropertyAll(
                         TagColors.white,
                       ),
                     ),
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showMaterialBanner(
-                        MaterialBanner(
-                          surfaceTintColor: Colors.transparent,
-                          margin: EdgeInsets.zero,
-                          padding: EdgeInsets.zero,
-                          elevation: 1,
-                          shadowColor: Colors.transparent,
-                          backgroundColor: Colors.transparent,
-                          dividerColor: Colors.transparent,
-                          content: Align(
-                            alignment: Alignment.centerRight,
-                            child: Container(
-                              alignment: Alignment.centerRight,
-                              height: 56,
-                              constraints: BoxConstraints(
-                                maxWidth:
-                                    MediaQuery.sizeOf(context).width * 0.8,
-                              ),
-                              color: TagColors.blue,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  const Icon(
-                                    Icons.done,
-                                    color: TagColors.white,
-                                    size: 25,
-                                  ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  const Text(
-                                    'Cart Successfully updated',
-                                    style: TextStyle(
-                                      color: TagColors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      ScaffoldMessenger.of(context)
-                                          .removeCurrentMaterialBanner();
-                                    },
-                                    icon: const Icon(
-                                      Icons.close,
-                                      color: TagColors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          actions: const [
-                            SizedBox(),
-                            SizedBox(),
-                          ],
-                        ),
-                      );
-                    },
+                    onPressed: function,
                     child: Text(
                       'Add to Cart',
                       style: TextStyle(
@@ -198,7 +146,14 @@ class CategoryWidget {
         content: Text(''),
       );
 
-  static Widget gridCard(context, image, name, price, discountedPrice) =>
+  static Widget gridCard({
+    context,
+    image,
+    name,
+    price,
+    discountedPrice,
+    VoidCallback? function,
+  }) =>
       Container(
         padding: const EdgeInsets.symmetric(horizontal: 5),
         child: Column(
@@ -296,84 +251,24 @@ class CategoryWidget {
                   width: MediaQuery.sizeOf(context).width,
                   child: TextButton(
                     style: ButtonStyle(
-                      shape: MaterialStatePropertyAll(
+                      shape: WidgetStatePropertyAll(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(9),
                         ),
                       ),
-                      backgroundColor: const MaterialStatePropertyAll(
+                      backgroundColor: const WidgetStatePropertyAll(
                         TagColors.lemonGreen,
                       ),
-                      foregroundColor: const MaterialStatePropertyAll(
+                      foregroundColor: const WidgetStatePropertyAll(
                         TagColors.white,
                       ),
                     ),
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showMaterialBanner(
-                        MaterialBanner(
-                          surfaceTintColor: Colors.transparent,
-                          margin: EdgeInsets.zero,
-                          padding: EdgeInsets.zero,
-                          elevation: 1,
-                          shadowColor: Colors.transparent,
-                          backgroundColor: Colors.transparent,
-                          dividerColor: Colors.transparent,
-                          content: Align(
-                            alignment: Alignment.centerRight,
-                            child: Container(
-                              alignment: Alignment.centerRight,
-                              height: 56,
-                              constraints: BoxConstraints(
-                                maxWidth:
-                                    MediaQuery.sizeOf(context).width * 0.8,
-                              ),
-                              color: TagColors.blue,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  const Icon(
-                                    Icons.done,
-                                    color: TagColors.white,
-                                    size: 25,
-                                  ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  const Text(
-                                    'Cart Successfully updated',
-                                    style: TextStyle(
-                                      color: TagColors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      ScaffoldMessenger.of(context)
-                                          .removeCurrentMaterialBanner();
-                                    },
-                                    icon: const Icon(
-                                      Icons.close,
-                                      color: TagColors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          actions: const [
-                            SizedBox(),
-                            SizedBox(),
-                          ],
-                        ),
-                      );
-                    },
-                    child: const Text('Add to Cart'),
+                    onPressed: function,
+                    child: const Text(
+                      'Add to Cart',
+                    ),
                   ),
                 ),
-           
-           
               ],
             ),
           ],
