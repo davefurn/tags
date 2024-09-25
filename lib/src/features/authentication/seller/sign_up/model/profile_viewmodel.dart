@@ -37,10 +37,11 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
     );
 
     try {
+      log(query.toString());
       final response = await _reader.read(serviceProvider).getWithToken(
             path: query != null ? 'api/search/?s=$query' : 'api/search/?s',
           );
-
+      log(response.statusCode.toString());
       if (response.statusCode == 200) {
         final Map<String, dynamic> body = response.data;
         List<SearchResult> eventCat = (body['data']['results'] as List)
@@ -61,6 +62,7 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
         state = state.copyWith(
           loading: Loader.error,
         );
+        log(response.data.toString());
         return ApiResponse(
           errorMessage: response.data['message'],
         );

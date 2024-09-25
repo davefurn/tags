@@ -1,5 +1,4 @@
 // ignore_for_file: use_build_context_synchronously, depend_on_referenced_packages
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -76,7 +75,7 @@ class _AddProductPageState extends ConsumerState<AddProductPage> {
   Widget build(BuildContext context) {
     final state = ref.watch(profileProvider);
     var imagesList = useState<List<XFile>>([]);
-    var documents = useState<List<PlatformFile>>([]);
+    // var documents = useState<List<PlatformFile>>([]);
 
     final imagePicker = ref.read(imagePickerService);
     ref.read(filePickerService);

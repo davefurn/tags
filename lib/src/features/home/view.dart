@@ -12,6 +12,7 @@ import 'package:tags/src/core/riverpod/providers/providers.dart';
 import 'package:tags/src/core/widget/tag_appbar.dart';
 import 'package:tags/src/data/hivekeys.dart';
 import 'package:tags/src/data/localdatabase.dart';
+import 'package:tags/src/features/search/riverpod/service.dart';
 import 'package:tags/src/features/search/view.dart';
 
 class HomePage extends StatefulHookConsumerWidget {
@@ -69,6 +70,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               controller: controller,
               onSubmitted: (p0) async {
                 await ref.read(profileProvider.notifier).getSearches(query: p0);
+                ref.read(searchProvider.notifier).updateSearchText(p0);
                 if (context.mounted) {
                   context.goNamed(TagRoutes.search.name);
                 }
@@ -77,6 +79,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ref
                     .read(profileProvider.notifier)
                     .getSearches(query: controller.text);
+
                 context.goNamed(TagRoutes.search.name);
               },
             ),

@@ -3,6 +3,7 @@ class HiveKeys {
   static const seller = 'seller';
   static const appBox = 'appBox';
   static const token = 'token';
+  static const search = 'search';
   static const refreshToken = 'refresh_token';
   static const hasEnabledBiometricLogin = 'hasEnabledBiometricLogin';
   static const stayLoggedIn = 'staySigned';

@@ -17,6 +17,7 @@ import 'package:tags/src/core/widget/tag_dialog.dart';
 import 'package:tags/src/data/hivekeys.dart';
 import 'package:tags/src/data/localdatabase.dart';
 import 'package:tags/src/features/categories/widget/category_widgets.dart';
+import 'package:tags/src/features/search/riverpod/service.dart';
 
 class SearchPage extends ConsumerStatefulWidget {
   const SearchPage({
@@ -32,21 +33,40 @@ class _SearchPageState extends ConsumerState<SearchPage> {
   String? token;
   @override
   void initState() {
+    // Initialize the controller
     controller = TextEditingController();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      await ref
-          .read(profileProvider.notifier)
-          .getSearches();
-      await ref.read(profileProvider.notifier).getAllCart();
-    });
+    // Fetch token
     token = HiveStorage.get(HiveKeys.token);
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      // Perform your async data loading
+
+      await ref.read(profileProvider.notifier).getSearches();
+
+      // await ref.read(profileProvider.notifier).getAllCart();
+    });
     super.initState();
   }
+
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+
+  //   // Retrieve the search text from HiveStorage
+  //   final searchText = ref.watch(searchProvider);
+
+  //   setState(() {
+  //     controller.text = searchText;
+  //   });
+
+  //   // Update the controller text to reflect the search text
+  // }
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(profileProvider);
     final model = ref.read(profileProvider.notifier);
+
     return Scaffold(
       appBar: TagBar(
         isHome: true,
@@ -66,8 +86,12 @@ class _SearchPageState extends ConsumerState<SearchPage> {
               controller: controller,
               onSubmitted: (p0) async {
                 await ref.read(profileProvider.notifier).getSearches(query: p0);
+                ref.read(searchProvider.notifier).updateSearchText(p0);
               },
               onEditingComplete: () {
+                ref
+                    .read(searchProvider.notifier)
+                    .updateSearchText(controller.text);
                 ref
                     .read(profileProvider.notifier)
                     .getSearches(query: controller.text);

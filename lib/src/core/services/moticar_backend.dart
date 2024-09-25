@@ -20,12 +20,21 @@ class AgencyBackEnd implements AgencyNetwork {
   AgencyBackEnd(this._dio) {
     _dio.options.baseUrl = baseUrl;
 
+    // Add logging for requests and responses
+    _dio.interceptors.add(
+      LogInterceptor(
+        responseBody: true,
+        requestBody: true,
+      ),
+    );
+
     (_dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate =
         (client) {
       client.badCertificateCallback = (cert, host, port) => true;
       return client;
     };
   }
+
   late final Dio _dio;
 
   Future<Response> put({
@@ -101,11 +110,12 @@ class AgencyBackEnd implements AgencyNetwork {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer $token',
+            'Authorization':
+                token == '' || token == null ? '' : 'Bearer $token',
           },
         ),
       );
-      log(response.toString());
+
       return response;
     } on DioError catch (e) {
       if (e.response != null && e.response!.statusCode! >= 500) {
@@ -172,7 +182,8 @@ class AgencyBackEnd implements AgencyNetwork {
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'Authorization': 'Bearer $token',
+            'Authorization':
+                token == '' || token == null ? '' : 'Bearer $token',
           },
         ),
       );
@@ -205,7 +216,7 @@ class AgencyBackEnd implements AgencyNetwork {
       {
         // "Accept": "application/json",
         'Content-type': 'multipart/form-data',
-        'Authorization': 'Bearer $token',
+        'Authorization': token == '' ? '' : 'Bearer $token',
       },
     );
     // request.files.add(await http.MultipartFile.fromPath(pathName, files.path));
@@ -250,7 +261,7 @@ class AgencyBackEnd implements AgencyNetwork {
     request.headers.addAll({
       // "Accept": "application/json",
       'Content-type': 'multipart/form-data',
-      'Authorization': 'Bearer $token',
+      'Authorization': token == '' ? '' : 'Bearer $token',
     });
 
     // Loop through each XFile object in the 'files' list
@@ -276,7 +287,7 @@ class AgencyBackEnd implements AgencyNetwork {
     request.headers.addAll(
       {
         'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
+        'Authorization': token == '' ? '' : 'Bearer $token',
       },
     );
     request.files.add(await http.MultipartFile.fromPath(pathName, files.path));
@@ -302,7 +313,8 @@ class AgencyBackEnd implements AgencyNetwork {
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',
-            'Authorization': 'Bearer $token',
+            'Authorization':
+                token == '' || token == null ? '' : 'Bearer $token',
           },
         ),
       );
@@ -336,7 +348,7 @@ class AgencyBackEnd implements AgencyNetwork {
         options: Options(
           headers: {
             'Content-Type': 'multipart/form-data',
-            'Authorization': 'Bearer $token',
+            'Authorization': token == '' || token == null ? '' : 'Bearer $token',
           },
         ),
       );
