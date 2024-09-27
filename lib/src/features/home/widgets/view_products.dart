@@ -2,17 +2,15 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tags/src/config/router/constants.dart';
-import 'package:tags/src/config/utils/enums.dart';
 import 'package:tags/src/core/constant/colors.dart';
-import 'package:tags/src/core/resources/resources.dart';
 import 'package:tags/src/core/riverpod/providers/providers.dart';
 import 'package:tags/src/core/widget/show_banner.dart';
 import 'package:tags/src/core/widget/tag_dialog.dart';
 import 'package:tags/src/features/home/widgets/buildbusinessrow.dart';
+import 'package:tags/src/features/home/widgets/product_image.dart';
 import 'package:tags/src/features/home/widgets/product_tiles_specs.dart';
 import 'package:tags/src/features/onboarding/widgets/app_texts.dart';
 import 'package:tags/src/features/search/view.dart';
@@ -140,120 +138,9 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
             15.verticalSpace,
             const CustomTextInput(),
             15.verticalSpace,
-            Container(
-              height: 212.h,
-              width: double.maxFinite,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.r),
-                image: DecorationImage(
-                  image: NetworkImage(
-                    widget.productImage,
-                  ),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 20.h),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SvgPicture.asset(
-                        Assets.iphoneBack,
-                        width: 40.w,
-                        height: 40.h,
-                      ),
-                      SvgPicture.asset(
-                        Assets.iphoneForward,
-                        width: 40.w,
-                        height: 40.h,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-
-            //
-
-            5.verticalSpace,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                if (state.loading != Loader.loading &&
-                    state.viewMoreProducts != null)
-                  SizedBox(
-                    height: 40.h,
-                    width: 300.w,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: state.viewMoreProducts!.images!.length,
-                      itemBuilder: (context, index) => Container(
-                        height: 40.h,
-                        width: 40.w,
-                        margin: EdgeInsets.only(left: 8.w),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4.r),
-                          image: DecorationImage(
-                            image: NetworkImage(
-                              state.viewMoreProducts!.images![index],
-                            ),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                else if (state.loading == Loader.loading)
-                  const Center(
-                    child: SizedBox.shrink(),
-                  )
-                else
-                  const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text(
-                        'No Images available',
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ),
-                  ),
-                SizedBox(
-                  width: 50.w,
-                  child: Row(
-                    children: [
-                      Container(
-                        height: 25.h,
-                        width: 25.w,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4.r),
-                        ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.share,
-                            color: TagColors.black,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 25.h,
-                        width: 25.w,
-                        decoration: BoxDecoration(
-                          color: const Color(0xffFFF6F1),
-                          borderRadius: BorderRadius.circular(25.r),
-                        ),
-                        child: const Center(
-                          child: Icon(
-                            Icons.favorite_border_outlined,
-                            color: TagColors.red,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+            ProductImageViewer(
+              images: state.viewMoreProducts?.images ?? [widget.productImage],
+              productImage: widget.productImage,
             ),
             24.verticalSpace,
             Align(
@@ -310,9 +197,8 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
               ),
             ),
             16.verticalSpace,
-            buildBusinessInfoRow(),
+            buildBusinessInfoRow(state.viewMoreProducts),
             12.verticalSpace,
-
             Row(
               children: [
                 Text(
@@ -541,7 +427,6 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
                 ],
               ),
             ),
-
             24.verticalSpace,
             Text(
               'Product specifications and features:',
@@ -565,7 +450,6 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
               title: 'Shipping',
               subDetails: state.viewMoreProducts?.deliveryType,
             ),
-
             8.verticalSpace,
             ProductSpecTiles(
               theme: theme,
@@ -573,7 +457,6 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
               title: 'Return Policy',
               subDetails: state.viewMoreProducts?.returnPolicy,
             ),
-
             8.verticalSpace,
           ],
         ),
