@@ -253,8 +253,7 @@ class CustomTextInput extends StatelessWidget {
           textAlignVertical: TextAlignVertical.bottom,
           decoration: InputDecoration(
             contentPadding:
-                EdgeInsets.symmetric(vertical: 15.h, horizontal: 5.w)
-                    .copyWith(bottom: 20.h),
+                EdgeInsets.symmetric(horizontal: 5.w, vertical: 25.h),
             hintMaxLines: 1,
             focusedBorder: OutlineInputBorder(
               borderSide: const BorderSide(color: TagColors.appThemeColor),

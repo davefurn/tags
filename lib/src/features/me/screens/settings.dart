@@ -17,16 +17,18 @@ class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     List<ProfileModel> myProfile = [
-      //order
-      ProfileModel(
-        action: () {},
-        image: Assets.location,
-        title: 'Change Location',
-      ),
+      // //order
+      // ProfileModel(
+      //   action: () {},
+      //   image: Assets.location,
+      //   title: 'Change Location',
+      // ),
 
       //id
       ProfileModel(
-        action: () {},
+        action: () {
+          context.pushNamed(TagRoutes.changeAddress.name);
+        },
         image: Assets.address,
         title: 'Change Address',
       ),
@@ -86,11 +88,11 @@ class _SettingsState extends State<Settings> {
                   borderRadius: BorderRadius.circular(24),
                 ),
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.5,
+                  height: MediaQuery.of(context).size.height * 0.22,
                   child: ListView.separated(
                     separatorBuilder: (_, __) => const Divider(
                       color: Color(0xffF1F1F1),
-                      thickness: 0.5,
+                      thickness: 0.2,
                     ),
                     itemCount: myProfile.length,
                     itemBuilder: (context, index) => Padding(

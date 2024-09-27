@@ -118,6 +118,15 @@ class _ChangeAddressState extends ConsumerState<ChangeAddress> {
                           height: 20,
                         ),
 
+                        const Padding(
+                          padding: EdgeInsets.only(top: 8, bottom: 8, left: 3),
+                          child: TagText(
+                            text: 'Phone number',
+                            fontSize: 13,
+                            fontWeight: FontWeight.w300,
+                            fontColor: TagColors.newText,
+                          ),
+                        ),
                         IntlPhoneField(
                           // key: const Key('phoneField'),
                           controller: phoneNumber,
@@ -214,8 +223,15 @@ class _ChangeAddressState extends ConsumerState<ChangeAddress> {
                           height: 20,
                         ),
 
-                        const SizedBox(height: 20),
-
+                        const Padding(
+                          padding: EdgeInsets.only(top: 8, bottom: 8, left: 3),
+                          child: TagText(
+                            text: 'Phone number',
+                            fontSize: 13,
+                            fontWeight: FontWeight.w300,
+                            fontColor: TagColors.newText,
+                          ),
+                        ),
                         DropdownButtonFormField(
                           dropdownColor: Colors.white,
                           decoration: InputDecoration(
@@ -278,7 +294,7 @@ class _ChangeAddressState extends ConsumerState<ChangeAddress> {
                 //       ? const CircularProgressIndicator()
                 //       : const Text('Login'),
                 // ),
-                const SizedBox(height: 50),
+                const SizedBox(height: 20),
                 Consumer(
                   builder: (context, ref, child) {
                     final model = ref.read(registerViewmodelProvider.notifier);
