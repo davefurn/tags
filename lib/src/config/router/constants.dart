@@ -120,6 +120,14 @@ enum TagRoutes {
     name: 'settings',
     path: '/settings',
   ),
+  wishlist(
+    name: 'wishlist',
+    path: '/wishlist',
+  ),
+    changePassword(
+    name: 'changePassword',
+    path: '/changePassword',
+  ),
   subCategoryScreen(
     name: 'subCategoryScreen',
     path: '/subCategoryScreen/:brandName',

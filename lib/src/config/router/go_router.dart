@@ -18,6 +18,7 @@ import 'package:tags/src/features/categories/sub_categories.dart';
 import 'package:tags/src/features/categories/view.dart';
 import 'package:tags/src/features/home/view.dart';
 import 'package:tags/src/features/home/widgets/view_products.dart';
+import 'package:tags/src/features/me/screens/change_password.dart';
 import 'package:tags/src/features/me/screens/settings.dart';
 import 'package:tags/src/features/me/view.dart';
 import 'package:tags/src/features/onboarding/intros/buyer.dart';
@@ -35,6 +36,7 @@ import 'package:tags/src/features/sell/sell_page.dart';
 import 'package:tags/src/features/sell/store_profile.dart';
 
 import 'package:tags/src/features/seller/seller_profile/update_store.dart';
+import 'package:tags/src/features/wishlist/view.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorHomeKey = GlobalKey<NavigatorState>(debugLabel: 'shellA');
@@ -162,10 +164,24 @@ GoRouter router = GoRouter(
       ),
     ),
     GoRoute(
+      name: TagRoutes.changePassword.name,
+      path: TagRoutes.changePassword.path,
+      pageBuilder: (context, state) => const CupertinoPage(
+        child: ChangePassword(),
+      ),
+    ),
+    GoRoute(
       name: TagRoutes.cart.name,
       path: TagRoutes.cart.path,
       pageBuilder: (context, state) => const CupertinoPage(
         child: Cart(),
+      ),
+    ),
+    GoRoute(
+      name: TagRoutes.wishlist.name,
+      path: TagRoutes.wishlist.path,
+      pageBuilder: (context, state) => const CupertinoPage(
+        child: WishList(),
       ),
     ),
     GoRoute(

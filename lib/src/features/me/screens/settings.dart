@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/core/resources/resources.dart';
 import 'package:tags/src/core/widget/tag_appbar.dart';
 import 'package:tags/src/features/home/models/home_models.dart';
@@ -31,7 +33,9 @@ class _SettingsState extends State<Settings> {
 
       //drafts
       ProfileModel(
-        action: () {},
+        action: () {
+          context.pushNamed(TagRoutes.changePassword.name);
+        },
         image: Assets.password,
         title: 'Change Password',
       ),
@@ -52,10 +56,11 @@ class _SettingsState extends State<Settings> {
     ];
     return Scaffold(
       backgroundColor: const Color(0xffF8F9FF),
-      appBar: const TagBar(
+      appBar: const TagBars(
         isHome: false,
         myColor: Color(0xffF8F9FF),
         title: 'Settings',
+        actions: [],
       ),
       body: Padding(
         padding: const EdgeInsets.only(
@@ -93,27 +98,30 @@ class _SettingsState extends State<Settings> {
                         horizontal: 8,
                         vertical: 10,
                       ),
-                      child: Row(
-                        children: [
-                          //
-                          SvgPicture.asset(
-                            myProfile[index].image,
-                            // height: 30,
-                          ),
-
-                          const SizedBox(width: 20),
-
-                          Text(
-                            myProfile[index].title,
-                            style: const TextStyle(
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w300,
-                              letterSpacing: 0.2,
-                              color: Color(0xff1B1B1B),
-                              fontSize: 13,
+                      child: InkWell(
+                        onTap: myProfile[index].action,
+                        child: Row(
+                          children: [
+                            //
+                            SvgPicture.asset(
+                              myProfile[index].image,
+                              // height: 30,
                             ),
-                          ),
-                        ],
+
+                            const SizedBox(width: 20),
+
+                            Text(
+                              myProfile[index].title,
+                              style: const TextStyle(
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w300,
+                                letterSpacing: 0.2,
+                                color: Color(0xff1B1B1B),
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
