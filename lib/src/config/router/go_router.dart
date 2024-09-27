@@ -18,6 +18,7 @@ import 'package:tags/src/features/categories/sub_categories.dart';
 import 'package:tags/src/features/categories/view.dart';
 import 'package:tags/src/features/home/view.dart';
 import 'package:tags/src/features/home/widgets/view_products.dart';
+import 'package:tags/src/features/me/screens/change_address.dart';
 import 'package:tags/src/features/me/screens/change_password.dart';
 import 'package:tags/src/features/me/screens/settings.dart';
 import 'package:tags/src/features/me/view.dart';
@@ -168,6 +169,13 @@ GoRouter router = GoRouter(
       path: TagRoutes.changePassword.path,
       pageBuilder: (context, state) => const CupertinoPage(
         child: ChangePassword(),
+      ),
+    ),
+    GoRoute(
+      name: TagRoutes.changeAddress.name,
+      path: TagRoutes.changeAddress.path,
+      pageBuilder: (context, state) => const CupertinoPage(
+        child: ChangeAddress(),
       ),
     ),
     GoRoute(

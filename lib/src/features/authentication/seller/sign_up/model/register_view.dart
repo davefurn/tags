@@ -84,6 +84,71 @@ class RegisterViewmodel extends StateNotifier<RegisterState> {
     }
   }
 
+  //
+  Future<ApiResponse> changeAddress({
+    required Map<String, dynamic> formData,
+  }) async {
+    state = state.copyWith(
+      loadStatus: Loader.loading,
+    );
+    // formData.addAll({"bank_id": bankId});
+    try {
+      final response = await _reader.read(serviceProvider).put(
+            formData: formData,
+            path: 'api/auth/user/address/',
+          );
+      var body = response.data;
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        var token = body['data']['access']; // Extract the id from the response
+
+        state = state.copyWith(
+          loadStatus: Loader.loaded,
+          token: token,
+        );
+        return ApiResponse(
+          successMessage: body['message'],
+        );
+      } else {
+        state = state.copyWith(
+          loadStatus: Loader.error,
+        );
+        return ApiResponse(
+          errorMessage: body['message'],
+        );
+      }
+    } on DioError catch (e) {
+      state = state.copyWith(loadStatus: Loader.error);
+
+      if (e.response != null &&
+          e.response!.data['message'] != null &&
+          e.response!.data['errors'] is List &&
+          e.response!.data['message'].isNotEmpty) {
+        // Join the error messages if there are multiple
+        String errorMessage = e.response!.data['errors'].join('\n');
+        return ApiResponse(errorMessage: errorMessage);
+      } else if (e.type == DioErrorType.badResponse ||
+          e.type == DioErrorType.receiveTimeout ||
+          e.type == DioErrorType.unknown) {
+        // Handle no internet connection or connection error here
+        return ApiResponse(
+          errorMessage:
+              e.response!.data['message'] ?? e.response!.data['error'],
+          // "Check your data connection / Connection error."
+        );
+      } else {
+        // Handle other DioErrors
+        // return ApiResponse(errorMessage: "Connection error, Please try again.");
+        return ApiResponse(errorMessage: e.response!.data['message']);
+      }
+    } catch (e) {
+      state = state.copyWith(
+        loadStatus: Loader.error,
+      );
+      rethrow;
+    }
+  }
+
   Future<ApiResponse> changePasswords({
     required Map<String, dynamic> formData,
   }) async {

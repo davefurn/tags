@@ -128,6 +128,10 @@ enum TagRoutes {
     name: 'changePassword',
     path: '/changePassword',
   ),
+    changeAddress(
+    name: 'changeAddress',
+    path: '/changeAddress',
+  ),
   subCategoryScreen(
     name: 'subCategoryScreen',
     path: '/subCategoryScreen/:brandName',
