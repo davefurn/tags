@@ -1,9 +1,17 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:tags/src/config/router/constants.dart';
+import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/resources/resources.dart';
+import 'package:tags/src/core/riverpod/providers/providers.dart';
+import 'package:tags/src/core/widget/tag_dialog.dart';
 
-class CartItem extends StatelessWidget {
+class CartItem extends ConsumerWidget {
   const CartItem({
     required this.image,
     required this.productName,
@@ -13,6 +21,7 @@ class CartItem extends StatelessWidget {
     required this.color,
     required this.quantity,
     required this.delete,
+    required this.slug,
     super.key,
   });
   final String image;
@@ -23,9 +32,12 @@ class CartItem extends StatelessWidget {
   final String color;
   final String quantity;
   final VoidCallback delete;
+  final String slug;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final model = ref.read(profileProvider.notifier);
+
     final format = NumberFormat('#,##0', 'en_US');
     return SizedBox(
       width: double.maxFinite,
@@ -138,13 +150,55 @@ class CartItem extends StatelessWidget {
           ),
           // Delete Icon
 
-          Align(
-            alignment: Alignment.topRight,
-            child: Image.asset(
-              AssetsImages.delete,
-              height: 32.h,
-              width: 32.w,
-              fit: BoxFit.cover,
+          InkWell(
+            onTap: () async {
+              final response = await model.delCart(
+                formData: {
+                  'product_slug': slug,
+                },
+              );
+
+              if (response.successMessage.isNotEmpty && context.mounted) {
+                await ref.read(profileProvider.notifier).getAllCart();
+              } else if (response.errorMessage.isNotEmpty &&
+                  context.mounted &&
+                  response.errorMessage ==
+                      'Authentication credentials were not provided.') {
+                await context.pushNamed(TagRoutes.sellerLogin.name);
+              } else if (response.errorMessage.isNotEmpty &&
+                  context.mounted &&
+                  response.errorMessage !=
+                      'Authentication credentials were not provided.') {
+                await showDialog(
+                  context: context,
+                  builder: (context) => TagDialog(
+                    icon: const Icon(
+                      Icons.error,
+                      color: TagColors.red,
+                      size: 50,
+                    ),
+                    title: 'Failed',
+                    subtitle: response.errorMessage,
+                    buttonColor: TagColors.red,
+                    textColor: Colors.white,
+                    buttonText: 'Dismiss',
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                );
+              } else {
+                log(response.error!.response!.statusCode.toString());
+              }
+            },
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Image.asset(
+                AssetsImages.delete,
+                height: 32.h,
+                width: 32.w,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ],

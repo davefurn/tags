@@ -297,6 +297,42 @@ class AgencyBackEnd implements AgencyNetwork {
   }
 
   @override
+  Future<Response> deleteWithToken({
+    required String path,
+    Map<String, dynamic>? formData,
+    Map<String, dynamic>? queryParameters,
+  }) async {
+    String? token = HiveStorage.get(HiveKeys.token);
+
+    try {
+      final data = await _dio.delete(
+        path,
+        data: formData, // Optional body data (some APIs allow data in DELETE)
+        queryParameters: queryParameters,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization':
+                token == '' || token == null ? '' : 'Bearer $token',
+          },
+        ),
+      );
+      log(data.statusCode.toString());
+      return data;
+    } on DioError catch (e) {
+      if (e.response != null && e.response!.statusCode! >= 500) {
+        e.response!.data = {
+          'message': 'Problem contacting server. Please try again later',
+        };
+        rethrow;
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  @override
   Future<Response> postWithToken({
     required String path,
     Map<String, dynamic>? formData,
@@ -348,7 +384,8 @@ class AgencyBackEnd implements AgencyNetwork {
         options: Options(
           headers: {
             'Content-Type': 'multipart/form-data',
-            'Authorization': token == '' || token == null ? '' : 'Bearer $token',
+            'Authorization':
+                token == '' || token == null ? '' : 'Bearer $token',
           },
         ),
       );

@@ -68,6 +68,7 @@ class _WishListState extends ConsumerState<WishList> {
                       itemCount: state.cartProducts!
                           .length, // Assuming there are 2 items in the cart
                       itemBuilder: (context, index) => CartItem(
+                        slug: state.cartProducts![index].slug.toString(),
                         image: state.cartProducts![index].image.toString(),
                         productName: state.cartProducts![index].name.toString(),
                         price: state.cartProducts![index].price.toString(),

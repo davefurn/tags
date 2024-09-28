@@ -21,7 +21,6 @@ class Cart extends ConsumerStatefulWidget {
 }
 
 class _CartState extends ConsumerState<Cart> {
-  
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
@@ -30,7 +29,6 @@ class _CartState extends ConsumerState<Cart> {
           'Authentication credentials were not provided.') {
         await context.pushNamed(TagRoutes.sellerLogin.name);
       }
-     
     });
     super.initState();
   }
@@ -70,6 +68,7 @@ class _CartState extends ConsumerState<Cart> {
                       itemCount: state.cartProducts!
                           .length, // Assuming there are 2 items in the cart
                       itemBuilder: (context, index) => CartItem(
+                        slug: state.cartProducts![index].slug.toString(),
                         image: state.cartProducts![index].image.toString(),
                         productName: state.cartProducts![index].name.toString(),
                         price: state.cartProducts![index].price.toString(),

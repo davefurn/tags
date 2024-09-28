@@ -99,6 +99,75 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
     }
   }
 
+  Future<ApiResponse> delCart({
+    required Map<String, dynamic> formData,
+  }) async {
+    // state = state.copyWith(
+    //   loading: Loader.loading,
+    // );
+
+    try {
+      final response = await _reader.read(serviceProvider).deleteWithToken(
+            formData: formData,
+            path: '/api/cart/remove/',
+          );
+      log(response.data.toString());
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        final Map<String, dynamic> body = response.data;
+        // List<CartProducts> eventCat = (body['data'] as List)
+        //     .map((e) => CartProducts.fromJson(e))
+        //     .toList();
+        // state = state.copyWith(
+        //   loading: Loader.loaded,
+        //   cartProducts: eventCat,
+        // );
+        return ApiResponse(
+          successMessage: body['message'],
+        );
+      } else if (response.statusCode == 401) {
+        return ApiResponse(
+          errorMessage: '401',
+        );
+      } else {
+        state = state.copyWith(
+          loading: Loader.error,
+        );
+        return ApiResponse(
+          errorMessage: response.data['message'],
+        );
+      }
+    } on DioError catch (e) {
+      state = state.copyWith(loading: Loader.error);
+
+      if (e.response != null &&
+          e.response!.data['message'] != null &&
+          e.response!.data['errors'] is List &&
+          e.response!.data['message'].isNotEmpty) {
+        // Join the error messages if there are multiple
+        String errorMessage = e.response!.data['errors'].join('\n');
+        return ApiResponse(errorMessage: errorMessage);
+      } else if (e.type == DioErrorType.badResponse ||
+          e.type == DioErrorType.receiveTimeout ||
+          e.type == DioErrorType.unknown) {
+        // Handle no internet connection or connection error here
+        return ApiResponse(
+          errorMessage:
+              e.response!.data['message'] ?? e.response!.data['error'],
+          // "Check your data connection / Connection error."
+        );
+      } else {
+        // Handle other DioErrors
+        // return ApiResponse(errorMessage: "Connection error, Please try again.");
+        return ApiResponse(errorMessage: e.response!.data['message']);
+      }
+    } catch (e) {
+      state = state.copyWith(
+        loading: Loader.error,
+      );
+      rethrow;
+    }
+  }
+
   Future<ApiResponse> postCart({
     required Map<String, dynamic> formData,
   }) async {
@@ -180,9 +249,12 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> body = response.data;
-        List<CartProducts> eventCat = (body['data'] as List)
-            .map((e) => CartProducts.fromJson(e))
-            .toList();
+
+// Parsing the data field as CartMetadata
+        CartMetadata cartMetadata = CartMetadata.fromJson(body['data']);
+
+// Access the list of CartProducts from the cartMetadata object
+        List<CartProducts> eventCat = cartMetadata.products ?? [];
         state = state.copyWith(
           loading: Loader.loaded,
           cartProducts: eventCat,

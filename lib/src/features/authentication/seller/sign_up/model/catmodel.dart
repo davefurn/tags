@@ -334,6 +334,7 @@ class CartProducts {
     this.brand,
     this.color,
     this.quantity,
+    this.seller,
   });
 
   // Factory method to create an instance from a JSON object
@@ -350,7 +351,9 @@ class CartProducts {
         brand: json['brand'] ?? '',
         color: json['color'] ?? '',
         quantity: json['quantity'] ?? 0,
+        seller: Seller.fromJson(json['seller']),
       );
+
   final String? name;
   final String? slug;
   final String? image;
@@ -359,6 +362,7 @@ class CartProducts {
   final String? brand;
   final String? color;
   final int? quantity;
+  final Seller? seller;
 
   // Method to convert an instance to a JSON object
   Map<String, dynamic> toJson() => {
@@ -370,6 +374,69 @@ class CartProducts {
         'brand': brand ?? '',
         'color': color ?? '',
         'quantity': quantity ?? 0,
+        'seller': seller?.toJson(),
+      };
+}
+
+class Seller {
+  Seller({
+    this.name,
+    this.slug,
+    this.logo,
+    this.phone,
+    this.email,
+  });
+
+  factory Seller.fromJson(Map<String, dynamic> json) => Seller(
+        name: json['name'] ?? '',
+        slug: json['slug'] ?? '',
+        logo: json['logo'] ?? '',
+        phone: json['phone'] ?? '',
+        email: json['email'] ?? '',
+      );
+
+  final String? name;
+  final String? slug;
+  final String? logo;
+  final String? phone;
+  final String? email;
+
+  Map<String, dynamic> toJson() => {
+        'name': name ?? '',
+        'slug': slug ?? '',
+        'logo': logo ?? '',
+        'phone': phone ?? '',
+        'email': email ?? '',
+      };
+}
+
+class CartMetadata {
+  CartMetadata({
+    this.total,
+    this.count,
+    this.products,
+  });
+
+  factory CartMetadata.fromJson(Map<String, dynamic> json) {
+    var productList = json['products'] as List;
+    List<CartProducts> products =
+        productList.map((i) => CartProducts.fromJson(i)).toList();
+
+    return CartMetadata(
+      total: json['total']?.toDouble() ?? 0.0,
+      count: json['count'] ?? 0,
+      products: products,
+    );
+  }
+
+  final double? total;
+  final int? count;
+  final List<CartProducts>? products;
+
+  Map<String, dynamic> toJson() => {
+        'total': total?.toString() ?? '0.0',
+        'count': count ?? 0,
+        'products': products?.map((product) => product.toJson()).toList(),
       };
 }
 
