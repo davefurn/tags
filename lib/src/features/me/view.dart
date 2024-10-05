@@ -59,11 +59,6 @@ class _MePageState extends State<MePage> {
           image: Assets.drafts,
           title: 'Drafts',
         ),
-        ProfileModel(
-          action: () {},
-          image: Assets.logout,
-          title: 'Log Out',
-        ),
       ],
       ProfileModel(
         action: () {},
@@ -79,15 +74,6 @@ class _MePageState extends State<MePage> {
       ),
       if (token != null || token != '') ...[
         ProfileModel(
-          action: () async {
-            await HiveStorage.put(HiveKeys.hasLoggedIn, false);
-            await HiveStorage.put(HiveKeys.token, '');
-            context.goNamed(TagRoutes.sellerLogin.name);
-          },
-          image: Assets.logout,
-          title: 'Log Out',
-        ),
-        ProfileModel(
           action: () {},
           image: Assets.wishlist,
           title: 'Wishlist',
@@ -96,6 +82,15 @@ class _MePageState extends State<MePage> {
           action: () {},
           image: Assets.order,
           title: 'Order History',
+        ),
+        ProfileModel(
+          action: () async {
+            await HiveStorage.put(HiveKeys.hasLoggedIn, false);
+            await HiveStorage.put(HiveKeys.token, '');
+            context.goNamed(TagRoutes.sellerLogin.name);
+          },
+          image: Assets.logout,
+          title: 'Log Out',
         ),
       ],
     ];
@@ -179,7 +174,7 @@ class _MePageState extends State<MePage> {
                   borderRadius: BorderRadius.circular(24),
                 ),
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.35,
+                  height: MediaQuery.of(context).size.height * 0.48,
                   child: ListView.separated(
                     separatorBuilder: (_, __) => const Divider(
                       color: Color(0xffF1F1F1),

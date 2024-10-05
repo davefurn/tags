@@ -149,68 +149,85 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                         String getCurrencySymbol(String currencyCode) =>
                             currencySymbols[currencyCode] ??
                             currencyCode; // Fallback to currency code if not found
-
-                        return CategoryWidget.gridCard(
-                          context: context,
-                          image: product.image ?? '',
-                          name: product.name ?? '',
-                          discountedPrice:
-                              '${getCurrencySymbol(product.currency ?? 'USD')}${format.format(product.discountedPrice)}',
-                          price:
-                              '${getCurrencySymbol(product.currency ?? 'USD')}${format.format(product.price)}',
-                          function: () async {
-                            final response = await model.postCart(
-                              formData: {
-                                'product_slug': product.slug,
-                                'quantity': 1,
+                        String price = format.format(product.price);
+                        return InkWell(
+                          onTap: () {
+                            context.pushNamed(
+                              TagRoutes.viewProducts.name,
+                              pathParameters: {
+                                'productImage': product.image.toString(),
+                                'productTitle': product.name.toString(),
+                                'productPrice':
+                                    '${getCurrencySymbol(product.currency.toString())}$price',
+                                'productBrand': product.slug.toString(),
+                                'slug': product.slug.toString(),
+                                'discount': ' ',
                               },
                             );
-
-                            if (response.successMessage.isNotEmpty &&
-                                context.mounted) {
-                              showSuccessBanner(
-                                context,
-                                response.successMessage,
-                              );
-                            } else if (response.errorMessage.isNotEmpty &&
-                                context.mounted &&
-                                response.errorMessage ==
-                                    'Authentication credentials were not provided.') {
-                              await context
-                                  .pushNamed(TagRoutes.sellerLogin.name);
-                            } else if (response.errorMessage.isNotEmpty &&
-                                context.mounted &&
-                                response.errorMessage !=
-                                    'Authentication credentials were not provided.') {
-                              await showDialog(
-                                context: context,
-                                builder: (context) => TagDialog(
-                                  icon: const Icon(
-                                    Icons.error,
-                                    color: TagColors.red,
-                                    size: 50,
-                                  ),
-                                  title: 'Failed',
-                                  subtitle: response.errorMessage,
-                                  buttonColor: TagColors.red,
-                                  textColor: Colors.white,
-                                  buttonText: 'Dismiss',
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              );
-                            } else {
-                              log(
-                                response.error!.response!.statusCode.toString(),
-                              );
-                            }
-
-                            Future.delayed(const Duration(seconds: 2), () {
-                              ScaffoldMessenger.of(context)
-                                  .removeCurrentMaterialBanner();
-                            });
                           },
+                          child: CategoryWidget.gridCard(
+                            context: context,
+                            image: product.image ?? '',
+                            name: product.name ?? '',
+                            discountedPrice:
+                                '${getCurrencySymbol(product.currency ?? 'USD')}${format.format(product.discountedPrice)}',
+                            price:
+                                '${getCurrencySymbol(product.currency ?? 'USD')}${format.format(product.price)}',
+                            function: () async {
+                              final response = await model.postCart(
+                                formData: {
+                                  'product_slug': product.slug,
+                                  'quantity': 1,
+                                },
+                              );
+
+                              if (response.successMessage.isNotEmpty &&
+                                  context.mounted) {
+                                showSuccessBanner(
+                                  context,
+                                  response.successMessage,
+                                );
+                              } else if (response.errorMessage.isNotEmpty &&
+                                  context.mounted &&
+                                  response.errorMessage ==
+                                      'Authentication credentials were not provided.') {
+                                await context
+                                    .pushNamed(TagRoutes.sellerLogin.name);
+                              } else if (response.errorMessage.isNotEmpty &&
+                                  context.mounted &&
+                                  response.errorMessage !=
+                                      'Authentication credentials were not provided.') {
+                                await showDialog(
+                                  context: context,
+                                  builder: (context) => TagDialog(
+                                    icon: const Icon(
+                                      Icons.error,
+                                      color: TagColors.red,
+                                      size: 50,
+                                    ),
+                                    title: 'Failed',
+                                    subtitle: response.errorMessage,
+                                    buttonColor: TagColors.red,
+                                    textColor: Colors.white,
+                                    buttonText: 'Dismiss',
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                );
+                              } else {
+                                log(
+                                  response.error!.response!.statusCode
+                                      .toString(),
+                                );
+                              }
+
+                              Future.delayed(const Duration(seconds: 2), () {
+                                ScaffoldMessenger.of(context)
+                                    .removeCurrentMaterialBanner();
+                              });
+                            },
+                          ),
                         );
                       }).toList(),
                     );
@@ -250,10 +267,11 @@ class CustomTextInput extends StatelessWidget {
           onSubmitted: onSubmitted,
           cursorHeight: 15.h,
           cursorColor: TagColors.black,
-          textAlignVertical: TextAlignVertical.bottom,
+          textAlignVertical:
+              TextAlignVertical.center, // Align hintText to center
           decoration: InputDecoration(
-            contentPadding:
-                EdgeInsets.symmetric(horizontal: 5.w, vertical: 25.h),
+            contentPadding: EdgeInsets.symmetric(
+                horizontal: 10.w), // Adjust padding to center vertically
             hintMaxLines: 1,
             focusedBorder: OutlineInputBorder(
               borderSide: const BorderSide(color: TagColors.appThemeColor),

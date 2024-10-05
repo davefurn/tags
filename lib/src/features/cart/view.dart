@@ -1,6 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tags/src/config/router/constants.dart';
@@ -9,6 +10,8 @@ import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/resources/resources.dart';
 import 'package:tags/src/core/riverpod/providers/providers.dart';
 import 'package:tags/src/core/widget/tag_appbar.dart';
+import 'package:tags/src/data/hivekeys.dart';
+import 'package:tags/src/data/localdatabase.dart';
 import 'package:tags/src/features/cart/cart_item.dart';
 import 'package:tags/src/features/onboarding/widgets/app_texts.dart';
 import 'package:tags/src/features/search/view.dart';
@@ -25,9 +28,13 @@ class _CartState extends ConsumerState<Cart> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       final response = await ref.read(profileProvider.notifier).getAllCart();
+      final refresh = HiveStorage.get(HiveKeys.refreshToken);
       if (response.errorMessage ==
-          'Authentication credentials were not provided.') {
+                  'Authentication credentials were not provided.' &&
+              refresh == null ||
+          refresh == '') {
         await context.pushNamed(TagRoutes.sellerLogin.name);
+        log('running');
       }
     });
     super.initState();
@@ -101,17 +108,9 @@ class _CartState extends ConsumerState<Cart> {
               )
             else if (state.loading != Loader.loading &&
                 state.cartProducts!.isNotEmpty)
-              const Center(
-                child: SpinKitWaveSpinner(
-                  color: TagColors.appThemeColor,
-                ),
-              )
+              const SizedBox.shrink()
             else if (state.loading == Loader.loading)
-              const Center(
-                child: SpinKitWaveSpinner(
-                  color: TagColors.appThemeColor,
-                ),
-              )
+              const SizedBox.shrink()
             else
               Column(
                 children: [

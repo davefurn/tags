@@ -88,7 +88,7 @@ class _SettingsState extends State<Settings> {
                   borderRadius: BorderRadius.circular(24),
                 ),
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.22,
+                  height: MediaQuery.of(context).size.height * 0.25,
                   child: ListView.separated(
                     separatorBuilder: (_, __) => const Divider(
                       color: Color(0xffF1F1F1),

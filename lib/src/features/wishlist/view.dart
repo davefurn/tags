@@ -24,11 +24,7 @@ class _WishListState extends ConsumerState<WishList> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      final response = await ref.read(profileProvider.notifier).getAllCart();
-      if (response.errorMessage ==
-          'Authentication credentials were not provided.') {
-        await context.pushNamed(TagRoutes.sellerLogin.name);
-      }
+      await ref.read(profileProvider.notifier).getAllCart();
     });
     super.initState();
   }

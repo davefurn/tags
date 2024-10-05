@@ -37,6 +37,10 @@ class LoginViewModel extends StateNotifier<LoginState> {
       if (response.statusCode == 200) {
         // && response.data['success'] == true
         await HiveStorage.put(HiveKeys.token, body['data']['access'] ?? '');
+        await HiveStorage.put(
+          HiveKeys.refreshToken,
+          body['data']['refresh'] ?? '',
+        );
         // await HiveStorage.put(HiveKeys.address, body['address'] ?? '');
         // await HiveStorage.put(HiveKeys.phonenumber, body["phone"] ?? '');
         await HiveStorage.put(

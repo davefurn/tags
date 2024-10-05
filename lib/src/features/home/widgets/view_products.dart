@@ -9,6 +9,8 @@ import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/riverpod/providers/providers.dart';
 import 'package:tags/src/core/widget/show_banner.dart';
 import 'package:tags/src/core/widget/tag_dialog.dart';
+import 'package:tags/src/data/hivekeys.dart';
+import 'package:tags/src/data/localdatabase.dart';
 import 'package:tags/src/features/home/widgets/buildbusinessrow.dart';
 import 'package:tags/src/features/home/widgets/product_image.dart';
 import 'package:tags/src/features/home/widgets/product_tiles_specs.dart';
@@ -38,7 +40,7 @@ class ViewProducts extends StatefulHookConsumerWidget {
 }
 
 class _ViewProductsState extends ConsumerState<ViewProducts> {
-  int _quantity = 1;
+  int _quantity = 0;
   bool addedToCart = false;
   @override
   void initState() {
@@ -268,6 +270,7 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
                       ),
                     ),
                     onPressed: () async {
+                      final refresh = HiveStorage.get(HiveKeys.refreshToken);
                       final response = await model.postCart(
                         formData: {
                           'product_slug': state.viewMoreProducts!.slug,
@@ -282,9 +285,11 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
                         });
                         showSuccessBanner(context, response.successMessage);
                       } else if (response.errorMessage.isNotEmpty &&
-                          context.mounted &&
-                          response.errorMessage ==
-                              'Authentication credentials were not provided.') {
+                              context.mounted &&
+                              response.errorMessage ==
+                                  'Authentication credentials were not provided.' &&
+                              refresh == null ||
+                          refresh == '') {
                         await context.pushNamed(TagRoutes.sellerLogin.name);
                       } else if (response.errorMessage.isNotEmpty &&
                           context.mounted &&
@@ -370,32 +375,44 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
                         ),
                       ),
                       11.verticalSpace,
-                      Text(
-                        'Condition: ${state.viewMoreProducts?.condition ?? ''}',
-                        style: TextStyle(
-                          color: TagColors.black,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w400,
+                      if (state.viewMoreProducts?.condition == null ||
+                          state.viewMoreProducts!.condition!.isEmpty)
+                        const SizedBox.shrink()
+                      else
+                        Text(
+                          'Condition: ${state.viewMoreProducts?.condition ?? ''}',
+                          style: TextStyle(
+                            color: TagColors.black,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
-                      ),
                       8.verticalSpace,
-                      Text(
-                        'Color: ${state.viewMoreProducts?.color ?? ''}',
-                        style: TextStyle(
-                          color: TagColors.black,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w400,
+                      if (state.viewMoreProducts?.color == null ||
+                          state.viewMoreProducts!.color!.isEmpty)
+                        const SizedBox.shrink()
+                      else
+                        Text(
+                          'Color: ${state.viewMoreProducts?.color ?? ''}',
+                          style: TextStyle(
+                            color: TagColors.black,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
-                      ),
                       8.verticalSpace,
-                      Text(
-                        'Brand: ${state.viewMoreProducts?.brand?.name ?? ''}',
-                        style: TextStyle(
-                          color: TagColors.black,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w400,
+                      if (state.viewMoreProducts?.brand == null ||
+                          state.viewMoreProducts!.brand!.name == '')
+                        const SizedBox.shrink()
+                      else
+                        Text(
+                          'Brand: ${state.viewMoreProducts?.brand!.name ?? ''}',
+                          style: TextStyle(
+                            color: TagColors.black,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
-                      ),
                       8.verticalSpace,
                     ],
                   ),
@@ -404,23 +421,37 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       11.verticalSpace,
-                      Text(
-                        'Quantity In Stock: ${state.viewMoreProducts?.quantity ?? ''}',
-                        style: TextStyle(
-                          color: TagColors.black,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w400,
+                      if (state.viewMoreProducts?.quantity == null ||
+                          state.viewMoreProducts!.quantity.toString() == '0')
+                        Text(
+                          'Quantity: Out of stock',
+                          style: TextStyle(
+                            color: TagColors.red,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        )
+                      else
+                        Text(
+                          'Quantity: ${state.viewMoreProducts?.quantity ?? ''}',
+                          style: TextStyle(
+                            color: TagColors.black,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
-                      ),
                       8.verticalSpace,
-                      Text(
-                        'Year of Manufacture: ${state.viewMoreProducts?.manufactureYear ?? ''}',
-                        style: TextStyle(
-                          color: TagColors.black,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w400,
+                      if (state.viewMoreProducts?.manufactureYear == null)
+                        const SizedBox.shrink()
+                      else
+                        Text(
+                          'Year of manufacture: ${state.viewMoreProducts?.manufactureYear ?? ''}',
+                          style: TextStyle(
+                            color: TagColors.black,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
-                      ),
                       8.verticalSpace,
                     ],
                   ),

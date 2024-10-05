@@ -1,4 +1,4 @@
-package com.example.tags
+package com.tags-marketplace.app
 
 import io.flutter.embedding.android.FlutterActivity
 

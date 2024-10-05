@@ -95,25 +95,25 @@ Widget buildBusinessInfoRow(ViewMoreProduct? view) => Row(
             10.horizontalSpace,
 
             // Message button
-            InkWell(
-              onTap: () {
-                // Implement chat functionality here
-              },
-              child: Container(
-                height: 35.h,
-                width: 35.h,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: TagColors.appThemeColor),
-                ),
-                child: Icon(
-                  Icons.chat_rounded,
-                  size: 15.sp,
-                  color: TagColors.appThemeColor,
-                ),
-              ),
-            ),
-            10.horizontalSpace,
+            // InkWell(
+            //   onTap: () {
+            //     // Implement chat functionality here
+            //   },
+            //   child: Container(
+            //     height: 35.h,
+            //     width: 35.h,
+            //     decoration: BoxDecoration(
+            //       shape: BoxShape.circle,
+            //       border: Border.all(color: TagColors.appThemeColor),
+            //     ),
+            //     child: Icon(
+            //       Icons.chat_rounded,
+            //       size: 15.sp,
+            //       color: TagColors.appThemeColor,
+            //     ),
+            //   ),
+            // ),
+            // 10.horizontalSpace,
 
             // Call button
             InkWell(

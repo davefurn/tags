@@ -13,7 +13,7 @@ import 'package:tags/src/data/localdatabase.dart';
 // import '../utils/constants.dart';
 
 // //up endpoint
-String baseUrl = 'https://api.tagsmarketplace.com/';
+String baseUrl = 'https://dev.api.tagsmarketplace.com/';
 // Constant.baseUrl;
 
 class AgencyBackEnd implements AgencyNetwork {
@@ -25,6 +25,54 @@ class AgencyBackEnd implements AgencyNetwork {
       LogInterceptor(
         responseBody: true,
         requestBody: true,
+      ),
+    );
+
+    // Add the token refresh interceptor
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onError: (error, handler) async {
+          if (error.response?.statusCode == 401) {
+            // Token might be expired, refresh it
+            try {
+              final refreshToken = await _refreshToken();
+              String? token = HiveStorage.get(HiveKeys.token);
+
+              // If refresh token is null or token is empty, break
+              if (refreshToken == null || refreshToken == '') {
+                return handler.reject(error); // Stop retrying if refresh fails
+              }
+
+              // Update the headers with the new token and retry the request
+              final options = error.requestOptions;
+              options.headers["Authorization"] = 'Bearer $token';
+
+              // Retry the request
+              final response = await _dio.request(
+                options.path,
+                options: Options(
+                  method: options.method,
+                  headers: options.headers,
+                ),
+              );
+              return handler.resolve(response);
+            } on DioError catch (refreshError) {
+              if (refreshError.response?.statusCode == 400 ||
+                  refreshError.response?.statusCode == 401) {
+                // Refresh token failed, break the flow
+                log('Refresh token failed with status: ${refreshError.response?.statusCode}');
+
+                return handler.reject(refreshError); // Stop retrying
+              } else {
+                log(refreshError.toString());
+                log('Making refresh token null');
+                HiveStorage.put(HiveKeys.refreshToken, null);
+                return handler.reject(error); // Forward original error
+              }
+            }
+          }
+          return handler.reject(error); // Forward error if not 401
+        },
       ),
     );
 
@@ -400,6 +448,47 @@ class AgencyBackEnd implements AgencyNetwork {
       } else {
         rethrow;
       }
+    }
+  }
+
+  @override
+  Future<String?> _refreshToken() async {
+    // Implement the logic for refreshing the token
+    try {
+      final refreshToken =
+          HiveStorage.get(HiveKeys.refreshToken); // Get stored refresh token
+      String? token = HiveStorage.get(HiveKeys.token); // Get stored token
+      final response = await _dio.post(
+        'api/auth/token/refresh/',
+        data: {'refresh': refreshToken},
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization':
+                token == '' || token == null ? '' : 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        // Refresh token and access token are both received
+        final newToken = response.data['accessToken'];
+        final refresh = response.data['refresh'];
+
+        // Save the new access token and refresh token
+        HiveStorage.put(HiveKeys.token, newToken);
+        HiveStorage.put(HiveKeys.refreshToken, refresh);
+
+        return newToken; // Return the new access token
+      } else {
+        // Handle token refresh failure (non-200 response)
+        log('Failed to refresh token: ${response.statusCode}');
+        return null;
+      }
+    } on Exception catch (e) {
+      log('Exception during token refresh: $e');
+      return null; // Return null if an exception occurs
     }
   }
 
