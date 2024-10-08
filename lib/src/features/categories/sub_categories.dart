@@ -314,6 +314,8 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
                     context: context,
                     image: dealOfDay.image,
                     name: dealOfDay.name,
+                    rating: dealOfDay.rating,
+                    inCart: dealOfDay.inCart,
                     discountedPrice:
                         '${getCurrencySymbol(dealOfDay.currency)}${format.format(dealOfDay.discountedPrice)}',
                     price:

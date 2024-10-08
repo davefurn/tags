@@ -18,8 +18,6 @@ import 'package:tags/src/data/localdatabase.dart';
 import 'package:tags/src/features/authentication/seller/widget/indicator.dart';
 import 'package:tags/src/features/onboarding/widgets/app_texts.dart';
 
-
-
 class SellLoginPage extends StatefulWidget {
   const SellLoginPage({super.key});
 
@@ -57,7 +55,7 @@ class _SellLoginPageState extends State<SellLoginPage> {
             automaticallyImplyLeading: false,
             leading: IconButton(
               onPressed: () {
-                context.goNamed(TagRoutes.introPageTwo.name);
+                context.canPop();
               },
               icon: Container(
                 height: 40,
@@ -266,8 +264,6 @@ class _SellLoginPageState extends State<SellLoginPage> {
                                     setState(() {
                                       _hasLoggedIn = true;
                                     });
-
-                                    
 
                                     context.goNamed(TagRoutes.home.name);
                                   } else if (response.errorMessage.isNotEmpty) {

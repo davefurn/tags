@@ -40,7 +40,7 @@ class ViewProducts extends StatefulHookConsumerWidget {
 }
 
 class _ViewProductsState extends ConsumerState<ViewProducts> {
-  int _quantity = 0;
+  int _quantity = 1;
   bool addedToCart = false;
   @override
   void initState() {
@@ -90,7 +90,7 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
         automaticallyImplyLeading: false,
         leading: IconButton(
           onPressed: () {
-            context.goNamed(TagRoutes.home.name);
+            context.pop();
           },
           icon: Container(
             height: 35,

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/config/utils/enums.dart';
 import 'package:tags/src/core/constant/colors.dart';
@@ -152,9 +153,25 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                           ),
                           itemBuilder: (context, productIndex) {
                             final product = allCatz.products[productIndex];
+                            final format = NumberFormat('#,##0', 'en_US');
+                            String price = format.format(product.price);
 
                             return GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                context.pushNamed(
+                                  TagRoutes.viewProducts.name,
+                                  pathParameters: {
+                                    'productImage': product.image,
+                                    'productTitle': product.name,
+                                    'productPrice':
+                                        '${getCurrencySymbol(product.currency)}$price',
+                                    'productBrand': product.slug,
+                                    'slug': product.slug,
+                                    'discount':
+                                        '${getCurrencySymbol(product.currency)}${product.discountedPrice}',
+                                  },
+                                );
+                              },
                               child: SizedBox(
                                 key: ValueKey(product.slug),
                                 height: 160,

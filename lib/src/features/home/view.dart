@@ -111,30 +111,35 @@ class _HomePageState extends ConsumerState<HomePage> {
                       key: ValueKey(topCatz.slug),
                       width: 130.w,
                       height: 150.h,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(9.r),
-                            child: Image.network(
-                              topCatz.image.isNotEmpty
-                                  ? topCatz.image
-                                  : 'https://images.pexels.com/photos/2294342/pexels-photo-2294342.jpeg?cs=srgb&dl=pexels-paggiarofrancesco-2294342.jpg&fm=jpg',
-                              fit: BoxFit.cover,
-                              height: 125,
-                              width: 130.w,
+                      child: InkWell(
+                        onTap: () {
+                          context.goNamed(TagRoutes.categories.name);
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(9.r),
+                              child: Image.network(
+                                topCatz.image.isNotEmpty
+                                    ? topCatz.image
+                                    : 'https://images.pexels.com/photos/2294342/pexels-photo-2294342.jpeg?cs=srgb&dl=pexels-paggiarofrancesco-2294342.jpg&fm=jpg',
+                                fit: BoxFit.cover,
+                                height: 125,
+                                width: 130.w,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 1),
-                          Text(
-                            topCatz.name,
-                            style: const TextStyle(
-                              fontFamily: 'poppins',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 12,
+                            const SizedBox(height: 1),
+                            Text(
+                              topCatz.name,
+                              style: const TextStyle(
+                                fontFamily: 'poppins',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 12,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   },

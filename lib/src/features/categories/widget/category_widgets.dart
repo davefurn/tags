@@ -12,10 +12,12 @@ class CategoryWidget {
     name,
     price,
     discountedPrice,
+    rating,
+    inCart,
     VoidCallback? function,
   }) =>
       SizedBox(
-        height: 135.h,
+        height: 150.h,
         width: MediaQuery.sizeOf(context).width,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,13 +30,13 @@ class CategoryWidget {
                   child: Image.network(
                     image,
                     fit: BoxFit.cover,
-                    height: 135.h,
-                    width: 141.w,
+                    height: 141.h,
+                    width: 135.w,
                   ),
                 ),
               ),
             ),
-            39.horizontalSpace,
+            15.horizontalSpace,
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: Column(
@@ -65,14 +67,13 @@ class CategoryWidget {
                           style: TextStyle(
                             decoration: TextDecoration.lineThrough,
                             color: TagColors.greyColor,
-                            fontSize: 8.sp,
+                            fontSize: 10.sp,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  4.verticalSpace,
                   const Text(
                     'Free Shipping',
                     style: TextStyle(
@@ -81,41 +82,30 @@ class CategoryWidget {
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  const Row(
-                    children: [
-                      Icon(
-                        Icons.star,
-                        color: TagColors.yellow,
-                        size: 20,
+                  8.verticalSpace,
+                  Row(
+                    children: List.generate(
+                      5,
+                      (index) => Icon(
+                        index < (rating ?? 0) ? Icons.star : Icons.star_border,
+                        color: Colors.yellow,
+                        size: 18.sp,
                       ),
-                      Icon(
-                        Icons.star,
-                        color: TagColors.yellow,
-                        size: 20,
-                      ),
-                      Icon(
-                        Icons.star,
-                        color: TagColors.yellow,
-                        size: 20,
-                      ),
-                      Icon(
-                        Icons.star,
-                        color: TagColors.yellow,
-                        size: 20,
-                      ),
-                      Icon(
-                        Icons.star_border,
-                        color: TagColors.yellow,
-                        size: 20,
-                      ),
-                    ],
+                    ),
                   ),
-                  const Spacer(),
+                  7.verticalSpace,
                   TextButton(
                     style: ButtonStyle(
+                      padding: WidgetStatePropertyAll(
+                        EdgeInsets.symmetric(
+                          horizontal: 0.w,
+                          vertical: 0.h,
+                        ),
+                      ),
+                      fixedSize: WidgetStatePropertyAll(Size(111.w, 26.h)),
                       shape: WidgetStatePropertyAll(
                         RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(9),
+                          borderRadius: BorderRadius.circular(4.r),
                         ),
                       ),
                       backgroundColor: const WidgetStatePropertyAll(

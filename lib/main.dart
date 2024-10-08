@@ -31,19 +31,28 @@ class MyApp extends StatelessWidget {
         designSize: const Size(393, 850),
         splitScreenMode: true,
         minTextAdapt: true,
-        child: MaterialApp.router(
-          title: 'TAGS MARKETPLACE',
-          routerConfig: router,
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            primaryColor: TagColors.white,
-            brightness: Brightness.light,
-            fontFamily: 'Poppins',
-            scaffoldBackgroundColor: TagColors.white,
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
+        child: GestureDetector(
+          onTap: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
+          child: MaterialApp.router(
+            title: 'TAGS MARKETPLACE',
+            routerConfig: router,
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              primaryColor: TagColors.white,
+              brightness: Brightness.light,
+              fontFamily: 'Poppins',
+              scaffoldBackgroundColor: TagColors.white,
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+              useMaterial3: true,
+            ),
           ),
         ),
       );

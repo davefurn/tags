@@ -291,6 +291,9 @@ class BrandProduct {
     required this.discount,
     required this.discountedPrice,
     required this.tagOne,
+    required this.rating,
+    required this.inCart,
+    required this.subscriptionBased,
   });
 
   factory BrandProduct.fromJson(Map<String, dynamic> json) => BrandProduct(
@@ -302,6 +305,9 @@ class BrandProduct {
         discount: json['discount'].toDouble(),
         discountedPrice: json['discounted_price'].toDouble(),
         tagOne: json['tag_one'],
+        rating: json['rating'].toDouble(),
+        inCart: json['in_cart'],
+        subscriptionBased: json['subscription_based'],
       );
   final String name;
   final String slug;
@@ -311,6 +317,9 @@ class BrandProduct {
   final double discount;
   final double discountedPrice;
   final bool tagOne;
+  final double rating;
+  final bool inCart;
+  final bool subscriptionBased;
 
   Map<String, dynamic> toJson() => {
         'name': name,
@@ -321,6 +330,9 @@ class BrandProduct {
         'discount': discount,
         'discounted_price': discountedPrice,
         'tag_one': tagOne,
+        'rating': rating,
+        'in_cart': inCart,
+        'subscription_based': subscriptionBased,
       };
 }
 
