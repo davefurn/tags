@@ -152,12 +152,21 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
                   setState(() {
                     wishlist = true;
                   });
-                  showSuccessBanner(context, 'Wishlist successfully updated');
+                  showSuccessBanner(context, response.successMessage);
                 } else if (response.errorMessage.isNotEmpty &&
                     context.mounted &&
                     response.errorMessage ==
                         'Authentication credentials were not provided.') {
-                  await context.pushNamed(TagRoutes.sellerLogin.name);
+                  final responseRefresh =
+                      await ref.read(profileProvider.notifier).refresh();
+                  log('Case one running');
+                  if (responseRefresh.successMessage == 'Token refreshed') {
+                    log('Case one running, success message');
+                    await ref.read(profileProvider.notifier).getAllCart();
+                  } else {
+                    log('Case one running, successful message');
+                    await context.pushNamed(TagRoutes.sellerLogin.name);
+                  }
                 } else if (response.errorMessage.isNotEmpty &&
                     context.mounted &&
                     response.errorMessage !=
@@ -334,7 +343,17 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
                           context.mounted &&
                           response.errorMessage ==
                               'Authentication credentials were not provided.') {
-                        await context.pushNamed(TagRoutes.sellerLogin.name);
+                        final responseRefresh =
+                            await ref.read(profileProvider.notifier).refresh();
+                        log('Case one running');
+                        if (responseRefresh.successMessage ==
+                            'Token refreshed') {
+                          log('Case one running, success message');
+                          await ref.read(profileProvider.notifier).getAllCart();
+                        } else {
+                          log('Case one running, successful message');
+                          await context.pushNamed(TagRoutes.sellerLogin.name);
+                        }
                       } else if (response.errorMessage.isNotEmpty &&
                           context.mounted &&
                           response.errorMessage !=

@@ -74,7 +74,9 @@ class _MePageState extends State<MePage> {
       ),
       if (token != null || token != '') ...[
         ProfileModel(
-          action: () {},
+          action: () {
+            context.pushNamed(TagRoutes.wishlist.name);
+          },
           image: Assets.wishlist,
           title: 'Wishlist',
         ),

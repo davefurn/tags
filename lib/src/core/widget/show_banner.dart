@@ -37,10 +37,10 @@ void showSuccessBanner(BuildContext context, String successMessage) {
                   width: 5,
                 ),
                 Text(
-                  'Cart Successfully updated',
+                  successMessage,
                   style: TextStyle(
                     color: TagColors.white,
-                    fontSize: 16.sp,
+                    fontSize: 13.sp,
                     fontWeight: FontWeight.w400,
                   ),
                 ),

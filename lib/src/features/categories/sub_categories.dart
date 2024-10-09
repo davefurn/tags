@@ -13,6 +13,8 @@ import 'package:tags/src/core/riverpod/providers/providers.dart';
 import 'package:tags/src/core/widget/show_banner.dart';
 import 'package:tags/src/core/widget/tag_appbar.dart';
 import 'package:tags/src/core/widget/tag_dialog.dart';
+import 'package:tags/src/data/hivekeys.dart';
+import 'package:tags/src/data/localdatabase.dart';
 import 'package:tags/src/features/categories/widget/category_widgets.dart';
 import 'package:tags/src/features/categories/widget/toggle_button.dart';
 import 'package:tags/src/features/search/view.dart';
@@ -30,6 +32,7 @@ class SubCategoryScreen extends StatefulHookConsumerWidget {
 
 class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
   bool isGrid = false;
+  String? token;
 
   @override
   void initState() {
@@ -37,6 +40,7 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
       ref.read(profileProvider.notifier).getAllBrands(widget.brandName);
       ref.read(profileProvider.notifier).getAllBrandsProduct(widget.brandName);
     });
+    token = HiveStorage.get(HiveKeys.token);
     super.initState();
   }
 
@@ -65,24 +69,26 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
     final model = ref.read(profileProvider.notifier);
     return Scaffold(
       appBar: TagBar(
+        token: token,
+        state: state,
         isHome: false,
         title: '',
-        actions: [
-          const InkWell(
-            child: Icon(
-              Icons.favorite_outline_rounded,
-              color: Color(0xff5E5E5E),
-            ),
-          ),
-          4.horizontalSpace,
-          Padding(
-            padding: EdgeInsets.only(right: 16.w),
-            child: const Icon(
-              Icons.shopping_bag_outlined,
-              color: Color(0xff474747),
-            ),
-          ),
-        ],
+        // actions: [
+        //   const InkWell(
+        //     child: Icon(
+        //       Icons.favorite_outline_rounded,
+        //       color: Color(0xff5E5E5E),
+        //     ),
+        //   ),
+        //   4.horizontalSpace,
+        //   Padding(
+        //     padding: EdgeInsets.only(right: 16.w),
+        //     child: const Icon(
+        //       Icons.shopping_bag_outlined,
+        //       color: Color(0xff474747),
+        //     ),
+        //   ),
+        // ],
       ),
       body: Padding(
         padding: const EdgeInsets.only(

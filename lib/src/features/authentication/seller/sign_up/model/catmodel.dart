@@ -533,15 +533,15 @@ class ResultItem {
     required this.totalQuantity,
   });
   factory ResultItem.fromJson(Map<String, dynamic> json) => ResultItem(
-        name: json['name'],
-        slug: json['slug'],
-        image: json['image'],
-        price: json['price'],
+        name: json['name'] ?? '',
+        slug: json['slug'] ?? '',
+        image: json['image'] ?? '',
+        price: json['price'] ?? 0.0,
         currency: json['currency'],
-        discountedPrice: json['discounted_price'],
-        brand: json['brand'],
-        color: json['color'],
-        totalQuantity: json['total_quantity'],
+        discountedPrice: json['discounted_price'] ?? 0.0,
+        brand: json['brand'] ?? '',
+        color: json['color'] ?? '',
+        totalQuantity: json['total_quantity'] ?? 0.0,
       );
   String name;
   String slug;

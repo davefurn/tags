@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -23,7 +25,26 @@ class _WishListState extends ConsumerState<WishList> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      await ref.read(profileProvider.notifier).getAllWishlist();
+      final response =
+          await ref.read(profileProvider.notifier).getAllWishlist();
+      switch (response.errorMessage) {
+        case 'Authentication credentials were not provided.':
+          final responseRefresh =
+              await ref.read(profileProvider.notifier).refresh();
+          log('Case one running');
+          if (responseRefresh.successMessage == 'Token refreshed') {
+            log('Case one running, success message');
+            await ref.read(profileProvider.notifier).getAllWishlist();
+          } else {
+            log('Case one running, successful message');
+            await context.pushNamed(TagRoutes.sellerLogin.name);
+          }
+          break;
+        default:
+          log('Case one failed, failed message');
+          // Handle other cases or proceed if no error
+          break;
+      }
     });
     super.initState();
   }

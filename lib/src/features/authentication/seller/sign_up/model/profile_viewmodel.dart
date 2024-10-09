@@ -40,8 +40,10 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
       log(response.statusCode.toString());
       if (response.statusCode == 200) {
         // Refresh token and access token are both received
-        final newToken = response.data['accessToken'];
-        final refresh = response.data['refresh'];
+        final newToken = response.data['data']['access'];
+        final refresh = response.data['data']['refresh'];
+        log(newToken);
+        log(refresh);
 
         // Save the new access token and refresh token
         HiveStorage.put(HiveKeys.token, newToken);
