@@ -31,6 +31,7 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(profileProvider.notifier).getAllProducts();
       ref.read(profileProvider.notifier).getAllCart();
+      ref.read(profileProvider.notifier).getAllWishlist();
     });
     token = HiveStorage.get(HiveKeys.token);
     super.initState();

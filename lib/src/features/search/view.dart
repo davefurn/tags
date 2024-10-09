@@ -42,8 +42,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
       // Perform your async data loading
 
       await ref.read(profileProvider.notifier).getSearches();
-
-      // await ref.read(profileProvider.notifier).getAllCart();
+      await ref.read(profileProvider.notifier).getAllWishlist();
+      await ref.read(profileProvider.notifier).getAllCart();
     });
     super.initState();
   }

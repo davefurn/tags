@@ -546,9 +546,9 @@ class ResultItem {
   String name;
   String slug;
   String image;
-  int price;
+  double price;
   String currency;
-  int discountedPrice;
+  double discountedPrice;
   String brand;
   String color;
   int totalQuantity;

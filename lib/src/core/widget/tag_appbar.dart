@@ -59,9 +59,13 @@ class _TagBarState extends State<TagBar> {
                     : () {
                         context.pushNamed(TagRoutes.wishlist.name);
                       },
-                child: const Icon(
-                  Icons.favorite_outline_rounded,
-                  color: Color(0xff5E5E5E),
+                child: Badge(
+                  backgroundColor: TagColors.appThemeColor,
+                  isLabelVisible: widget.state!.resultItem!.isNotEmpty,
+                  child: const Icon(
+                    Icons.favorite_outline_rounded,
+                    color: Color(0xff5E5E5E),
+                  ),
                 ),
               ),
               4.horizontalSpace,

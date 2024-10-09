@@ -11,10 +11,14 @@ class ProductImageViewer extends StatefulWidget {
   const ProductImageViewer({
     required this.images,
     required this.productImage,
+    required this.ontap,
+    required this.wishlist,
     super.key,
   });
   final List<String> images; // List of product images
   final String productImage;
+  final VoidCallback ontap;
+  final bool wishlist;
 
   @override
   ProductImageViewerState createState() => ProductImageViewerState();
@@ -172,17 +176,25 @@ class ProductImageViewerState extends State<ProductImageViewer> {
                     ),
 
                     // Favorite button
-                    Container(
-                      height: 25.h,
-                      width: 25.w,
-                      decoration: BoxDecoration(
-                        color: const Color(0xffFFF6F1),
-                        borderRadius: BorderRadius.circular(25.r),
-                      ),
-                      child: const Center(
-                        child: Icon(
-                          Icons.favorite_border_outlined,
-                          color: TagColors.red,
+                    InkWell(
+                      onTap: widget.ontap,
+                      child: Container(
+                        height: 25.h,
+                        width: 25.w,
+                        decoration: BoxDecoration(
+                          color: const Color(0xffFFF6F1),
+                          borderRadius: BorderRadius.circular(25.r),
+                        ),
+                        child: Center(
+                          child: widget.wishlist == true
+                              ? const Icon(
+                                  Icons.favorite,
+                                  color: TagColors.red,
+                                )
+                              : const Icon(
+                                  Icons.favorite_border_outlined,
+                                  color: TagColors.red,
+                                ),
                         ),
                       ),
                     ),

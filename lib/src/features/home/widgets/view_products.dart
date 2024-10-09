@@ -9,8 +9,6 @@ import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/riverpod/providers/providers.dart';
 import 'package:tags/src/core/widget/show_banner.dart';
 import 'package:tags/src/core/widget/tag_dialog.dart';
-import 'package:tags/src/data/hivekeys.dart';
-import 'package:tags/src/data/localdatabase.dart';
 import 'package:tags/src/features/home/widgets/buildbusinessrow.dart';
 import 'package:tags/src/features/home/widgets/product_image.dart';
 import 'package:tags/src/features/home/widgets/product_tiles_specs.dart';
@@ -42,6 +40,7 @@ class ViewProducts extends StatefulHookConsumerWidget {
 class _ViewProductsState extends ConsumerState<ViewProducts> {
   int _quantity = 1;
   bool addedToCart = false;
+  bool wishlist = false;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -141,6 +140,54 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
             const CustomTextInput(),
             15.verticalSpace,
             ProductImageViewer(
+              wishlist: wishlist,
+              ontap: () async {
+                final response = await model.postWishList(
+                  formData: {
+                    'product_slug': state.viewMoreProducts!.slug,
+                  },
+                );
+
+                if (response.successMessage.isNotEmpty && context.mounted) {
+                  setState(() {
+                    wishlist = true;
+                  });
+                  showSuccessBanner(context, 'Wishlist successfully updated');
+                } else if (response.errorMessage.isNotEmpty &&
+                    context.mounted &&
+                    response.errorMessage ==
+                        'Authentication credentials were not provided.') {
+                  await context.pushNamed(TagRoutes.sellerLogin.name);
+                } else if (response.errorMessage.isNotEmpty &&
+                    context.mounted &&
+                    response.errorMessage !=
+                        'Authentication credentials were not provided.') {
+                  await showDialog(
+                    context: context,
+                    builder: (context) => TagDialog(
+                      icon: const Icon(
+                        Icons.error,
+                        color: TagColors.red,
+                        size: 50,
+                      ),
+                      title: 'Failed',
+                      subtitle: response.errorMessage,
+                      buttonColor: TagColors.red,
+                      textColor: Colors.white,
+                      buttonText: 'Dismiss',
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  );
+                } else {
+                  log(response.error!.response!.statusCode.toString());
+                }
+
+                Future.delayed(const Duration(seconds: 2), () {
+                  ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
+                });
+              },
               images: state.viewMoreProducts?.images ?? [widget.productImage],
               productImage: widget.productImage,
             ),
@@ -270,7 +317,6 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
                       ),
                     ),
                     onPressed: () async {
-                      final refresh = HiveStorage.get(HiveKeys.refreshToken);
                       final response = await model.postCart(
                         formData: {
                           'product_slug': state.viewMoreProducts!.slug,
@@ -285,11 +331,9 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
                         });
                         showSuccessBanner(context, response.successMessage);
                       } else if (response.errorMessage.isNotEmpty &&
-                              context.mounted &&
-                              response.errorMessage ==
-                                  'Authentication credentials were not provided.' &&
-                              refresh == null ||
-                          refresh == '') {
+                          context.mounted &&
+                          response.errorMessage ==
+                              'Authentication credentials were not provided.') {
                         await context.pushNamed(TagRoutes.sellerLogin.name);
                       } else if (response.errorMessage.isNotEmpty &&
                           context.mounted &&

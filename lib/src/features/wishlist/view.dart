@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tags/src/config/router/constants.dart';
@@ -9,9 +8,9 @@ import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/resources/resources.dart';
 import 'package:tags/src/core/riverpod/providers/providers.dart';
 import 'package:tags/src/core/widget/tag_appbar.dart';
-import 'package:tags/src/features/cart/cart_item.dart';
 import 'package:tags/src/features/onboarding/widgets/app_texts.dart';
 import 'package:tags/src/features/search/view.dart';
+import 'package:tags/src/features/wishlist/widget/wishlist.dart';
 
 class WishList extends ConsumerStatefulWidget {
   const WishList({super.key});
@@ -62,7 +61,7 @@ class _WishListState extends ConsumerState<WishList> {
                     child: ListView.builder(
                       itemCount: state.resultItem!
                           .length, // Assuming there are 2 items in the cart
-                      itemBuilder: (context, index) => CartItem(
+                      itemBuilder: (context, index) => WishlistItem(
                         slug: state.resultItem![index].slug,
                         image: state.resultItem![index].image,
                         productName: state.resultItem![index].name,
@@ -80,11 +79,10 @@ class _WishListState extends ConsumerState<WishList> {
                 ],
               )
             else if (state.loading == Loader.loading)
-              const Center(
-                child: SpinKitWaveSpinner(
-                  color: TagColors.appThemeColor,
-                ),
-              )
+              const SizedBox.shrink()
+            else if (state.loading != Loader.loading &&
+                state.resultItem!.isNotEmpty)
+              const SizedBox.shrink()
             else
               Column(
                 children: [

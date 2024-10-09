@@ -29,52 +29,52 @@ class AgencyBackEnd implements AgencyNetwork {
     );
 
     // Add the token refresh interceptor
-    _dio.interceptors.add(
-      InterceptorsWrapper(
-        onError: (error, handler) async {
-          if (error.response?.statusCode == 401) {
-            // Token might be expired, refresh it
-            try {
-              final refreshToken = await _refreshToken();
-              String? token = HiveStorage.get(HiveKeys.token);
+    // _dio.interceptors.add(
+    //   InterceptorsWrapper(
+    //     onError: (error, handler) async {
+    //       if (error.response?.statusCode == 401) {
+    //         // Token might be expired, refresh it
+    //         try {
+    //           final refreshToken = await _refreshToken();
+    //           String? token = HiveStorage.get(HiveKeys.token);
 
-              // If refresh token is null or token is empty, break
-              if (refreshToken == null || refreshToken == '') {
-                return handler.reject(error); // Stop retrying if refresh fails
-              }
+    //           // If refresh token is null or token is empty, break
+    //           if (refreshToken == null || refreshToken == '') {
+    //             return handler.reject(error); // Stop retrying if refresh fails
+    //           }
 
-              // Update the headers with the new token and retry the request
-              final options = error.requestOptions;
-              options.headers["Authorization"] = 'Bearer $token';
+    //           // Update the headers with the new token and retry the request
+    //           final options = error.requestOptions;
+    //           options.headers["Authorization"] = 'Bearer $token';
 
-              // Retry the request
-              final response = await _dio.request(
-                options.path,
-                options: Options(
-                  method: options.method,
-                  headers: options.headers,
-                ),
-              );
-              return handler.resolve(response);
-            } on DioError catch (refreshError) {
-              if (refreshError.response?.statusCode == 400 ||
-                  refreshError.response?.statusCode == 401) {
-                // Refresh token failed, break the flow
-                log('Refresh token failed with status: ${refreshError.response?.statusCode}');
+    //           // Retry the request
+    //           final response = await _dio.request(
+    //             options.path,
+    //             options: Options(
+    //               method: options.method,
+    //               headers: options.headers,
+    //             ),
+    //           );
+    //           return handler.resolve(response);
+    //         } on DioError catch (refreshError) {
+    //           if (refreshError.response?.statusCode == 400 ||
+    //               refreshError.response?.statusCode == 401) {
+    //             // Refresh token failed, break the flow
+    //             log('Refresh token failed with status: ${refreshError.response?.statusCode}');
 
-                return handler.reject(refreshError); // Stop retrying
-              } else {
-                log(refreshError.toString());
-                log('Making refresh token null');
-                HiveStorage.put(HiveKeys.refreshToken, null);
-                return handler.reject(error); // Forward original error
-              }
-            }
-          }
-          return handler.reject(error); // Forward error if not 401
-        },
-      ),
-    );
+    //             return handler.reject(refreshError); // Stop retrying
+    //           } else {
+    //             log(refreshError.toString());
+    //             log('Making refresh token null');
+    //             HiveStorage.put(HiveKeys.refreshToken, null);
+    //             return handler.reject(error); // Forward original error
+    //           }
+    //         }
+    //       }
+    //       return handler.reject(error); // Forward error if not 401
+    //     },
+    //   ),
+    // );
 
     (_dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate =
         (client) {
@@ -150,6 +150,7 @@ class AgencyBackEnd implements AgencyNetwork {
     Map<String, dynamic>? formData,
   }) async {
     String? token = HiveStorage.get(HiveKeys.token);
+    log(token.toString());
     try {
       final response = await _dio.get(
         path,
@@ -452,7 +453,7 @@ class AgencyBackEnd implements AgencyNetwork {
   }
 
   @override
-  Future<String?> _refreshToken() async {
+  Future<Response> refreshToken() async {
     // Implement the logic for refreshing the token
     try {
       final refreshToken =
@@ -470,28 +471,19 @@ class AgencyBackEnd implements AgencyNetwork {
           },
         ),
       );
-
-      if (response.statusCode == 200) {
-        // Refresh token and access token are both received
-        final newToken = response.data['accessToken'];
-        final refresh = response.data['refresh'];
-
-        // Save the new access token and refresh token
-        HiveStorage.put(HiveKeys.token, newToken);
-        HiveStorage.put(HiveKeys.refreshToken, refresh);
-
-        return newToken; // Return the new access token
+      log(response.toString());
+      return response;
+    } on DioError catch (e) {
+      if (e.response != null && e.response!.statusCode! >= 500) {
+        e.response!.data = {
+          'message': 'Problem contacting server. Please try again later',
+        };
+        rethrow;
       } else {
-        // Handle token refresh failure (non-200 response)
-        log('Failed to refresh token: ${response.statusCode}');
-        return null;
+        rethrow;
       }
-    } on Exception catch (e) {
-      log('Exception during token refresh: $e');
-      return null; // Return null if an exception occurs
     }
   }
-
   //   @override
   //     Future<Response> getUserProfile({String? authToken, dynamic id}) async {
   //   try {

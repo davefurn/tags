@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -24,19 +22,18 @@ class Cart extends ConsumerStatefulWidget {
 }
 
 class _CartState extends ConsumerState<Cart> {
+  String? token;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       final response = await ref.read(profileProvider.notifier).getAllCart();
-      final refresh = HiveStorage.get(HiveKeys.refreshToken);
+      await ref.read(profileProvider.notifier).getAllWishlist();
       if (response.errorMessage ==
-                  'Authentication credentials were not provided.' &&
-              refresh == null ||
-          refresh == '') {
+          'Authentication credentials were not provided.') {
         await context.pushNamed(TagRoutes.sellerLogin.name);
-        log('running');
       }
     });
+    token = HiveStorage.get(HiveKeys.token);
     super.initState();
   }
 
@@ -49,8 +46,15 @@ class _CartState extends ConsumerState<Cart> {
         isHome: false,
         title: 'Cart',
         actions: [
-          const InkWell(
-            child: Icon(
+          InkWell(
+            onTap: token == null || token!.isEmpty
+                ? () {
+                    context.goNamed(TagRoutes.sellerLogin.name);
+                  }
+                : () {
+                    context.pushNamed(TagRoutes.wishlist.name);
+                  },
+            child: const Icon(
               Icons.favorite_outline_rounded,
               color: Color(0xff5E5E5E),
             ),
