@@ -496,3 +496,60 @@ class SearchResult {
         'tag_one': tagOne,
       };
 }
+
+class PaginatedResult {
+  PaginatedResult({
+    required this.count,
+    required this.next,
+    required this.previous,
+    required this.results,
+  });
+
+  factory PaginatedResult.fromJson(Map<String, dynamic> json) =>
+      PaginatedResult(
+        count: json['count'],
+        next: json['next'],
+        previous: json['previous'],
+        results: List<ResultItem>.from(
+          json['results'].map((item) => ResultItem.fromJson(item)),
+        ),
+      );
+  int count;
+  String? next;
+  String? previous;
+  List<ResultItem> results;
+}
+
+class ResultItem {
+  ResultItem({
+    required this.name,
+    required this.slug,
+    required this.image,
+    required this.price,
+    required this.currency,
+    required this.discountedPrice,
+    required this.brand,
+    required this.color,
+    required this.totalQuantity,
+  });
+  factory ResultItem.fromJson(Map<String, dynamic> json) => ResultItem(
+        name: json['name'],
+        slug: json['slug'],
+        image: json['image'],
+        price: json['price'],
+        currency: json['currency'],
+        discountedPrice: json['discounted_price'],
+        brand: json['brand'],
+        color: json['color'],
+        totalQuantity: json['total_quantity'],
+      );
+  String name;
+  String slug;
+  String image;
+  int price;
+  String currency;
+  int discountedPrice;
+  String brand;
+  String color;
+  int totalQuantity;
+}

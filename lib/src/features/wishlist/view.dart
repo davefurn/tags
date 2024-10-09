@@ -24,7 +24,7 @@ class _WishListState extends ConsumerState<WishList> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      await ref.read(profileProvider.notifier).getAllCart();
+      await ref.read(profileProvider.notifier).getAllWishlist();
     });
     super.initState();
   }
@@ -54,26 +54,25 @@ class _WishListState extends ConsumerState<WishList> {
           children: [
             const CustomTextInput(),
             25.verticalSpace,
-            if (state.loading != Loader.loading &&
-                state.cartProducts!.isNotEmpty)
+            if (state.loading != Loader.loading && state.resultItem!.isNotEmpty)
               Column(
                 children: [
                   LimitedBox(
                     maxHeight: 550.h,
                     child: ListView.builder(
-                      itemCount: state.cartProducts!
+                      itemCount: state.resultItem!
                           .length, // Assuming there are 2 items in the cart
                       itemBuilder: (context, index) => CartItem(
-                        slug: state.cartProducts![index].slug.toString(),
-                        image: state.cartProducts![index].image.toString(),
-                        productName: state.cartProducts![index].name.toString(),
-                        price: state.cartProducts![index].price.toString(),
-                        discount: state.cartProducts![index].discountedPrice
-                            .toString(),
-                        brand: state.cartProducts![index].brand.toString(),
-                        color: state.cartProducts![index].color.toString(),
+                        slug: state.resultItem![index].slug,
+                        image: state.resultItem![index].image,
+                        productName: state.resultItem![index].name,
+                        price: state.resultItem![index].price.toString(),
+                        discount:
+                            state.resultItem![index].discountedPrice.toString(),
+                        brand: state.resultItem![index].brand,
+                        color: state.resultItem![index].color,
                         quantity:
-                            state.cartProducts![index].quantity.toString(),
+                            state.resultItem![index].totalQuantity.toString(),
                         delete: () {},
                       ),
                     ),

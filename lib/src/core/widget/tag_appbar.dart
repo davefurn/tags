@@ -51,8 +51,15 @@ class _TagBarState extends State<TagBar> {
         automaticallyImplyLeading: false,
         actions: widget.actions ??
             [
-              const InkWell(
-                child: Icon(
+              InkWell(
+                onTap: widget.token == null || widget.token!.isEmpty
+                    ? () {
+                        context.goNamed(TagRoutes.sellerLogin.name);
+                      }
+                    : () {
+                        context.pushNamed(TagRoutes.wishlist.name);
+                      },
+                child: const Icon(
                   Icons.favorite_outline_rounded,
                   color: Color(0xff5E5E5E),
                 ),
