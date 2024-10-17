@@ -2,10 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/config/utils/enums.dart';
 import 'package:tags/src/core/constant/colors.dart';
@@ -106,10 +106,46 @@ class _SearchPageState extends ConsumerState<SearchPage> {
               child: Builder(
                 builder: (context) {
                   if (state.loading == Loader.loading) {
-                    // Show loading spinner
-                    return const Center(
-                      child: SpinKitWaveSpinner(
-                        color: TagColors.appThemeColor,
+                    // Show shimmer loading effect instead of spinner
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: 6, // Number of shimmer items
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        mainAxisExtent: 300,
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 5,
+                        mainAxisSpacing: 10,
+                      ),
+                      itemBuilder: (context, index) => Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(9.r),
+                              child: Container(
+                                height: 200.h,
+                                width: MediaQuery.sizeOf(context).width * 0.4,
+                                color: Colors.grey[300],
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Container(
+                              height: 15.h,
+                              width: 80.w,
+                              color: Colors.grey[300],
+                            ),
+                            const SizedBox(height: 10),
+                            Container(
+                              height: 12.h,
+                              width: 60.w,
+                              color: Colors.grey[300],
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   } else if (state.searchResults == null ||
@@ -145,11 +181,14 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                           // Add other currencies as needed
                         };
                         final format = NumberFormat('#,##0', 'en_US');
-// Function to get the currency symbol
+
+                        // Function to get the currency symbol
                         String getCurrencySymbol(String currencyCode) =>
                             currencySymbols[currencyCode] ??
                             currencyCode; // Fallback to currency code if not found
+
                         String price = format.format(product.price);
+
                         return InkWell(
                           onTap: () {
                             context.pushNamed(
@@ -185,9 +224,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                               if (response.successMessage.isNotEmpty &&
                                   context.mounted) {
                                 showSuccessBanner(
-                                  context,
-                                  response.successMessage,
-                                );
+                                    context, response.successMessage);
                               } else if (response.errorMessage.isNotEmpty &&
                                   context.mounted &&
                                   response.errorMessage ==
@@ -217,10 +254,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                                   ),
                                 );
                               } else {
-                                log(
-                                  response.error!.response!.statusCode
-                                      .toString(),
-                                );
+                                log(response.error!.response!.statusCode
+                                    .toString());
                               }
 
                               Future.delayed(const Duration(seconds: 2), () {
@@ -233,6 +268,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                       }).toList(),
                     );
                   }
+
                   return const SizedBox
                       .shrink(); // Default fallback in case no state matches
                 },

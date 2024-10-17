@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/config/utils/enums.dart';
 import 'package:tags/src/core/constant/colors.dart';
@@ -218,9 +218,65 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                 },
               )
             else if (state.loading == Loader.loading)
-              const Center(
-                child: SpinKitWaveSpinner(
-                  color: TagColors.appThemeColor,
+              // Show shimmer instead of spinner during loading
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: 3, // Number of shimmer categories to display
+                itemBuilder: (context, index) => Padding(
+                  padding: const EdgeInsets.only(bottom: 15),
+                  child: Shimmer.fromColors(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Simulate the category name
+                        Container(
+                          height: 20,
+                          width: 120,
+                          color: Colors.grey[300],
+                        ),
+                        const SizedBox(height: 15),
+                        GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: 6, // Number of shimmer products to display
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                            mainAxisExtent: 160,
+                          ),
+                          itemBuilder: (context, index) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Simulate product image
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(9),
+                                  child: Container(
+                                    height: 135,
+                                    width:
+                                        MediaQuery.sizeOf(context).width * 0.35,
+                                    color: Colors.grey[300],
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                // Simulate product name
+                                Container(
+                                  height: 15,
+                                  width: 80,
+                                  color: Colors.grey[300],
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               )
             else

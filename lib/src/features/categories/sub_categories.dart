@@ -1,11 +1,10 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/config/utils/enums.dart';
 import 'package:tags/src/core/constant/colors.dart';
@@ -136,10 +135,32 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
               ),
             ),
             if (state.loading == Loader.loading)
-              const SliverToBoxAdapter(
-                child: Center(
-                  child: SpinKitWaveSpinner(
-                    color: TagColors.appThemeColor,
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Column(
+                    children: [
+                      // Shimmer effect while loading
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          height: 100,
+                          width: MediaQuery.sizeOf(context).width,
+                          color: Colors.grey[300],
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          height: 100,
+                          width: MediaQuery.sizeOf(context).width,
+                          color: Colors.grey[300],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               )
@@ -179,10 +200,42 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
               ),
             ),
             if (state.loading == Loader.loading)
-              const SliverToBoxAdapter(
-                child: Center(
-                  child: SpinKitWaveSpinner(
-                    color: TagColors.appThemeColor,
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
+                  child: Column(
+                    children: [
+                      // Shimmer effect for the list items while loading
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          height: 100,
+                          width: MediaQuery.sizeOf(context).width,
+                          color: Colors.grey[300],
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          height: 100,
+                          width: MediaQuery.sizeOf(context).width,
+                          color: Colors.grey[300],
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          height: 100,
+                          width: MediaQuery.sizeOf(context).width,
+                          color: Colors.grey[300],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               )
@@ -243,9 +296,7 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
                           ),
                         );
                       } else {
-                        log(
-                          response.error!.response!.statusCode.toString(),
-                        );
+                        log(response.error!.response!.statusCode.toString());
                       }
 
                       Future.delayed(const Duration(seconds: 2), () {
@@ -311,9 +362,7 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
                           ),
                         );
                       } else {
-                        log(
-                          response.error!.response!.statusCode.toString(),
-                        );
+                        log(response.error!.response!.statusCode.toString());
                       }
 
                       Future.delayed(const Duration(seconds: 2), () {

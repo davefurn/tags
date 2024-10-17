@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/config/utils/enums.dart';
 import 'package:tags/src/core/constant/colors.dart';
@@ -152,9 +152,42 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ),
               )
             else if (state.loading == Loader.loading)
-              const Center(
-                child: SpinKitWaveSpinner(
-                  color: TagColors.appThemeColor,
+              SizedBox(
+                height: 180.h,
+                child: ListView.separated(
+                  physics: const BouncingScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(width: 10),
+                  itemCount: 7,
+                  itemBuilder: (context, index) => SizedBox(
+                    key: const ValueKey('shimmer_loading'),
+                    width: 130.w,
+                    height: 150.h,
+                    child: Shimmer.fromColors(
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(9.r),
+                            child: Container(
+                              color: Colors.grey[300],
+                              height: 125,
+                              width: 130.w,
+                            ),
+                          ),
+                          const SizedBox(height: 1),
+                          Container(
+                            color: Colors.grey[300],
+                            height: 12.h,
+                            width: 80.w,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               )
             else
@@ -263,9 +296,44 @@ class _HomePageState extends ConsumerState<HomePage> {
                 },
               )
             else if (state.loading == Loader.loading)
-              const Center(
-                child: SpinKitWaveSpinner(
-                  color: TagColors.appThemeColor,
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: 6, // Placeholder count for shimmer effect
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  mainAxisExtent: 200,
+                ),
+                itemBuilder: (context, index) => Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(9.r),
+                        child: Container(
+                          height: 135.h,
+                          width: MediaQuery.sizeOf(context).width * 0.35,
+                          color: Colors.grey[300],
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Container(
+                        height: 12.h,
+                        width: 80.w,
+                        color: Colors.grey[300],
+                      ),
+                      const SizedBox(height: 2),
+                      Container(
+                        height: 14.h,
+                        width: 50.w,
+                        color: Colors.grey[300],
+                      ),
+                    ],
+                  ),
                 ),
               )
             else
@@ -417,9 +485,50 @@ class _HomePageState extends ConsumerState<HomePage> {
                 },
               )
             else if (state.loading == Loader.loading)
-              const Center(
-                child: SpinKitWaveSpinner(
-                  color: TagColors.appThemeColor,
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: 6, // Number of shimmer items
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  mainAxisExtent: 220.h,
+                ),
+                itemBuilder: (context, index) => Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(9),
+                        child: Container(
+                          height: 135.h,
+                          width: MediaQuery.sizeOf(context).width * 0.35,
+                          color: Colors.grey[300],
+                        ),
+                      ),
+                      10.verticalSpace,
+                      Container(
+                        height: 15.h,
+                        width: 80.w,
+                        color: Colors.grey[300],
+                      ),
+                      10.verticalSpace,
+                      Container(
+                        height: 12.h,
+                        width: 60.w,
+                        color: Colors.grey[300],
+                      ),
+                      const SizedBox(height: 4),
+                      Container(
+                        height: 12.h,
+                        width: 100.w,
+                        color: Colors.grey[300],
+                      ),
+                    ],
+                  ),
                 ),
               )
             else
@@ -504,9 +613,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   );
                                 },
                                 child: SizedBox(
-                                  key: ValueKey(
-                                    categories.slug,
-                                  ),
+                                  key: ValueKey(categories.slug),
                                   height: 200.h,
                                   child: Column(
                                     crossAxisAlignment:
@@ -560,9 +667,46 @@ class _HomePageState extends ConsumerState<HomePage> {
                             },
                           )
                         else if (state.loading == Loader.loading)
-                          const Center(
-                            child: SpinKitWaveSpinner(
-                              color: TagColors.appThemeColor,
+                          GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: 6, // Number of shimmer items
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                              mainAxisExtent: 200,
+                            ),
+                            itemBuilder: (context, index) => Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(9.r),
+                                    child: Container(
+                                      height: 135.h,
+                                      width: MediaQuery.sizeOf(context).width *
+                                          0.35,
+                                      color: Colors.grey[300],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    height: 15.h,
+                                    width: 80.w,
+                                    color: Colors.grey[300],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    height: 12.h,
+                                    width: 60.w,
+                                    color: Colors.grey[300],
+                                  ),
+                                ],
+                              ),
                             ),
                           )
                         else
@@ -573,9 +717,66 @@ class _HomePageState extends ConsumerState<HomePage> {
                 },
               )
             else if (state.loading == Loader.loading)
-              const Center(
-                child: SpinKitWaveSpinner(
-                  color: TagColors.appThemeColor,
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: 6, // Number of shimmer items
+                itemBuilder: (context, index) => Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 20.h,
+                        width: 100.w,
+                        color: Colors.grey[300],
+                      ),
+                      const SizedBox(height: 15),
+                      GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: 3,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          mainAxisExtent: 200,
+                        ),
+                        itemBuilder: (context, index) => Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(9.r),
+                                child: Container(
+                                  height: 135.h,
+                                  width:
+                                      MediaQuery.sizeOf(context).width * 0.35,
+                                  color: Colors.grey[300],
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Container(
+                                height: 15.h,
+                                width: 80.w,
+                                color: Colors.grey[300],
+                              ),
+                              const SizedBox(height: 10),
+                              Container(
+                                height: 12.h,
+                                width: 60.w,
+                                color: Colors.grey[300],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               )
             else
