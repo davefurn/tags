@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -10,9 +9,11 @@ import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/resources/resources.dart';
 import 'package:tags/src/core/riverpod/providers/providers.dart';
 import 'package:tags/src/core/widget/tag_appbar.dart';
+import 'package:tags/src/core/widget/tag_dialog.dart';
 import 'package:tags/src/data/hivekeys.dart';
 import 'package:tags/src/data/localdatabase.dart';
 import 'package:tags/src/features/cart/cart_item.dart';
+import 'package:tags/src/features/cart/model/checkout_model.dart';
 import 'package:tags/src/features/onboarding/widgets/app_texts.dart';
 import 'package:tags/src/features/search/view.dart';
 
@@ -56,6 +57,7 @@ class _CartState extends ConsumerState<Cart> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(profileProvider);
+    final model = ref.read(profileProvider.notifier);
 
     return Scaffold(
       appBar: TagBar(
@@ -122,7 +124,68 @@ class _CartState extends ConsumerState<Cart> {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    onTap: () {},
+                    onTap: () async {
+                      final response = await model.checkOut(
+                        formData: {},
+                      );
+
+                      if (response.successMessage.isNotEmpty &&
+                          context.mounted) {
+                        OrderData? orderData = await getOrder();
+                        if (orderData != null) {
+                          log('Order ID: ${orderData.orderId}');
+                          // Navigate to the next page, passing the data if needed
+                          await context.pushNamed(
+                            TagRoutes.checkOut.name,
+                            extra: orderData,
+                          );
+                        }
+                      } else if (response.errorMessage.isNotEmpty &&
+                          context.mounted &&
+                          response.errorMessage ==
+                              'Authentication credentials were not provided.') {
+                        final responseRefresh =
+                            await ref.read(profileProvider.notifier).refresh();
+                        log('Case one running');
+                        if (responseRefresh.successMessage ==
+                            'Token refreshed') {
+                          log('Case one running, success message');
+                          await ref.read(profileProvider.notifier).getAllCart();
+                        } else {
+                          log('Case one running, successful message');
+                          await context.pushNamed(TagRoutes.sellerLogin.name);
+                        }
+                      } else if (response.errorMessage.isNotEmpty &&
+                          context.mounted &&
+                          response.errorMessage !=
+                              'Authentication credentials were not provided.') {
+                        await showDialog(
+                          context: context,
+                          builder: (context) => TagDialog(
+                            icon: const Icon(
+                              Icons.error,
+                              color: TagColors.red,
+                              size: 50,
+                            ),
+                            title: 'Failed',
+                            subtitle: response.errorMessage,
+                            buttonColor: TagColors.red,
+                            textColor: Colors.white,
+                            buttonText: 'Dismiss',
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        );
+                      } else {
+                        log(response.error!.response!.statusCode.toString());
+                      }
+
+                      Future.delayed(const Duration(seconds: 2), () {
+                        ScaffoldMessenger.of(context)
+                            .removeCurrentMaterialBanner();
+                      });
+                    },
                   ),
                 ],
               )

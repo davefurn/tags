@@ -13,6 +13,7 @@ import 'package:tags/src/features/authentication/seller/sign_up/otp.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/passW.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/signup_page.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/signup_page2.dart';
+import 'package:tags/src/features/cart/model/checkout_model.dart';
 import 'package:tags/src/features/cart/view.dart';
 import 'package:tags/src/features/categories/sub_categories.dart';
 import 'package:tags/src/features/categories/view.dart';
@@ -28,6 +29,7 @@ import 'package:tags/src/features/onboarding/intros/intro_page_two.dart';
 import 'package:tags/src/features/onboarding/intros/intro_pagge_one.dart';
 import 'package:tags/src/features/onboarding/intros/seller.dart';
 import 'package:tags/src/features/onboarding/splash_screen/view.dart';
+import 'package:tags/src/features/payment/checkout/view.dart';
 import 'package:tags/src/features/search/view.dart';
 import 'package:tags/src/features/sell/add_products.dart';
 import 'package:tags/src/features/sell/orderz/myorderz.dart';
@@ -173,9 +175,21 @@ GoRouter router = GoRouter(
       ),
     ),
     GoRoute(
+      name: TagRoutes.checkOut.name,
+      path: TagRoutes.checkOut.path,
+      pageBuilder: (context, state) {
+          OrderData orderData = state.extra! as OrderData;
+        return  CupertinoPage(
+        child: Checkout(
+          orderData: orderData,
+        ),
+      );
+      },
+    ),
+    GoRoute(
       name: TagRoutes.filtersPage.name,
       path: TagRoutes.filtersPage.path,
-      pageBuilder: (context, state) => CupertinoPage(
+      pageBuilder: (context, state) => const CupertinoPage(
         child: FilterScreen(),
       ),
     ),

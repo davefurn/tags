@@ -64,6 +64,10 @@ enum TagRoutes {
     name: 'filtersPage',
     path: '/filtersPage',
   ),
+  checkOut(
+    name: 'checkOut',
+    path: '/checkOut',
+  ),
   mySellProductPage(
     name: 'mySellProductPage',
     path: '/mySellProductPage',

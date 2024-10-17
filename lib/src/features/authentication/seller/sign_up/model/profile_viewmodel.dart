@@ -2,11 +2,8 @@
 
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:dio/dio.dart';
-
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
 import 'package:image_picker/image_picker.dart';
 import 'package:tags/src/config/utils/enums.dart';
 import 'package:tags/src/core/riverpod/providers/providers.dart';
@@ -14,6 +11,7 @@ import 'package:tags/src/core/services/dio_utils.dart';
 import 'package:tags/src/data/hivekeys.dart';
 import 'package:tags/src/data/localdatabase.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/model/catmodel.dart';
+import 'package:tags/src/features/cart/model/checkout_model.dart';
 import 'package:tags/src/features/home/models/view_model.dart';
 
 class ProfileViewModel extends StateNotifier<ProfileState> {
@@ -179,6 +177,148 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
       final response = await _reader.read(serviceProvider).deleteWithToken(
             formData: formData,
             path: '/api/cart/remove/',
+          );
+      log(response.data.toString());
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        final Map<String, dynamic> body = response.data;
+        // List<CartProducts> eventCat = (body['data'] as List)
+        //     .map((e) => CartProducts.fromJson(e))
+        //     .toList();
+        // state = state.copyWith(
+        //   loading: Loader.loaded,
+        //   cartProducts: eventCat,
+        // );
+        return ApiResponse(
+          successMessage: body['message'],
+        );
+      } else if (response.statusCode == 401) {
+        return ApiResponse(
+          errorMessage: '401',
+        );
+      } else {
+        state = state.copyWith(
+          loading: Loader.error,
+        );
+        return ApiResponse(
+          errorMessage: response.data['message'],
+        );
+      }
+    } on DioError catch (e) {
+      state = state.copyWith(loading: Loader.error);
+
+      if (e.response != null &&
+          e.response!.data['message'] != null &&
+          e.response!.data['errors'] is List &&
+          e.response!.data['message'].isNotEmpty) {
+        // Join the error messages if there are multiple
+        String errorMessage = e.response!.data['errors'].join('\n');
+        return ApiResponse(errorMessage: errorMessage);
+      } else if (e.type == DioErrorType.badResponse ||
+          e.type == DioErrorType.receiveTimeout ||
+          e.type == DioErrorType.unknown) {
+        // Handle no internet connection or connection error here
+        return ApiResponse(
+          errorMessage:
+              e.response!.data['message'] ?? e.response!.data['error'],
+          // "Check your data connection / Connection error."
+        );
+      } else {
+        // Handle other DioErrors
+        // return ApiResponse(errorMessage: "Connection error, Please try again.");
+        return ApiResponse(errorMessage: e.response!.data['message']);
+      }
+    } catch (e) {
+      state = state.copyWith(
+        loading: Loader.error,
+      );
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse> checkOut({
+    required Map<String, dynamic> formData,
+  }) async {
+    // state = state.copyWith(
+    //   loading: Loader.loading,
+    // );
+
+    try {
+      final response = await _reader.read(serviceProvider).postWithToken(
+            formData: formData,
+            path: '/api/checkout/',
+          );
+      log(response.data.toString());
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        final Map<String, dynamic> body = response.data;
+        OrderData orderData = OrderData.fromJson(
+          body['data'],
+        ); // Deserialize the entire 'data' object
+
+        log(orderData.orderId);
+        await saveOrder(orderData);
+
+        state = state.copyWith(
+          loading: Loader.loaded,
+          orderData: orderData,
+        );
+        return ApiResponse(
+          successMessage: body['message'],
+        );
+      } else if (response.statusCode == 401) {
+        return ApiResponse(
+          errorMessage: '401',
+        );
+      } else {
+        state = state.copyWith(
+          loading: Loader.error,
+        );
+        return ApiResponse(
+          errorMessage: response.data['message'],
+        );
+      }
+    } on DioError catch (e) {
+      state = state.copyWith(loading: Loader.error);
+
+      if (e.response != null &&
+          e.response!.data['message'] != null &&
+          e.response!.data['errors'] is List &&
+          e.response!.data['message'].isNotEmpty) {
+        // Join the error messages if there are multiple
+        String errorMessage = e.response!.data['errors'].join('\n');
+        return ApiResponse(errorMessage: errorMessage);
+      } else if (e.type == DioErrorType.badResponse ||
+          e.type == DioErrorType.receiveTimeout ||
+          e.type == DioErrorType.unknown) {
+        // Handle no internet connection or connection error here
+        return ApiResponse(
+          errorMessage:
+              e.response!.data['message'] ?? e.response!.data['error'],
+          // "Check your data connection / Connection error."
+        );
+      } else {
+        // Handle other DioErrors
+        // return ApiResponse(errorMessage: "Connection error, Please try again.");
+        return ApiResponse(errorMessage: e.response!.data['message']);
+      }
+    } catch (e) {
+      state = state.copyWith(
+        loading: Loader.error,
+      );
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse> checkOutSingle({
+    required Map<String, dynamic> formData,
+  }) async {
+    // state = state.copyWith(
+    //   loading: Loader.loading,
+    // );
+
+    try {
+      final response = await _reader.read(serviceProvider).postWithToken(
+            formData: formData,
+            path: '/api/checkout/single/',
           );
       log(response.data.toString());
       if (response.statusCode == 201 || response.statusCode == 200) {
@@ -1594,6 +1734,7 @@ class ProfileState {
     required this.hasEnabledBiometricLogin,
     this.loading = Loader.idle,
     // required this.userProfile,
+    this.orderData,
     this.company_name,
     this.viewMoreProducts,
     this.company_email,
@@ -1638,6 +1779,7 @@ class ProfileState {
   final List<AllCategoriesModel> allNewCatz;
   final List<SearchResult>? searchResults;
   final ViewMoreProduct? viewMoreProducts;
+  final OrderData? orderData;
   String? company_name;
   String? company_email;
   String? company_phone;
@@ -1654,6 +1796,7 @@ class ProfileState {
     final List<PopularCategoriz>? popularCat,
     final List<Brand>? brandsNames,
     final ViewMoreProduct? viewMoreProducts,
+    final OrderData? orderData,
     final List<BrandProduct>? productResponse,
     final List<CartProducts>? cartProducts,
     final List<ResultItem>? resultItem,
@@ -1679,6 +1822,7 @@ class ProfileState {
       ProfileState(
         resultItem: resultItem ?? this.resultItem,
         viewMoreProducts: viewMoreProducts ?? this.viewMoreProducts,
+        orderData: orderData ?? this.orderData,
         productz: productz ?? this.productz,
         company_name: company_name ?? this.company_name,
         cartProducts: cartProducts ?? this.cartProducts,
