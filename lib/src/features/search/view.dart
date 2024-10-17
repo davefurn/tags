@@ -162,6 +162,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                                 'productBrand': product.slug.toString(),
                                 'slug': product.slug.toString(),
                                 'discount': ' ',
+                                'subScription': 'false',
                               },
                             );
                           },
@@ -251,9 +252,11 @@ class CustomTextInput extends StatelessWidget {
     this.onEditingComplete,
     this.onSubmitted,
     this.controller,
+    this.onpressed,
   });
   final void Function(String)? onChanged;
   final void Function()? onEditingComplete;
+  final void Function()? onpressed;
   final void Function(String)? onSubmitted;
   final TextEditingController? controller;
 
@@ -271,7 +274,8 @@ class CustomTextInput extends StatelessWidget {
               TextAlignVertical.center, // Align hintText to center
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(
-                horizontal: 10.w), // Adjust padding to center vertically
+              horizontal: 10.w,
+            ), // Adjust padding to center vertically
             hintMaxLines: 1,
             focusedBorder: OutlineInputBorder(
               borderSide: const BorderSide(color: TagColors.appThemeColor),
@@ -285,34 +289,14 @@ class CustomTextInput extends StatelessWidget {
               fontSize: 13.sp,
             ),
             prefixIcon: IconButton(
-              onPressed: () {},
+              onPressed: onpressed,
               icon: Icon(
                 Icons.search,
                 size: 20.sp,
                 color: TagColors.greyColor,
               ),
             ),
-            suffixIcon: Padding(
-              padding: EdgeInsets.only(right: 10.w),
-              child: SizedBox(
-                width: 50.w,
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.mic_none_outlined,
-                      color: TagColors.greyColor,
-                      size: 20.sp,
-                    ),
-                    2.horizontalSpace,
-                    Icon(
-                      Icons.image_outlined,
-                      color: TagColors.greyColor,
-                      size: 20.sp,
-                    ),
-                  ],
-                ),
-              ),
-            ),
+
             hintText: 'Search for categories, product or brand',
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(32.r),

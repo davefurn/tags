@@ -172,6 +172,9 @@ class Product {
     required this.discount,
     required this.discountedPrice,
     required this.discountedPriceString,
+    required this.rating,
+    required this.inCart,
+    required this.subscriptionBased,
   });
   factory Product.fromJson(Map<String, dynamic> json) => Product(
         name: json['name'] ?? '',
@@ -185,6 +188,9 @@ class Product {
         discount: json['discount'].toDouble(),
         discountedPrice: json['discounted_price'].toDouble(),
         discountedPriceString: json['discounted_price_string'] ?? '',
+        rating: json['rating'].toDouble() ?? 0.0,
+        inCart: json['in_cart'] ?? false,
+        subscriptionBased: json['subscription_based'] ?? false,
       );
 
   final String name;
@@ -196,6 +202,9 @@ class Product {
   final double discount;
   final double discountedPrice;
   final String discountedPriceString;
+  final double rating;
+  final bool inCart;
+  final bool subscriptionBased;
 
   Map<String, dynamic> toJson() => {
         'name': name,
@@ -207,6 +216,9 @@ class Product {
         'discount': discount,
         'discounted_price': discountedPrice,
         'discounted_price_string': discountedPriceString,
+        'rating': rating,
+        'in_cart': inCart,
+        'subscription_based': subscriptionBased,
       };
 }
 

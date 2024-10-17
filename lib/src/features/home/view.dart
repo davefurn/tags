@@ -114,7 +114,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                       height: 150.h,
                       child: InkWell(
                         onTap: () {
-                          context.goNamed(TagRoutes.categories.name);
+                          context.pushNamed(
+                            TagRoutes.subCategoryScreen.name,
+                            pathParameters: {
+                              'brandName': topCatz.slug,
+                            },
+                          );
                         },
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,6 +209,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                           'productBrand': bestSeller.product,
                           'slug': bestSeller.slug,
                           'discount': ' ',
+                          'subScription': 'false',
                         },
                       );
                     },
@@ -309,6 +315,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                           'slug': dealOfDay.slug,
                           'discount':
                               '${getCurrencySymbol(dealOfDay.currency)}${dealOfDay.formattedDiscountedPrice}',
+                          'subScription': 'false',
                         },
                       );
                     },
@@ -490,6 +497,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                                       'productBrand': categories.slug,
                                       'slug': categories.slug,
                                       'discount': ' ',
+                                      'subScription': categories
+                                          .subscriptionBased
+                                          .toString(),
                                     },
                                   );
                                 },

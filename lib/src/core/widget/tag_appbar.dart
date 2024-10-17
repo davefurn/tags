@@ -114,11 +114,16 @@ class _TagBarState extends State<TagBar> {
                   ),
                 ),
               )
-            : Padding(
-                padding: EdgeInsets.only(left: 16.w, right: 10.w),
-                child: Image.asset(
-                  AssetsImages.tagLogo,
-                  fit: BoxFit.contain,
+            : InkWell(
+                onTap: () {
+                  context.goNamed(TagRoutes.home.name);
+                },
+                child: Padding(
+                  padding: EdgeInsets.only(left: 16.w, right: 10.w),
+                  child: Image.asset(
+                    AssetsImages.tagLogo,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ), // tags logo for home screen,
         // foregroundColor: Colors.white,

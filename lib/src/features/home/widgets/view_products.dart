@@ -22,6 +22,7 @@ class ViewProducts extends StatefulHookConsumerWidget {
     required this.productPrice,
     required this.productBrand,
     required this.slug,
+    this.subScription,
     this.discount,
     super.key,
   });
@@ -32,6 +33,7 @@ class ViewProducts extends StatefulHookConsumerWidget {
   final String productBrand;
   final String slug;
   final String? discount;
+  final String? subScription;
 
   @override
   ConsumerState<ViewProducts> createState() => _ViewProductsState();
@@ -41,12 +43,13 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
   int _quantity = 1;
   bool addedToCart = false;
   bool wishlist = false;
+  late TextEditingController controller;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(profileProvider.notifier).getAProduct(widget.slug);
     });
-
+    controller = TextEditingController();
     super.initState();
   }
 
@@ -106,27 +109,6 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
             ),
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              // Navigator.pop(context);
-            },
-            icon: Container(
-              height: 35,
-              width: 35,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                shape: BoxShape.circle,
-                border: Border.all(color: TagColors.white),
-              ),
-              child: const Icon(
-                Icons.more_vert_rounded,
-                color: Colors.black,
-              ),
-            ),
-          ),
-        ],
         backgroundColor: Colors.white,
         shadowColor: Colors.white,
         surfaceTintColor: Colors.white,
@@ -137,9 +119,20 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
           // mainAxisAlignment: MainAxisAlignment.center,
           children: [
             15.verticalSpace,
-            const CustomTextInput(),
+            CustomTextInput(
+              controller: controller,
+              onpressed: () {
+                ref
+                    .read(profileProvider.notifier)
+                    .getSearches(query: controller.text);
+
+                context.goNamed(TagRoutes.search.name);
+              },
+            ),
             15.verticalSpace,
             ProductImageViewer(
+              productUrl:
+                  'https://dev.api.tagsmarketplace.com/api/product/${widget.slug}/',
               wishlist: wishlist,
               ontap: () async {
                 final response = await model.postWishList(
@@ -257,51 +250,56 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
             16.verticalSpace,
             buildBusinessInfoRow(state.viewMoreProducts),
             12.verticalSpace,
-            Row(
-              children: [
-                Text(
-                  'Quantity',
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w400,
+            if (widget.subScription != null &&
+                widget.subScription != '' &&
+                widget.subScription == 'true')
+              const SizedBox.shrink()
+            else
+              Row(
+                children: [
+                  Text(
+                    'Quantity',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                ),
-                10.horizontalSpace,
-                Container(
-                  height: 35.h,
-                  width: 35.h,
-                  decoration: const BoxDecoration(
-                    color: TagColors.appThemeColor,
-                    shape: BoxShape.circle,
+                  10.horizontalSpace,
+                  Container(
+                    height: 35.h,
+                    width: 35.h,
+                    decoration: const BoxDecoration(
+                      color: TagColors.appThemeColor,
+                      shape: BoxShape.circle,
+                    ),
+                    child: GestureDetector(
+                      onTap: decrementQuantity,
+                      child: const Icon(Icons.remove, color: Colors.white),
+                    ),
                   ),
-                  child: GestureDetector(
-                    onTap: incrementQuantity,
-                    child: const Icon(Icons.add, color: Colors.white),
+                  10.horizontalSpace,
+                  Text(
+                    _quantity.toString(),
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w300,
+                    ),
                   ),
-                ),
-                10.horizontalSpace,
-                Text(
-                  _quantity.toString(),
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w300,
+                  10.horizontalSpace,
+                  Container(
+                    height: 35.h,
+                    width: 35.h,
+                    decoration: const BoxDecoration(
+                      color: TagColors.appThemeColor,
+                      shape: BoxShape.circle,
+                    ),
+                    child: GestureDetector(
+                      onTap: incrementQuantity,
+                      child: const Icon(Icons.add, color: Colors.white),
+                    ),
                   ),
-                ),
-                10.horizontalSpace,
-                Container(
-                  height: 35.h,
-                  width: 35.h,
-                  decoration: const BoxDecoration(
-                    color: TagColors.appThemeColor,
-                    shape: BoxShape.circle,
-                  ),
-                  child: GestureDetector(
-                    onTap: decrementQuantity,
-                    child: const Icon(Icons.remove, color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
+                ],
+              ),
             24.verticalSpace,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -325,73 +323,93 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
                         TagColors.white,
                       ),
                     ),
-                    onPressed: () async {
-                      final response = await model.postCart(
-                        formData: {
-                          'product_slug': state.viewMoreProducts!.slug,
-                          'quantity': _quantity,
-                        },
-                      );
+                    onPressed: widget.subScription != null &&
+                            widget.subScription != '' &&
+                            widget.subScription == 'true'
+                        ? () {}
+                        : () async {
+                            final response = await model.postCart(
+                              formData: {
+                                'product_slug': state.viewMoreProducts!.slug,
+                                'quantity': _quantity,
+                              },
+                            );
 
-                      if (response.successMessage.isNotEmpty &&
-                          context.mounted) {
-                        setState(() {
-                          addedToCart = true;
-                        });
-                        showSuccessBanner(context, response.successMessage);
-                      } else if (response.errorMessage.isNotEmpty &&
-                          context.mounted &&
-                          response.errorMessage ==
-                              'Authentication credentials were not provided.') {
-                        final responseRefresh =
-                            await ref.read(profileProvider.notifier).refresh();
-                        log('Case one running');
-                        if (responseRefresh.successMessage ==
-                            'Token refreshed') {
-                          log('Case one running, success message');
-                          await ref.read(profileProvider.notifier).getAllCart();
-                        } else {
-                          log('Case one running, successful message');
-                          await context.pushNamed(TagRoutes.sellerLogin.name);
-                        }
-                      } else if (response.errorMessage.isNotEmpty &&
-                          context.mounted &&
-                          response.errorMessage !=
-                              'Authentication credentials were not provided.') {
-                        await showDialog(
-                          context: context,
-                          builder: (context) => TagDialog(
-                            icon: const Icon(
-                              Icons.error,
-                              color: TagColors.red,
-                              size: 50,
+                            if (response.successMessage.isNotEmpty &&
+                                context.mounted) {
+                              setState(() {
+                                addedToCart = true;
+                              });
+                              showSuccessBanner(
+                                  context, response.successMessage);
+                            } else if (response.errorMessage.isNotEmpty &&
+                                context.mounted &&
+                                response.errorMessage ==
+                                    'Authentication credentials were not provided.') {
+                              final responseRefresh = await ref
+                                  .read(profileProvider.notifier)
+                                  .refresh();
+                              log('Case one running');
+                              if (responseRefresh.successMessage ==
+                                  'Token refreshed') {
+                                log('Case one running, success message');
+                                await ref
+                                    .read(profileProvider.notifier)
+                                    .getAllCart();
+                              } else {
+                                log('Case one running, successful message');
+                                await context
+                                    .pushNamed(TagRoutes.sellerLogin.name);
+                              }
+                            } else if (response.errorMessage.isNotEmpty &&
+                                context.mounted &&
+                                response.errorMessage !=
+                                    'Authentication credentials were not provided.') {
+                              await showDialog(
+                                context: context,
+                                builder: (context) => TagDialog(
+                                  icon: const Icon(
+                                    Icons.error,
+                                    color: TagColors.red,
+                                    size: 50,
+                                  ),
+                                  title: 'Failed',
+                                  subtitle: response.errorMessage,
+                                  buttonColor: TagColors.red,
+                                  textColor: Colors.white,
+                                  buttonText: 'Dismiss',
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              );
+                            } else {
+                              log(response.error!.response!.statusCode
+                                  .toString());
+                            }
+
+                            Future.delayed(const Duration(seconds: 2), () {
+                              ScaffoldMessenger.of(context)
+                                  .removeCurrentMaterialBanner();
+                            });
+                          },
+                    child: widget.subScription != null &&
+                            widget.subScription != '' &&
+                            widget.subScription == 'true'
+                        ? Text(
+                            'Request Call Back',
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: TagColors.lemonGreen,
                             ),
-                            title: 'Failed',
-                            subtitle: response.errorMessage,
-                            buttonColor: TagColors.red,
-                            textColor: Colors.white,
-                            buttonText: 'Dismiss',
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
+                          )
+                        : Text(
+                            addedToCart ? 'Added to Cart' : 'Add to Cart',
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: TagColors.lemonGreen,
+                            ),
                           ),
-                        );
-                      } else {
-                        log(response.error!.response!.statusCode.toString());
-                      }
-
-                      Future.delayed(const Duration(seconds: 2), () {
-                        ScaffoldMessenger.of(context)
-                            .removeCurrentMaterialBanner();
-                      });
-                    },
-                    child: Text(
-                      addedToCart ? 'Added to Cart' : 'Add to Cart',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: TagColors.lemonGreen,
-                      ),
-                    ),
                   ),
                 ),
                 SizedBox(
@@ -410,8 +428,16 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
                         TagColors.white,
                       ),
                     ),
-                    onPressed: () {},
-                    child: const Text('Buy Now'),
+                    onPressed: widget.subScription != null &&
+                            widget.subScription != '' &&
+                            widget.subScription == 'true'
+                        ? () {}
+                        : () {},
+                    child: widget.subScription != null &&
+                            widget.subScription != '' &&
+                            widget.subScription == 'true'
+                        ? const Text('Call')
+                        : const Text('Buy Now'),
                   ),
                 ),
               ],

@@ -89,6 +89,14 @@ class _MePageState extends State<MePage> {
           action: () async {
             await HiveStorage.put(HiveKeys.hasLoggedIn, false);
             await HiveStorage.put(HiveKeys.token, '');
+            await HiveStorage.put(
+              HiveKeys.userEmail,
+              'tagsmarketplace@market.com',
+            );
+            await HiveStorage.put(
+              HiveKeys.name,
+              'Tags Marketplace',
+            );
             context.goNamed(TagRoutes.sellerLogin.name);
           },
           image: Assets.logout,

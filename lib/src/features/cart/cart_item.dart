@@ -136,9 +136,11 @@ class CartItem extends ConsumerWidget {
                       ),
                     ),
                     Text(
-                      quantity,
+                      quantity == '0' ? 'Out of stock' : quantity,
                       style: TextStyle(
-                        color: const Color(0xff5e5e5e),
+                        color: quantity == '0'
+                            ? TagColors.red
+                            : const Color(0xff5e5e5e),
                         fontSize: 10.sp,
                         fontWeight: FontWeight.w400,
                       ),

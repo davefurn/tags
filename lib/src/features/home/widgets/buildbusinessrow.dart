@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/features/home/models/view_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -73,67 +72,67 @@ Widget buildBusinessInfoRow(ViewMoreProduct? view) => Row(
         ),
 
         // Action buttons (email, message, and call)
-        Row(
-          children: [
-            // Email button
-            InkWell(
-              onTap: () => _launchEmail(view?.seller?.email),
-              child: Container(
-                height: 35.h,
-                width: 35.h,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: TagColors.appThemeColor),
-                ),
-                child: Icon(
-                  Icons.email,
-                  size: 15.sp,
-                  color: TagColors.appThemeColor,
-                ),
-              ),
-            ),
-            10.horizontalSpace,
+        // Row(
+        //   children: [
+        //     // Email button
+        //     InkWell(
+        //       onTap: () => _launchEmail(view?.seller?.email),
+        //       child: Container(
+        //         height: 35.h,
+        //         width: 35.h,
+        //         decoration: BoxDecoration(
+        //           shape: BoxShape.circle,
+        //           border: Border.all(color: TagColors.appThemeColor),
+        //         ),
+        //         child: Icon(
+        //           Icons.email,
+        //           size: 15.sp,
+        //           color: TagColors.appThemeColor,
+        //         ),
+        //       ),
+        //     ),
+        //     10.horizontalSpace,
 
-            // Message button
-            // InkWell(
-            //   onTap: () {
-            //     // Implement chat functionality here
-            //   },
-            //   child: Container(
-            //     height: 35.h,
-            //     width: 35.h,
-            //     decoration: BoxDecoration(
-            //       shape: BoxShape.circle,
-            //       border: Border.all(color: TagColors.appThemeColor),
-            //     ),
-            //     child: Icon(
-            //       Icons.chat_rounded,
-            //       size: 15.sp,
-            //       color: TagColors.appThemeColor,
-            //     ),
-            //   ),
-            // ),
-            // 10.horizontalSpace,
+        //     // Message button
+        //     // InkWell(
+        //     //   onTap: () {
+        //     //     // Implement chat functionality here
+        //     //   },
+        //     //   child: Container(
+        //     //     height: 35.h,
+        //     //     width: 35.h,
+        //     //     decoration: BoxDecoration(
+        //     //       shape: BoxShape.circle,
+        //     //       border: Border.all(color: TagColors.appThemeColor),
+        //     //     ),
+        //     //     child: Icon(
+        //     //       Icons.chat_rounded,
+        //     //       size: 15.sp,
+        //     //       color: TagColors.appThemeColor,
+        //     //     ),
+        //     //   ),
+        //     // ),
+        //     // 10.horizontalSpace,
 
-            // Call button
-            InkWell(
-              onTap: () => _launchPhone(view?.seller?.phone),
-              child: Container(
-                height: 35.h,
-                width: 35.h,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: TagColors.appThemeColor),
-                ),
-                child: Icon(
-                  Icons.call,
-                  size: 15.sp,
-                  color: TagColors.appThemeColor,
-                ),
-              ),
-            ),
-          ],
-        ),
+        //     // Call button
+        //     InkWell(
+        //       onTap: () => _launchPhone(view?.seller?.phone),
+        //       child: Container(
+        //         height: 35.h,
+        //         width: 35.h,
+        //         decoration: BoxDecoration(
+        //           shape: BoxShape.circle,
+        //           border: Border.all(color: TagColors.appThemeColor),
+        //         ),
+        //         child: Icon(
+        //           Icons.call,
+        //           size: 15.sp,
+        //           color: TagColors.appThemeColor,
+        //         ),
+        //       ),
+        //     ),
+        //   ],
+        // ),
       ],
     );
 

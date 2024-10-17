@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,10 +15,12 @@ class ProductImageViewer extends StatefulWidget {
     required this.productImage,
     required this.ontap,
     required this.wishlist,
+    required this.productUrl,
     super.key,
   });
   final List<String> images; // List of product images
   final String productImage;
+  final String productUrl;
   final VoidCallback ontap;
   final bool wishlist;
 
@@ -46,8 +50,9 @@ class ProductImageViewerState extends State<ProductImageViewer> {
   }
 
   void _shareImage() {
+    log(widget.productUrl);
     Share.shareUri(
-      Uri.parse(widget.images[_currentIndex]),
+      Uri.parse(widget.productUrl),
     ); // Share the current image URL
   }
 

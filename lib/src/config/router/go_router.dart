@@ -16,6 +16,7 @@ import 'package:tags/src/features/authentication/seller/sign_up/signup_page2.dar
 import 'package:tags/src/features/cart/view.dart';
 import 'package:tags/src/features/categories/sub_categories.dart';
 import 'package:tags/src/features/categories/view.dart';
+import 'package:tags/src/features/categories/widget/fllters_page.dart';
 import 'package:tags/src/features/home/view.dart';
 import 'package:tags/src/features/home/widgets/view_products.dart';
 import 'package:tags/src/features/me/screens/change_address.dart';
@@ -172,6 +173,13 @@ GoRouter router = GoRouter(
       ),
     ),
     GoRoute(
+      name: TagRoutes.filtersPage.name,
+      path: TagRoutes.filtersPage.path,
+      pageBuilder: (context, state) => CupertinoPage(
+        child: FilterScreen(),
+      ),
+    ),
+    GoRoute(
       name: TagRoutes.changeAddress.name,
       path: TagRoutes.changeAddress.path,
       pageBuilder: (context, state) => const CupertinoPage(
@@ -271,6 +279,7 @@ GoRouter router = GoRouter(
           productBrand: state.pathParameters['productBrand'].toString(),
           slug: state.pathParameters['slug'].toString(),
           discount: state.pathParameters['discount'].toString(),
+          subScription: state.pathParameters['subScription'].toString(),
         ),
       ),
     ),

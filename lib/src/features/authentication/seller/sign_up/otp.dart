@@ -172,9 +172,14 @@ class _SellOtpPageState extends ConsumerState<SellOtpPage> {
                       );
 
                       if (response.successMessage.isNotEmpty) {
-                        context.pushReplacementNamed(
-                          TagRoutes.createStore.name,
-                        );
+                        String seller = HiveStorage.get(HiveKeys.seller);
+                        if (seller != '') {
+                          context.pushReplacementNamed(
+                            TagRoutes.createStore.name,
+                          );
+                        } else {
+                          context.goNamed(TagRoutes.sellerLogin.name);
+                        }
                       } else if (response.errorMessage.isNotEmpty) {
                         await showDialog(
                           context: context,

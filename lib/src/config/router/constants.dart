@@ -54,11 +54,15 @@ enum TagRoutes {
   viewProducts(
     name: 'viewProducts',
     path:
-        '/viewProducts/:productImage/:productTitle/:productPrice/:productBrand/:slug/:discount',
+        '/viewProducts/:productImage/:productTitle/:productPrice/:productBrand/:slug/:discount/:subScription',
   ),
   salesPage(
     name: 'salesPage',
     path: '/salesPage',
+  ),
+  filtersPage(
+    name: 'filtersPage',
+    path: '/filtersPage',
   ),
   mySellProductPage(
     name: 'mySellProductPage',
@@ -124,11 +128,11 @@ enum TagRoutes {
     name: 'wishlist',
     path: '/wishlist',
   ),
-    changePassword(
+  changePassword(
     name: 'changePassword',
     path: '/changePassword',
   ),
-    changeAddress(
+  changeAddress(
     name: 'changeAddress',
     path: '/changeAddress',
   ),

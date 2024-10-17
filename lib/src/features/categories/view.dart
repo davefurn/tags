@@ -170,6 +170,8 @@ class _CategoryScreenState extends ConsumerState<CategoryScreen> {
                                     'slug': product.slug,
                                     'discount':
                                         '${getCurrencySymbol(product.currency)}${product.discountedPrice}',
+                                    'subScription':
+                                        product.subscriptionBased.toString(),
                                   },
                                 );
                               },

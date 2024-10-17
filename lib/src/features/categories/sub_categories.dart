@@ -73,22 +73,6 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
         state: state,
         isHome: false,
         title: '',
-        // actions: [
-        //   const InkWell(
-        //     child: Icon(
-        //       Icons.favorite_outline_rounded,
-        //       color: Color(0xff5E5E5E),
-        //     ),
-        //   ),
-        //   4.horizontalSpace,
-        //   Padding(
-        //     padding: EdgeInsets.only(right: 16.w),
-        //     child: const Icon(
-        //       Icons.shopping_bag_outlined,
-        //       color: Color(0xff474747),
-        //     ),
-        //   ),
-        // ],
       ),
       body: Padding(
         padding: const EdgeInsets.only(
@@ -107,134 +91,25 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
               ),
             ),
             SliverToBoxAdapter(
-              child: Text(
-                widget.brandName.toUpperCase(),
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            const SliverToBoxAdapter(
-              child: SizedBox(
-                height: 10,
-              ),
-            ),
-            SliverToBoxAdapter(
               child: SizedBox(
                 width: MediaQuery.sizeOf(context).width,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton(
-                          style: const ButtonStyle(
-                            backgroundColor:
-                                WidgetStatePropertyAll(TagColors.paleBlue),
-                          ),
-                          onPressed: () {},
-                          child: const Row(
-                            children: [
-                              Text(
-                                'Price',
-                                style: TextStyle(
-                                  color: TagColors.black,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              Icon(Icons.arrow_drop_down),
-                            ],
-                          ),
-                        ),
-                        TextButton(
-                          style: const ButtonStyle(
-                            backgroundColor:
-                                WidgetStatePropertyAll(TagColors.paleBlue),
-                          ),
-                          onPressed: () {},
-                          child: const Row(
-                            children: [
-                              Text(
-                                'Color',
-                                style: TextStyle(
-                                  color: TagColors.black,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              Icon(Icons.arrow_drop_down),
-                            ],
-                          ),
-                        ),
-                        TextButton(
-                          style: const ButtonStyle(
-                            backgroundColor:
-                                WidgetStatePropertyAll(TagColors.paleBlue),
-                          ),
-                          onPressed: () {},
-                          child: const Row(
-                            children: [
-                              Text(
-                                'Conditions',
-                                style: TextStyle(
-                                  color: TagColors.black,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              Icon(Icons.arrow_drop_down),
-                            ],
-                          ),
-                        ),
-                        TextButton(
-                          style: const ButtonStyle(
-                            backgroundColor:
-                                WidgetStatePropertyAll(TagColors.paleBlue),
-                          ),
-                          onPressed: () {},
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Filter ',
-                                style: TextStyle(
-                                  color: TagColors.black,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              Image.asset(
-                                'assets/images/filter_icon.png',
-                                height: 12,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                    Text(
+                      widget.brandName.toUpperCase(),
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    SizedBox(
-                      width: 105,
-                      child: TextButton(
-                        style: const ButtonStyle(
-                          backgroundColor:
-                              WidgetStatePropertyAll(TagColors.paleBlue),
-                        ),
-                        onPressed: () {},
-                        child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Discount',
-                              style: TextStyle(
-                                color: TagColors.black,
-                                fontSize: 12,
-                              ),
-                            ),
-                            Icon(Icons.arrow_drop_down),
-                          ],
-                        ),
+                    InkWell(
+                      onTap: () {
+                        context.pushNamed(TagRoutes.filtersPage.name);
+                      },
+                      child: Icon(
+                        Icons.filter_list_alt,
+                        size: 20.sp,
                       ),
                     ),
                   ],
