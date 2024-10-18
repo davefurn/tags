@@ -178,12 +178,16 @@ GoRouter router = GoRouter(
       name: TagRoutes.checkOut.name,
       path: TagRoutes.checkOut.path,
       pageBuilder: (context, state) {
-          OrderData orderData = state.extra! as OrderData;
-        return  CupertinoPage(
-        child: Checkout(
-          orderData: orderData,
-        ),
-      );
+        OrderData orderData = state.extra! as OrderData;
+
+        return CupertinoPage(
+          child: Checkout(
+            orderData: orderData,
+            subTotal: state.uri.queryParameters['subTotal'].toString(),
+            delivery: state.uri.queryParameters['delivery'].toString(),
+            coupon: state.uri.queryParameters['coupon'].toString(),
+          ),
+        );
       },
     ),
     GoRoute(

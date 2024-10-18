@@ -437,10 +437,15 @@ class Seller {
 class CartMetadata {
   CartMetadata({
     this.total,
+    this.subtotal,
+    this.discount,
+    this.deliveryFee,
+    this.couponCode,
     this.count,
     this.products,
   });
 
+  // Factory method to create CartMetadata from JSON
   factory CartMetadata.fromJson(Map<String, dynamic> json) {
     var productList = json['products'] as List;
     List<CartProducts> products =
@@ -448,17 +453,30 @@ class CartMetadata {
 
     return CartMetadata(
       total: json['total']?.toDouble() ?? 0.0,
+      subtotal: json['subtotal']?.toDouble() ?? 0.0,
+      discount: json['discount']?.toDouble() ?? 0.0,
+      deliveryFee: json['delivery_fee']?.toDouble() ?? 0.0,
+      couponCode: json['coupon_code'] ?? '', // Default to empty string
       count: json['count'] ?? 0,
       products: products,
     );
   }
 
   final double? total;
+  final double? subtotal;
+  final double? discount;
+  final double? deliveryFee;
+  final String? couponCode;
   final int? count;
   final List<CartProducts>? products;
 
+  // Method to convert CartMetadata to JSON
   Map<String, dynamic> toJson() => {
         'total': total?.toString() ?? '0.0',
+        'subtotal': subtotal?.toString() ?? '0.0',
+        'discount': discount?.toString() ?? '0.0',
+        'delivery_fee': deliveryFee?.toString() ?? '0.0',
+        'coupon_code': couponCode ?? '',
         'count': count ?? 0,
         'products': products?.map((product) => product.toJson()).toList(),
       };

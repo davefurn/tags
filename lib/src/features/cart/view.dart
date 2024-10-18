@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/config/utils/enums.dart';
 import 'package:tags/src/core/constant/colors.dart';
@@ -138,6 +139,14 @@ class _CartState extends ConsumerState<Cart> {
                           await context.pushNamed(
                             TagRoutes.checkOut.name,
                             extra: orderData,
+                            queryParameters: {
+                              'subTotal':
+                                  state.cartMetadata!.subtotal.toString(),
+                              'delivery':
+                                  state.cartMetadata!.deliveryFee.toString(),
+                              'coupon':
+                                  state.cartMetadata!.couponCode.toString(),
+                            },
                           );
                         }
                       } else if (response.errorMessage.isNotEmpty &&
@@ -189,11 +198,13 @@ class _CartState extends ConsumerState<Cart> {
                   ),
                 ],
               )
-            else if (state.loading != Loader.loading &&
-                state.cartProducts!.isNotEmpty)
-              const SizedBox.shrink()
             else if (state.loading == Loader.loading)
-              const SizedBox.shrink()
+              Column(
+                children: List.generate(
+                  3,
+                  (index) => _buildShimmerCartItem(),
+                ), // Showing shimmer for 3 items
+              )
             else
               Column(
                 children: [
@@ -252,4 +263,47 @@ class _CartState extends ConsumerState<Cart> {
       ),
     );
   }
+
+  Widget _buildShimmerCartItem() => Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 50.w,
+                height: 50.h,
+                color: Colors.white,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      height: 10.h,
+                      color: Colors.white,
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      width: double.infinity,
+                      height: 10.h,
+                      color: Colors.white,
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      width: 40.w,
+                      height: 10.h,
+                      color: Colors.white,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
 }

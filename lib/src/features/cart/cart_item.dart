@@ -10,6 +10,7 @@ import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/resources/resources.dart';
 import 'package:tags/src/core/riverpod/providers/providers.dart';
 import 'package:tags/src/core/widget/tag_dialog.dart';
+import 'package:tags/src/features/authentication/seller/sign_up/model/profile_viewmodel.dart';
 
 class CartItem extends ConsumerWidget {
   const CartItem({
@@ -38,125 +39,170 @@ class CartItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final model = ref.read(profileProvider.notifier);
 
-    final format = NumberFormat('#,##0', 'en_US');
-    return SizedBox(
-      width: double.maxFinite,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Product Image
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8.r),
-                child: Image.network(
-                  image, // Replace with actual image URL
-                  width: 130.w,
-                  height: 150.h,
-                  fit: BoxFit.cover,
+    return Card(
+      color: TagColors.white,
+      elevation: 0,
+      child: Padding(
+        padding: const EdgeInsets.all(16).copyWith(
+          left: 0.w,
+          top: 0.h,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Product details
+            Row(
+              children: [
+                Container(
+                  height: 40.h,
+                  width: 40.w,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(image),
+                      fit: BoxFit.cover,
+                    ),
+                    shape: BoxShape.circle,
+                  ),
                 ),
-              ),
-              16.horizontalSpace,
-              // Product Details
-              SizedBox(
-                height: 160.h,
-                child: Column(
+                20.horizontalSpace,
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       productName,
                       style: TextStyle(
-                        fontFamily: 'Montserrat',
-                        fontWeight: FontWeight.w500,
                         fontSize: 14.sp,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          format.format(double.tryParse(price)),
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14.sp,
-                          ),
-                        ),
-                        4.horizontalSpace,
-                        Text(
-                          format.format(double.tryParse(discount)),
-                          style: TextStyle(
-                            decoration: TextDecoration.lineThrough,
-                            color: Colors.grey,
-                            fontSize: 8.sp,
-                          ),
-                        ),
-                      ],
-                    ),
-                    8.verticalSpace,
-                    Text(
-                      'Brand',
-                      style: TextStyle(
-                        color: const Color(0xff303030),
-                        fontSize: 12.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                     Text(
-                      brand,
+                      '$quantity item - \$$price',
                       style: TextStyle(
-                        color: const Color(0xff5e5e5e),
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    Text(
-                      'Color',
-                      style: TextStyle(
-                        color: const Color(0xff303030),
                         fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Text(
-                      color == '' ? 'null' : color,
-                      style: TextStyle(
-                        color: const Color(0xff5e5e5e),
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    Text(
-                      'Quantity',
-                      style: TextStyle(
-                        color: const Color(0xff303030),
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Text(
-                      quantity == '0' ? 'Out of stock' : quantity,
-                      style: TextStyle(
-                        color: quantity == '0'
-                            ? TagColors.red
-                            : const Color(0xff5e5e5e),
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w300,
                       ),
                     ),
                   ],
                 ),
-              ),
-            ],
-          ),
-          // Delete Icon
+              ],
+            ),
+            16.verticalSpace,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  brand,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                InkWell(
+                  onTap: () async {
+                    final response = await model.delCart(
+                      formData: {
+                        'product_slug': slug,
+                      },
+                    );
 
-          InkWell(
-            onTap: () async {
-              final response = await model.delCart(
+                    if (response.successMessage.isNotEmpty && context.mounted) {
+                      await ref.read(profileProvider.notifier).getAllCart();
+                    } else if (response.errorMessage.isNotEmpty &&
+                        context.mounted &&
+                        response.errorMessage ==
+                            'Authentication credentials were not provided.') {
+                      await context.pushNamed(TagRoutes.sellerLogin.name);
+                    } else if (response.errorMessage.isNotEmpty &&
+                        context.mounted &&
+                        response.errorMessage !=
+                            'Authentication credentials were not provided.') {
+                      await showDialog(
+                        context: context,
+                        builder: (context) => TagDialog(
+                          icon: const Icon(
+                            Icons.error,
+                            color: TagColors.red,
+                            size: 50,
+                          ),
+                          title: 'Failed',
+                          subtitle: response.errorMessage,
+                          buttonColor: TagColors.red,
+                          textColor: Colors.white,
+                          buttonText: 'Dismiss',
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      );
+                    } else {
+                      log(response.error!.response!.statusCode.toString());
+                    }
+                  },
+                  child: Image.asset(
+                    AssetsImages.delete,
+                    height: 32.h,
+                    width: 32.w,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
+            ),
+            16.verticalSpace,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '✦ $productName - $color',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14.sp,
+                      ),
+                    ),
+                    Text(
+                      '\$ $price',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w300,
+                        fontSize: 12.sp,
+                      ),
+                    ),
+                  ],
+                ),
+                _buildQuantityChanger(model, context, ref),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQuantityChanger(
+    ProfileViewModel model,
+    BuildContext context,
+    WidgetRef ref,
+  ) {
+    String newValue = '1';
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: const Color(0xffF9F9F9),
+        borderRadius: BorderRadius.circular(4.r),
+      ),
+      child: Row(
+        children: [
+          IconButton(
+            icon: Icon(
+              Icons.remove,
+              size: 14.sp,
+            ),
+            onPressed: () async {
+              newValue = (int.parse(quantity) - 1).toString();
+              final response = await model.editCart(
                 formData: {
                   'product_slug': slug,
+                  'quantity': newValue,
                 },
               );
 
@@ -193,15 +239,62 @@ class CartItem extends ConsumerWidget {
                 log(response.error!.response!.statusCode.toString());
               }
             },
-            child: Align(
-              alignment: Alignment.topRight,
-              child: Image.asset(
-                AssetsImages.delete,
-                height: 32.h,
-                width: 32.w,
-                fit: BoxFit.cover,
-              ),
+          ),
+          Text(
+            quantity,
+            style: TextStyle(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w500,
             ),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.add,
+              size: 14.sp,
+            ),
+            onPressed: () async {
+              newValue = (int.parse(quantity) + 1).toString();
+
+              final response = await model.editCart(
+                formData: {
+                  'product_slug': slug,
+                  'quantity': newValue,
+                },
+              );
+
+              if (response.successMessage.isNotEmpty && context.mounted) {
+                await ref.read(profileProvider.notifier).getAllCart();
+              } else if (response.errorMessage.isNotEmpty &&
+                  context.mounted &&
+                  response.errorMessage ==
+                      'Authentication credentials were not provided.') {
+                await context.pushNamed(TagRoutes.sellerLogin.name);
+              } else if (response.errorMessage.isNotEmpty &&
+                  context.mounted &&
+                  response.errorMessage !=
+                      'Authentication credentials were not provided.') {
+                await showDialog(
+                  context: context,
+                  builder: (context) => TagDialog(
+                    icon: const Icon(
+                      Icons.error,
+                      color: TagColors.red,
+                      size: 50,
+                    ),
+                    title: 'Failed',
+                    subtitle: response.errorMessage,
+                    buttonColor: TagColors.red,
+                    textColor: Colors.white,
+                    buttonText: 'Dismiss',
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                );
+              } else {
+                log(response.error!.response!.statusCode.toString());
+              }
+            },
           ),
         ],
       ),

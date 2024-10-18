@@ -66,8 +66,8 @@ class Productive {
         currency: json['currency'] ?? '', // Default to empty string if null
         brand: json['brand'] ?? '', // Default to empty string if null
         color: json['color'] != null && json['color'] is String
-            ? (json['color'] as String).split(',').map((c) => c.trim()).toList()
-            : [], // Default to empty list if null
+            ? json['color']
+            : '', // Default to empty list if null
         quantity: json['quantity'] ?? 0, // Default to 0 if null
       );
 
@@ -77,7 +77,7 @@ class Productive {
   final double price;
   final String currency;
   final String brand;
-  final List<String> color;
+  final String color;
   final int quantity;
 
   // Convert Product to JSON
