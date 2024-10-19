@@ -81,7 +81,9 @@ class _MePageState extends State<MePage> {
           title: 'Wishlist',
         ),
         ProfileModel(
-          action: () {},
+          action: () {
+            context.pushNamed(TagRoutes.orderHistory.name);
+          },
           image: Assets.order,
           title: 'Order History',
         ),

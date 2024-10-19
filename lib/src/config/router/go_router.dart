@@ -29,6 +29,7 @@ import 'package:tags/src/features/onboarding/intros/intro_page_two.dart';
 import 'package:tags/src/features/onboarding/intros/intro_pagge_one.dart';
 import 'package:tags/src/features/onboarding/intros/seller.dart';
 import 'package:tags/src/features/onboarding/splash_screen/view.dart';
+import 'package:tags/src/features/orders/view.dart';
 import 'package:tags/src/features/payment/checkout/view.dart';
 import 'package:tags/src/features/search/view.dart';
 import 'package:tags/src/features/sell/add_products.dart';
@@ -274,6 +275,13 @@ GoRouter router = GoRouter(
       path: TagRoutes.createStore.path,
       pageBuilder: (context, state) => const CupertinoPage(
         child: CreateStorePage(),
+      ),
+    ),
+    GoRoute(
+      name: TagRoutes.orderHistory.name,
+      path: TagRoutes.orderHistory.path,
+      pageBuilder: (context, state) => const CupertinoPage(
+        child: OrderHistory(),
       ),
     ),
     GoRoute(

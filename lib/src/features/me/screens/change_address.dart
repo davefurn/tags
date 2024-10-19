@@ -426,7 +426,9 @@ class _ChangeAddressState extends ConsumerState<ChangeAddress> {
                           initialCountryCode: 'NG',
                           onChanged: (phone) {
                             log(phone.completeNumber);
-                            completePhoneNumber = phone.completeNumber;
+                            setState(() {
+                              completePhoneNumber = phone.completeNumber;
+                            });
                           },
                         ),
 
@@ -522,7 +524,9 @@ class _ChangeAddressState extends ConsumerState<ChangeAddress> {
                           value: selectedCountry,
                           onChanged: (value) {
                             setState(() {
-                              selectedCountry = value;
+                              setState(() {
+                                selectedCountry = value;
+                              });
                             });
                           },
                         ),
@@ -565,11 +569,11 @@ class _ChangeAddressState extends ConsumerState<ChangeAddress> {
                                   formData: {
                                     'first_name': firstName.text,
                                     'last_name': lastName.text,
-                                    'phone_number': phoneNumber.text,
+                                    'phone_number': completePhoneNumber,
                                     'email': email.text,
                                     'flat_no': flatNo.text,
                                     'street_address': streetAddress.text,
-                                    'country': country.text,
+                                    'country': selectedCountry,
                                   },
                                 );
 
@@ -587,8 +591,14 @@ class _ChangeAddressState extends ConsumerState<ChangeAddress> {
                                       buttonColor: TagColors.appThemeColor,
                                       textColor: Colors.white,
                                       buttonText: 'Continue',
-                                      onTap: () async {
-                                        context.canPop();
+                                      onTap: () {
+                                        if (widget.checkout == 'true') {
+                                          context
+                                            ..pop()
+                                            ..pop();
+                                        } else {
+                                          context.canPop();
+                                        }
                                       },
                                     ),
                                   );

@@ -15,6 +15,10 @@ enum TagRoutes {
     name: 'sellerPage',
     path: '/sellerPage',
   ),
+  orderHistory(
+    name: 'orderHistory',
+    path: '/orderHistory',
+  ),
   deliveryPage(
     name: 'deliveryPage',
     path: '/deliveryPage',

@@ -68,11 +68,13 @@ class TagDialog extends StatelessWidget {
           ],
         ),
         actions: [
-          tagDefaultButton(
-            color: buttonColor,
-            textColor: textColor ?? Colors.white,
-            text: buttonText ?? 'Continue',
-            onTap: onTap,
+          InkWell(
+            child: tagDefaultButton(
+              color: buttonColor,
+              textColor: textColor ?? Colors.white,
+              text: buttonText ?? 'Continue',
+              onTap: onTap,
+            ),
           ),
         ],
       );
