@@ -89,7 +89,7 @@ class _CheckoutState extends ConsumerState<Checkout> {
               ),
             ),
             const SizedBox(height: 20),
-            _buildAddressSection(),
+            _buildAddressSection(context),
             40.verticalSpace,
             _buildPaymentMethod(),
             const SizedBox(height: 20),
@@ -333,7 +333,7 @@ class _CheckoutState extends ConsumerState<Checkout> {
         ),
       );
 
-  Widget _buildAddressSection() => Column(
+  Widget _buildAddressSection(BuildContext context) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -351,10 +351,20 @@ class _CheckoutState extends ConsumerState<Checkout> {
                 color: TagColors.textColor,
               ),
               const SizedBox(width: 8),
-              Text(
-                widget.orderData.address == ''
-                    ? 'Address not supplied'
-                    : widget.orderData.address,
+              InkWell(
+                onTap: () {
+                  context.pushNamed(
+                    TagRoutes.changeAddress.name,
+                    queryParameters: {
+                      'checkout': 'true',
+                    },
+                  );
+                },
+                child: Text(
+                  widget.orderData.address == ''
+                      ? 'Address not supplied, Tap to add address'
+                      : widget.orderData.address,
+                ),
               ),
             ],
           ),

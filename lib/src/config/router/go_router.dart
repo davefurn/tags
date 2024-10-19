@@ -200,8 +200,10 @@ GoRouter router = GoRouter(
     GoRoute(
       name: TagRoutes.changeAddress.name,
       path: TagRoutes.changeAddress.path,
-      pageBuilder: (context, state) => const CupertinoPage(
-        child: ChangeAddress(),
+      pageBuilder: (context, state) => CupertinoPage(
+        child: ChangeAddress(
+          checkout: state.uri.queryParameters['checkout'].toString(),
+        ),
       ),
     ),
     GoRoute(
