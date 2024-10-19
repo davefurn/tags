@@ -9,6 +9,7 @@ import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/riverpod/providers/providers.dart';
 import 'package:tags/src/core/widget/show_banner.dart';
 import 'package:tags/src/core/widget/tag_dialog.dart';
+import 'package:tags/src/features/cart/model/checkout_model.dart';
 import 'package:tags/src/features/home/widgets/buildbusinessrow.dart';
 import 'package:tags/src/features/home/widgets/product_image.dart';
 import 'package:tags/src/features/home/widgets/product_tiles_specs.dart';
@@ -48,6 +49,7 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(profileProvider.notifier).getAProduct(widget.slug);
+      ref.read(profileProvider.notifier).getAllCart();
     });
     controller = TextEditingController();
     super.initState();
@@ -186,8 +188,10 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
                   log(response.error!.response!.statusCode.toString());
                 }
 
-                Future.delayed(const Duration(seconds: 2), () {
-                  ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
+                Future.delayed(const Duration(seconds: 1), () {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
+                  }
                 });
               },
               images: state.viewMoreProducts?.images ?? [widget.productImage],
@@ -341,7 +345,9 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
                                 addedToCart = true;
                               });
                               showSuccessBanner(
-                                  context, response.successMessage);
+                                context,
+                                response.successMessage,
+                              );
                             } else if (response.errorMessage.isNotEmpty &&
                                 context.mounted &&
                                 response.errorMessage ==
@@ -384,13 +390,16 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
                                 ),
                               );
                             } else {
-                              log(response.error!.response!.statusCode
-                                  .toString());
+                              log(
+                                response.error!.response!.statusCode.toString(),
+                              );
                             }
 
                             Future.delayed(const Duration(seconds: 2), () {
-                              ScaffoldMessenger.of(context)
-                                  .removeCurrentMaterialBanner();
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context)
+                                    .removeCurrentMaterialBanner();
+                              }
                             });
                           },
                     child: widget.subScription != null &&
@@ -432,7 +441,82 @@ class _ViewProductsState extends ConsumerState<ViewProducts> {
                             widget.subScription != '' &&
                             widget.subScription == 'true'
                         ? () {}
-                        : () {},
+                        : () async {
+                            final response = await model.checkOut(
+                              formData: {},
+                            );
+
+                            if (response.successMessage.isNotEmpty &&
+                                context.mounted) {
+                              OrderData? orderData = await getOrder();
+                              if (orderData != null) {
+                                log('Order ID: ${orderData.orderId}');
+                                // Navigate to the next page, passing the data if needed
+                                await context.pushNamed(
+                                  TagRoutes.checkOut.name,
+                                  extra: orderData,
+                                  queryParameters: {
+                                    'subTotal':
+                                        state.cartMetadata!.subtotal.toString(),
+                                    'delivery': state.cartMetadata!.deliveryFee
+                                        .toString(),
+                                    'coupon': state.cartMetadata!.couponCode
+                                        .toString(),
+                                  },
+                                );
+                              }
+                            } else if (response.errorMessage.isNotEmpty &&
+                                context.mounted &&
+                                response.errorMessage ==
+                                    'Authentication credentials were not provided.') {
+                              final responseRefresh = await ref
+                                  .read(profileProvider.notifier)
+                                  .refresh();
+                              log('Case one running');
+                              if (responseRefresh.successMessage ==
+                                  'Token refreshed') {
+                                log('Case one running, success message');
+                                await ref
+                                    .read(profileProvider.notifier)
+                                    .getAllCart();
+                              } else {
+                                log('Case one running, successful message');
+                                await context
+                                    .pushNamed(TagRoutes.sellerLogin.name);
+                              }
+                            } else if (response.errorMessage.isNotEmpty &&
+                                context.mounted &&
+                                response.errorMessage !=
+                                    'Authentication credentials were not provided.') {
+                              await showDialog(
+                                context: context,
+                                builder: (context) => TagDialog(
+                                  icon: const Icon(
+                                    Icons.error,
+                                    color: TagColors.red,
+                                    size: 50,
+                                  ),
+                                  title: 'Failed',
+                                  subtitle: response.errorMessage,
+                                  buttonColor: TagColors.red,
+                                  textColor: Colors.white,
+                                  buttonText: 'Dismiss',
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              );
+                            } else {
+                              log(
+                                response.error!.response!.statusCode.toString(),
+                              );
+                            }
+
+                            Future.delayed(const Duration(seconds: 2), () {
+                              ScaffoldMessenger.of(context)
+                                  .removeCurrentMaterialBanner();
+                            });
+                          },
                     child: widget.subScription != null &&
                             widget.subScription != '' &&
                             widget.subScription == 'true'

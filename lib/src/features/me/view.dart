@@ -97,7 +97,9 @@ class _MePageState extends State<MePage> {
               HiveKeys.name,
               'Tags Marketplace',
             );
-            context.goNamed(TagRoutes.sellerLogin.name);
+            if (context.mounted) {
+              context.goNamed(TagRoutes.sellerLogin.name);
+            }
           },
           image: Assets.logout,
           title: 'Log Out',

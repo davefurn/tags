@@ -377,7 +377,7 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
     }
   }
 
-  Future<ApiResponse> checkOutSingle({
+  Future<ApiResponse> initPay({
     required Map<String, dynamic> formData,
   }) async {
     // state = state.copyWith(
@@ -387,20 +387,15 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
     try {
       final response = await _reader.read(serviceProvider).postWithToken(
             formData: formData,
-            path: '/api/checkout/single/',
+            path: '/api/payment/initiate/',
           );
       log(response.data.toString());
       if (response.statusCode == 201 || response.statusCode == 200) {
         final Map<String, dynamic> body = response.data;
-        // List<CartProducts> eventCat = (body['data'] as List)
-        //     .map((e) => CartProducts.fromJson(e))
-        //     .toList();
-        // state = state.copyWith(
-        //   loading: Loader.loaded,
-        //   cartProducts: eventCat,
-        // );
+
         return ApiResponse(
           successMessage: body['message'],
+          secret: body['data']['client_secret'],
         );
       } else if (response.statusCode == 401) {
         return ApiResponse(

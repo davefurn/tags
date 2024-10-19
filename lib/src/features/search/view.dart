@@ -224,7 +224,9 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                               if (response.successMessage.isNotEmpty &&
                                   context.mounted) {
                                 showSuccessBanner(
-                                    context, response.successMessage);
+                                  context,
+                                  response.successMessage,
+                                );
                               } else if (response.errorMessage.isNotEmpty &&
                                   context.mounted &&
                                   response.errorMessage ==
@@ -254,13 +256,17 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                                   ),
                                 );
                               } else {
-                                log(response.error!.response!.statusCode
-                                    .toString());
+                                log(
+                                  response.error!.response!.statusCode
+                                      .toString(),
+                                );
                               }
 
                               Future.delayed(const Duration(seconds: 2), () {
-                                ScaffoldMessenger.of(context)
-                                    .removeCurrentMaterialBanner();
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context)
+                                      .removeCurrentMaterialBanner();
+                                }
                               });
                             },
                           ),

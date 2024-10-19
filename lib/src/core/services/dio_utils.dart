@@ -102,11 +102,13 @@ class ApiResponse {
     this.successMessage = '',
     this.error,
     this.responseMessage = '',
+    this.secret = '',
   });
   final String successMessage;
   final String errorMessage;
   final DioError? error;
   final String responseMessage;
+  final String secret;
 }
 
 void handleBankOneError({

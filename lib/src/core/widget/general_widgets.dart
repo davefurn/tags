@@ -1,6 +1,7 @@
 // ignore_for_file: type_annotate_public_apis
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/widget/tag_loader.dart';
@@ -21,7 +22,7 @@ Widget tagDefaultButton({
         child: DecoratedBox(
           decoration: BoxDecoration(
             color: icon != null ? Colors.transparent : color ?? TagColors.white,
-            borderRadius: BorderRadius.circular(40),
+            borderRadius: BorderRadius.circular(8.r),
             border: icon != null ? Border.all(color: textColor) : null,
             boxShadow: [
               BoxShadow(

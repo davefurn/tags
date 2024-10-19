@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tags/src/config/router/go_router.dart';
@@ -11,6 +12,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   await Hive.openBox(HiveKeys.appBox);
+  Stripe.publishableKey =
+      'pk_test_51PsoKuD0kq1OhQSyTJ8fhMKAn9Z8zcadfjSqtBPe6zYDi3yj7dCBB1KRbLRplpD7Ru85RHELTqCiTW6uY675DpOX000R9S38Fu';
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then(

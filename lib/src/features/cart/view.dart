@@ -133,7 +133,7 @@ class _CartState extends ConsumerState<Cart> {
                       if (response.successMessage.isNotEmpty &&
                           context.mounted) {
                         OrderData? orderData = await getOrder();
-                        if (orderData != null) {
+                        if (orderData != null && context.mounted) {
                           log('Order ID: ${orderData.orderId}');
                           // Navigate to the next page, passing the data if needed
                           await context.pushNamed(

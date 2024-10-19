@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tags/src/core/constant/colors.dart';
 import 'package:tags/src/core/resources/resources.dart';
@@ -28,7 +29,7 @@ class TagDialog extends StatelessWidget {
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
         shadowColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.r)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

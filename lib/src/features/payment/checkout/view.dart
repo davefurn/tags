@@ -1,14 +1,19 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/core/constant/colors.dart';
-import 'package:tags/src/core/resources/resources.dart';
 import 'package:tags/src/core/riverpod/providers/providers.dart';
 import 'package:tags/src/core/widget/tag_appbar.dart';
+import 'package:tags/src/core/widget/tag_dialog.dart';
 import 'package:tags/src/data/hivekeys.dart';
 import 'package:tags/src/data/localdatabase.dart';
 import 'package:tags/src/features/cart/model/checkout_model.dart';
 import 'package:tags/src/features/onboarding/widgets/app_texts.dart';
+import 'package:tags/src/features/payment/stripe/services.dart';
 
 class Checkout extends ConsumerStatefulWidget {
   const Checkout({
@@ -42,6 +47,7 @@ class _CheckoutState extends ConsumerState<Checkout> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(profileProvider);
+    final model = ref.read(profileProvider.notifier);
     return Scaffold(
       appBar: TagBar(
         state: state,
@@ -89,7 +95,85 @@ class _CheckoutState extends ConsumerState<Checkout> {
             const SizedBox(height: 20),
             _buildPaymentSummary(),
             const SizedBox(height: 30),
-            _buildPaymentButton(),
+            TagLoginButton(
+              height: 50.h,
+              child: Text(
+                'Make Payments',
+                style: TextStyle(
+                  fontFamily: 'Poppings',
+                  fontSize: 12.sp,
+                  letterSpacing: 1,
+                  color: TagColors.white,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              onTap: () async {
+                final response = await model.initPay(
+                  formData: {
+                    'order_id': widget.orderData.orderId,
+                    'instructions': controller.text,
+                  },
+                );
+
+                if (response.successMessage.isNotEmpty && context.mounted) {
+                  try {
+                    //STEP 2: Initialize Payment Sheet
+                    await initializeAndDisplayPaymentSheet(
+                      context,
+                      response.secret,
+                    );
+                  } catch (err) {
+                    throw Exception(err);
+                  }
+                } else if (response.errorMessage.isNotEmpty &&
+                    context.mounted &&
+                    response.errorMessage ==
+                        'Authentication credentials were not provided.') {
+                  final responseRefresh =
+                      await ref.read(profileProvider.notifier).refresh();
+                  log('Case one running');
+                  if (responseRefresh.successMessage == 'Token refreshed') {
+                    log('Case one running, success message');
+                    await ref.read(profileProvider.notifier).getAllCart();
+                  } else {
+                    log('Case one running, successful message');
+                    if (context.mounted) {
+                      await context.pushNamed(TagRoutes.sellerLogin.name);
+                    }
+                  }
+                } else if (response.errorMessage.isNotEmpty &&
+                    context.mounted &&
+                    response.errorMessage !=
+                        'Authentication credentials were not provided.') {
+                  await showDialog(
+                    context: context,
+                    builder: (context) => TagDialog(
+                      icon: const Icon(
+                        Icons.error,
+                        color: TagColors.red,
+                        size: 50,
+                      ),
+                      title: 'Failed',
+                      subtitle: response.errorMessage,
+                      buttonColor: TagColors.red,
+                      textColor: Colors.white,
+                      buttonText: 'Dismiss',
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  );
+                } else {
+                  log(response.error!.response!.statusCode.toString());
+                }
+
+                Future.delayed(const Duration(seconds: 2), () {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).removeCurrentMaterialBanner();
+                  }
+                });
+              },
+            ),
           ],
         ),
       ),
@@ -164,12 +248,16 @@ class _CheckoutState extends ConsumerState<Checkout> {
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  Image.asset(
-                    AssetsImages.delete,
+                  SizedBox(
                     height: 32.h,
                     width: 32.w,
-                    fit: BoxFit.cover,
                   ),
+                  // Image.asset(
+                  //   AssetsImages.delete,
+                  //   height: 32.h,
+                  //   width: 32.w,
+                  //   fit: BoxFit.cover,
+                  // ),
                 ],
               ),
               16.verticalSpace,
@@ -195,7 +283,7 @@ class _CheckoutState extends ConsumerState<Checkout> {
                       ),
                     ],
                   ),
-                  _buildQuantityChanger(),
+                  _buildQuantityChanger(numberItem),
                 ],
               ),
             ],
@@ -203,34 +291,44 @@ class _CheckoutState extends ConsumerState<Checkout> {
         ),
       );
 
-  Widget _buildQuantityChanger() => DecoratedBox(
+  Widget _buildQuantityChanger(
+    String numberItem,
+  ) =>
+      DecoratedBox(
         decoration: BoxDecoration(
           color: const Color(0xffF9F9F9),
           borderRadius: BorderRadius.circular(4.r),
         ),
         child: Row(
           children: [
-            IconButton(
-              icon: Icon(
-                Icons.remove,
-                size: 14.sp,
+            // IconButton(
+            //   icon: Icon(
+            //     Icons.remove,
+            //     size: 14.sp,
+            //   ),
+            //   onPressed: () {},
+            // ),
+            Text(
+              'Quantity: ',
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w400,
               ),
-              onPressed: () {},
             ),
             Text(
-              '1',
+              numberItem,
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            IconButton(
-              icon: Icon(
-                Icons.add,
-                size: 14.sp,
-              ),
-              onPressed: () {},
-            ),
+            // IconButton(
+            //   icon: Icon(
+            //     Icons.add,
+            //     size: 14.sp,
+            //   ),
+            //   onPressed: () {},
+            // ),
           ],
         ),
       );
@@ -319,7 +417,7 @@ class _CheckoutState extends ConsumerState<Checkout> {
               Radio(
                 value: 1,
                 groupValue: 1,
-                onChanged: (int? value) {},
+                onChanged: (value) {},
                 activeColor: Colors.green,
               ),
             ],
@@ -375,20 +473,5 @@ class _CheckoutState extends ConsumerState<Checkout> {
             ),
           ],
         ),
-      );
-
-  Widget _buildPaymentButton() => TagLoginButton(
-        height: 50.h,
-        child: Text(
-          'Make Payments',
-          style: TextStyle(
-            fontFamily: 'Poppings',
-            fontSize: 12.sp,
-            letterSpacing: 1,
-            color: TagColors.white,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        onTap: () {},
       );
 }
