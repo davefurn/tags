@@ -13,6 +13,7 @@ import 'package:tags/src/data/localdatabase.dart';
 import 'package:tags/src/features/authentication/seller/sign_up/model/catmodel.dart';
 import 'package:tags/src/features/cart/model/checkout_model.dart';
 import 'package:tags/src/features/home/models/view_model.dart';
+import 'package:tags/src/features/orders/model/order_history.dart';
 
 class ProfileViewModel extends StateNotifier<ProfileState> {
   ProfileViewModel(this._reader)
@@ -603,6 +604,77 @@ class ProfileViewModel extends StateNotifier<ProfileState> {
         //   loading: Loader.loaded,
         //   cartProducts: eventCat,
         // );
+        return ApiResponse(
+          successMessage: body['message'],
+        );
+      } else if (response.statusCode == 401) {
+        return ApiResponse(
+          errorMessage: '401',
+        );
+      } else {
+        state = state.copyWith(
+          loading: Loader.error,
+        );
+        return ApiResponse(
+          errorMessage: response.data['message'],
+        );
+      }
+    } on DioError catch (e) {
+      state = state.copyWith(loading: Loader.error);
+
+      if (e.response != null &&
+          e.response!.data['message'] != null &&
+          e.response!.data['errors'] is List &&
+          e.response!.data['message'].isNotEmpty) {
+        // Join the error messages if there are multiple
+        String errorMessage = e.response!.data['errors'].join('\n');
+        return ApiResponse(errorMessage: errorMessage);
+      } else if (e.type == DioErrorType.badResponse ||
+          e.type == DioErrorType.receiveTimeout ||
+          e.type == DioErrorType.unknown) {
+        // Handle no internet connection or connection error here
+        return ApiResponse(
+          errorMessage:
+              e.response!.data['message'] ?? e.response!.data['error'],
+          // "Check your data connection / Connection error."
+        );
+      } else {
+        // Handle other DioErrors
+        // return ApiResponse(errorMessage: "Connection error, Please try again.");
+        return ApiResponse(errorMessage: e.response!.data['message']);
+      }
+    } catch (e) {
+      state = state.copyWith(
+        loading: Loader.error,
+      );
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse> getAllOrderHistory() async {
+    state = state.copyWith(
+      loading: Loader.loading,
+    );
+
+    try {
+      final response = await _reader.read(serviceProvider).getWithToken(
+            path: 'api/orders/',
+          );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> body = response.data;
+        log(body.toString());
+
+// Parsing the data field as OrderHistory
+        OrderHistory orderHistory = OrderHistory.fromJson(body['data']);
+
+// Access the list of OrderDetails from the orderHistory object
+        List<OrderDetails> eventCat = orderHistory.results ?? [];
+
+        state = state.copyWith(
+          loading: Loader.loaded,
+          orderdetails: eventCat,
+        );
         return ApiResponse(
           successMessage: body['message'],
         );
@@ -1821,6 +1893,7 @@ class ProfileState {
     this.allNewCatz = const [],
     this.cartProducts = const [],
     this.resultItem = const [],
+    this.orderdetails = const [],
     // required this.user,
     // this.otpResponse,
     // this.bankFlexUser,
@@ -1844,6 +1917,7 @@ class ProfileState {
   final List<Product> productz;
   final List<AllCategoriesModel> allNewCatz;
   final List<SearchResult>? searchResults;
+  final  List<OrderDetails>? orderdetails;
   final ViewMoreProduct? viewMoreProducts;
   final OrderData? orderData;
   final CartMetadata? cartMetadata;
@@ -1868,6 +1942,7 @@ class ProfileState {
     final List<BrandProduct>? productResponse,
     final List<CartProducts>? cartProducts,
     final List<ResultItem>? resultItem,
+  final  List<OrderDetails>? orderdetails,
     final List<SearchResult>? searchResults,
     final List<BestSellingModel>? bestSelling,
     final List<TodayDeal>? todayDealz,
@@ -1888,6 +1963,7 @@ class ProfileState {
     // OtpResponseModel? otpResponse,
   }) =>
       ProfileState(
+        orderdetails: orderdetails ?? this.orderdetails,
         resultItem: resultItem ?? this.resultItem,
         viewMoreProducts: viewMoreProducts ?? this.viewMoreProducts,
         orderData: orderData ?? this.orderData,

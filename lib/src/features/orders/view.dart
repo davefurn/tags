@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -22,6 +24,33 @@ class OrderHistory extends ConsumerStatefulWidget {
 
 class _OrderHistoryState extends ConsumerState<OrderHistory> {
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      final response =
+          await ref.read(profileProvider.notifier).getAllOrderHistory();
+      switch (response.errorMessage) {
+        case 'Authentication credentials were not provided.':
+          final responseRefresh =
+              await ref.read(profileProvider.notifier).refresh();
+          log('Case one running');
+          if (responseRefresh.successMessage == 'Token refreshed') {
+            log('Case one running, success message');
+            await ref.read(profileProvider.notifier).getAllWishlist();
+          } else {
+            log('Case one running, successful message');
+            await context.pushNamed(TagRoutes.sellerLogin.name);
+          }
+          break;
+        default:
+          log('Case one failed, failed message');
+          // Handle other cases or proceed if no error
+          break;
+      }
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final state = ref.watch(profileProvider);
     return Scaffold(
@@ -45,26 +74,29 @@ class _OrderHistoryState extends ConsumerState<OrderHistory> {
           children: [
             const CustomTextInput(),
             25.verticalSpace,
-            if (state.loading != Loader.loading && state.resultItem!.isNotEmpty)
+            if (state.loading != Loader.loading &&
+                state.orderdetails!.isNotEmpty)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'All Orders',
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14.sp,
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Expanded(
+                  LimitedBox(
+                    maxHeight: 700.h,
                     child: ListView.builder(
-                      itemCount: 6, // Number of orders
+                      itemCount: state.orderdetails!.length, // Number of orders
                       itemBuilder: (context, index) => OrderItem(
-                        imageUrl:
-                            'https://d26acmihx6rw84.cloudfront.net/media/uploads/products/images/sh3.jpg',
-                        productName: 'AirPods Max',
-                        price: '\$707,600',
+                        imageUrl: 'https://via.placeholder.com/40',
+                        productName:
+                            state.orderdetails![index].orderId.toString(),
+                        price:
+                            '${state.orderdetails![index].currency} ${state.orderdetails![index].total}',
                         sellerName: 'Tola Koko',
                         status: index % 3 == 0
                             ? 'Delivered'
@@ -85,7 +117,7 @@ class _OrderHistoryState extends ConsumerState<OrderHistory> {
             else if (state.loading == Loader.loading)
               const SizedBox.shrink()
             else if (state.loading != Loader.loading &&
-                state.resultItem!.isNotEmpty)
+                state.orderdetails!.isNotEmpty)
               const SizedBox.shrink()
             else
               Column(

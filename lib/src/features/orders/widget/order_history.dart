@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class OrderItem extends StatelessWidget {
-  OrderItem({
+class OrderItem extends ConsumerWidget {
+  const OrderItem({
     required this.imageUrl,
     required this.productName,
     required this.price,
@@ -10,9 +12,8 @@ class OrderItem extends StatelessWidget {
     required this.statusColor,
     required this.timeAgo,
     super.key,
-  }) {
-    throw UnimplementedError();
-  }
+  });
+
   final String imageUrl;
   final String productName;
   final String price;
@@ -22,7 +23,7 @@ class OrderItem extends StatelessWidget {
   final String timeAgo;
 
   @override
-  Widget build(BuildContext context) => Padding(
+  Widget build(BuildContext context, WidgetRef ref) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           children: [
@@ -42,60 +43,64 @@ class OrderItem extends StatelessWidget {
                 children: [
                   Text(
                     productName,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 12.sp,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     price,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14.sp,
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Text(
-                        sellerName,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      const Icon(
-                        Icons.circle,
-                        color: Colors.blue,
-                        size: 8,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        timeAgo,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
-                  ),
+
+                  // Row(
+                  //   children: [
+                  //     Text(
+                  //       sellerName,
+                  //       style: const TextStyle(
+                  //         fontSize: 12,
+                  //         color: Colors.grey,
+                  //       ),
+                  //     ),
+                  //     const SizedBox(width: 6),
+                  //     const Icon(
+                  //       Icons.circle,
+                  //       color: Colors.blue,
+                  //       size: 8,
+                  //     ),
+                  //     const SizedBox(width: 6),
+                  //     Text(
+                  //       timeAgo,
+                  //       style: const TextStyle(
+                  //         fontSize: 12,
+                  //         color: Colors.grey,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                 ],
               ),
             ),
             Container(
               decoration: BoxDecoration(
                 color: statusColor.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(8.r),
               ),
-              padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+              padding: EdgeInsets.symmetric(
+                vertical: 4.h,
+                horizontal: 6.w,
+              ),
               child: Text(
                 status,
                 style: TextStyle(
                   color: statusColor,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w300,
+                  fontSize: 10.sp,
                 ),
               ),
             ),
