@@ -36,7 +36,7 @@ class OrderItem extends ConsumerWidget {
                 fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(width: 16),
+            32.horizontalSpace,
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,6 +57,7 @@ class OrderItem extends ConsumerWidget {
                       fontSize: 14.sp,
                     ),
                   ),
+                  const SizedBox(height: 4),
 
                   // Row(
                   //   children: [

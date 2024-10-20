@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:tags/src/config/router/constants.dart';
 import 'package:tags/src/config/utils/enums.dart';
 import 'package:tags/src/core/constant/colors.dart';
@@ -86,7 +87,7 @@ class _OrderHistoryState extends ConsumerState<OrderHistory> {
                       fontSize: 14.sp,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 8),
                   LimitedBox(
                     maxHeight: 700.h,
                     child: ListView.builder(
@@ -98,16 +99,17 @@ class _OrderHistoryState extends ConsumerState<OrderHistory> {
                         price:
                             '${state.orderdetails![index].currency} ${state.orderdetails![index].total}',
                         sellerName: 'Tola Koko',
-                        status: index % 3 == 0
+                        status: state.orderdetails![index].status == 'DELIVERED'
                             ? 'Delivered'
-                            : index % 3 == 1
+                            : state.orderdetails![index].status == 'PENDING'
                                 ? 'Pending'
                                 : 'Shipped',
-                        statusColor: index % 3 == 0
-                            ? Colors.green
-                            : index % 3 == 1
-                                ? Colors.red
-                                : Colors.yellow,
+                        statusColor:
+                            state.orderdetails![index].status == 'DELIVERED'
+                                ? Colors.green
+                                : state.orderdetails![index].status == 'PENDING'
+                                    ? Colors.red
+                                    : Colors.yellow,
                         timeAgo: '2 days ago',
                       ),
                     ),
@@ -115,7 +117,80 @@ class _OrderHistoryState extends ConsumerState<OrderHistory> {
                 ],
               )
             else if (state.loading == Loader.loading)
-              const SizedBox.shrink()
+              LimitedBox(
+                maxHeight: 700.h,
+                child: ListView.builder(
+                  itemCount:
+                      8, // Set the number of shimmer items you want to show
+                  itemBuilder: (context, index) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      children: [
+                        // Shimmer effect for image
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Container(
+                              height: 60,
+                              width: 60,
+                              color: Colors.white, // Placeholder color
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Shimmer effect for product name
+                              Shimmer.fromColors(
+                                baseColor: Colors.grey[300]!,
+                                highlightColor: Colors.grey[100]!,
+                                child: Container(
+                                  height: 14,
+                                  width: 100,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              // Shimmer effect for price
+                              Shimmer.fromColors(
+                                baseColor: Colors.grey[300]!,
+                                highlightColor: Colors.grey[100]!,
+                                child: Container(
+                                  height: 14,
+                                  width: 50,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                            ],
+                          ),
+                        ),
+                        // Shimmer effect for status box
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white, // Placeholder color
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 4,
+                              horizontal: 6,
+                            ),
+                            width: 50,
+                            height: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )
             else if (state.loading != Loader.loading &&
                 state.orderdetails!.isNotEmpty)
               const SizedBox.shrink()
